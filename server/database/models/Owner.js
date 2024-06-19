@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
 
-const User = sequelize.define("User", {
+const Owner = sequelize.define("Owner", {
   image: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -32,8 +32,12 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  CINImage:{
+    type:DataTypes.STRING,
+    allowNull:false
+  }
 
 
 });
 
-module.exports=User
+module.exports=Owner

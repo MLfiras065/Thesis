@@ -5,7 +5,7 @@ const sequelize = new Sequelize("thesis", "root", "0657firasML", {
   dialect: "mysql",
 });
 sequelize
-  .query("CREATE DATABASE IF NOT EXISTS InstaKilo ")
+  .query("CREATE DATABASE IF NOT EXISTS thesis ")
   .then(() => {
     console.log("data mawjouda");
   })

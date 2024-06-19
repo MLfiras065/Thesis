@@ -2,16 +2,15 @@ const express = require("express");
 const sequelize=require("./database/db")
 
 const  cors = require('cors')
-
-
+const user=require('./Routes/UserRouter')
 const app = express();
 app.use(cors());
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 4000
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/../client/dist"));
-
+app.use('/api/user',user)
 const initApp = async () => {
     console.log("Testing the database connection..");
 
@@ -28,6 +27,3 @@ const initApp = async () => {
 };
 
 initApp()
-
-
-
