@@ -57,7 +57,7 @@ style={{marginLeft:70,
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        //  onPress={()=>navigation.navigate('Role')}
+         onPress={()=>navigation.navigate('TopNav',{screen:"TopNav"})}
         style={{
           fontSize: 46,
           flex: 1,
@@ -92,3 +92,4 @@ style={{marginLeft:70,
 };
 
 export default Role;
+

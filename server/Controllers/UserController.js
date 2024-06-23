@@ -44,7 +44,8 @@ const getUserEmail=async(req,res)=>{
 const login=(req,res)=>{
   console.log(req.body,"req.body");
     User.findOne({ where: { email: req.params.email } }).then((user) => {
-        bcrypt
+      if(user){
+                bcrypt
           .compare(req.body.Password,user.Password)
           .then((passCheck) => {
             if (!passCheck) {
@@ -64,7 +65,7 @@ const login=(req,res)=>{
           .catch((err) => {
             console.log(err);
           });
-      });
+      }});
 }
 const updateUser=async(req,res)=>{
   const  updeted=await User.update({image:req.body.image,
