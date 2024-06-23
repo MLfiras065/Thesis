@@ -83,5 +83,13 @@ const updateOwner=async(req,res)=>{
     } catch (err) {
       console.log(err);
     }
+    const updateOwner=async(req,res)=>{
+      const updated=await Owner.update({image:req.body.image,
+        FirstNmae:req.body.FirstName,
+        LastName:req.body.LastName,
+        Uername:req.body.username,
+        email:req.body 
+      })
+    }
 }
 module.exports={getOwner,register,login,updateOwner,getOwnerEmail}

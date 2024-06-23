@@ -7,17 +7,20 @@ import { NavigationContainer } from '@react-navigation/native';
 import Login from './Screens/Login';
 import TopTabNav from './Screens/TopTabNav';
 import SignUp from './Screens/SignUp';
+import HomePage from './Screens/HomePage';
 const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
 
     <Stack.Navigator>
+    <Stack.Screen name="Home" component={HomePage} />
     <Stack.Screen name="OnBording" component={OnBording}   options={{ headerShown: false }}/>
    <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
      <Stack.Screen name="TopTabNav" component={TopTabNav}  options={{ headerShown: false }}/>
     <Stack.Screen name="Login" component={Login} />  
-    <Stack.Screen name="SignUp" component={SignUp} />  
+    <Stack.Screen name="SignUp" component={SignUp} />
+    <Stack.Screen name="HomePage" component={HomePage} />
   </Stack.Navigator>
     </NavigationContainer>
   );

@@ -36,7 +36,7 @@ const Owner = sequelize.define("Owner", {
     type:DataTypes.STRING,
     allowNull:false
   }
-
+  
 
 });
 
