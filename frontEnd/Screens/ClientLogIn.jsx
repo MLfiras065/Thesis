@@ -5,21 +5,21 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import { APP_API_URL } from '../env';
 import SessionStorage from "react-native-session-storage";
-const Login = () => {
+const LogInUser = () => {
   const navigation = useNavigation()
  
-  const [email, setEmail] = useState("");
+  const [emailUser, setEmailUser] = useState("");
   const [Password, setPassword] = useState("");
   const [token,setToken]=useState("")
   const logIn = async( ) => {
 
    
       try {
-        const res= await axios.post(`${APP_API_URL}/owner/log/${email}`, {
+        const res= await axios.post(`${APP_API_URL}/user/log/${emailUser}`, {
         Password:Password,
         
       })
-      SessionStorage.setItem("email",email)
+      SessionStorage.setItem("emailUser",emailUser)
      
         alert("login")
         
@@ -47,7 +47,7 @@ const Login = () => {
     <View style={styles.wrapper}>
     <View>
       <Text style={styles.label}>Email</Text>
-      <View style={styles.inputWrapper(email? 'blue' : 'gray')}>
+      <View style={styles.inputWrapper(emailUser? 'blue' : 'gray')}>
         <MaterialCommunityIcons
           name="email-outline"
           size={20}
@@ -56,8 +56,8 @@ const Login = () => {
         <View  style={{ marginLeft: 5 }}>
         <TextInput
           style={styles.input}
-          onChangeText={(text) => setEmail(text)}
-          value={email}
+          onChangeText={(text) => setEmailUser(text)}
+          value={emailUser}
           placeholder="Email"
         />
       </View>
@@ -92,14 +92,11 @@ const Login = () => {
   )
 }
 
-export default Login
+export default LogInUser
 const styles = StyleSheet.create({
     container:{
       flex:1,
-      padding:20,
-  // backgroundColor:"white",
-
-  
+      padding:20,  
     },
     inputWrapper:(borderColor)=>(
      { 
