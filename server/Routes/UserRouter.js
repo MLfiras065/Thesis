@@ -5,4 +5,5 @@ route.get('/:email',getUserEmail)
 route.post('/reg',register)
 route.post("/log/:email",login)
 route.put("/upd/:id",updateUser)
+
 module.exports=route
