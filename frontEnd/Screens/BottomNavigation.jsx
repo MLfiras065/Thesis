@@ -13,6 +13,7 @@ const Tab = createBottomTabNavigator();
 const BottomNavigation=()=>{
   const navigation = useNavigation()
 const  onPressHome=()=>navigation.navigate("Home",{screen:"Home"})
+const  onPressProfile=()=>navigation.navigate({name:"Profile",params:{email:email}})
     return (
         <Tab.Navigator style={styles.mainContainer} >
           <Tab.Screen name="Home" component={Home}
@@ -39,7 +40,7 @@ const  onPressHome=()=>navigation.navigate("Home",{screen:"Home"})
               ),
             }} />
         
-          <Tab.Screen name="Profile" component={Profile}
+          <Tab.Screen name="Profile" component={Profile} 
               options={{
                 
                 tabBarIcon: () => (

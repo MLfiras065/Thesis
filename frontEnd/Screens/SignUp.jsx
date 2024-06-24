@@ -1,22 +1,32 @@
 import { StyleSheet,View, Text, TextInput, Button,Image, ScrollView ,TouchableOpacity, KeyboardAvoidingView} from 'react-native'
-import React ,{useState,}from 'react'
+import React ,{useState,useEffect}from 'react'
 import { Formik } from 'formik'
 import axios from "axios"
 import { APP_API_URL } from '../env'
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 const SignUp = () => {
-    const navigation = useNavigation()
-    const [image ,setImage] = useState("");
-    const [FirstName, setFirstName] = useState("");
-    const [LastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [Password, setPassword] = useState("");
-    const [gender, setGender] = useState("");
-    const [DateOfBirth, setDateOfBirth] = useState("");
-    const [CINImage, setCINImage] = useState("");
+  const [facing, setFacing] = useState("back");
+  const [permission, requestPermission] = useCameraPermissions();
+  const [isCameraVisible, setIsCameraVisible] = useState(false);
 
+
+
+  const navigation = useNavigation()
+  const [image,setImage]=useState(null)
+  const [FirstName, setFirstName] = useState("");
+  const [LastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+  const [gender, setGender] = useState("");
+  const [DateOfBirth, setDateOfBirth] = useState("");
+  const [CINImage, setCINImage] = useState("");
+  function toggleCameraFacing() {
+    setFacing((current) => (current === "back" ? "back" : "front"));
+  }
   
     const SignUp = (
       image, 
@@ -48,7 +58,21 @@ const SignUp = () => {
           console.log( error);
         });
     };
+    const pickImage = async () => {
+   
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
   
+      console.log(result);
+  
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    };
   
   
   
@@ -64,7 +88,11 @@ const SignUp = () => {
         CINImage
       );
     };
-  
+    useEffect(() => {
+      if (!permission) {
+        requestPermission();
+      }
+    }, []);
     return (
 
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -80,14 +108,39 @@ const SignUp = () => {
              <View>
    <TouchableOpacity 
 
-
+onPress={pickImage}
    >
             <Image 
-source={{ uri: 'https://c4.wallpaperflare.com/wallpaper/365/244/884/uchiha-itachi-naruto-shippuuden-anbu-silhouette-wallpaper-preview.jpg' }}
+source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s' }}
 style={styles.profimges} 
 
 />
 </TouchableOpacity> 
+<View>
+                  {permission?.granted ? (
+                    <>
+                      {isCameraVisible && (
+                        <CameraView style={styles.camera}
+                        ratio="16:9"
+                        type={facing}>
+                          <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+                              <Text style={styles.text}>Flip Camera</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </CameraView>
+                      )}
+                      <TouchableOpacity onPress={() => setIsCameraVisible(!isCameraVisible)}>
+                        <Text>Toggle Camera</Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <View style={styles.container}>
+                      <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+                      <Button onPress={requestPermission} title="Grant permission" />
+                    </View>
+                  )}
+                </View>
              </View>
              <View>
                <Text style={styles.label}>FirstName</Text>
@@ -265,10 +318,23 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
   },
+  camera: {
+    height: 800,
+    justifyContent: 'flex-end',
+  },
   buttonContainer: {
-    marginTop: 20,
-    borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#007BFF',
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    margin: 20,
+  },
+  button: {
+    flex: 0.1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    color: 'white',
   },
 });

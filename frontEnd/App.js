@@ -25,8 +25,8 @@ export default function App() {
    <Provider >
     <NavigationContainer>
     <Stack.Navigator>
-    {/* <Stack.Screen name="OnBording" component={OnBording}   options={{ headerShown: false }}/>
-    {/* <Stack.Screen name="Sub" component={Subscribe}   options={{ headerShown: false }}/> */}
+     <Stack.Screen name="OnBording" component={OnBording}   options={{ headerShown: false }}/>
+     {/* <Stack.Screen name="Sub" component={Subscribe}   options={{ headerShown: false }}/>  */}
     <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
      <Stack.Screen name="TopTabNav" component={TopTabNav}  options={{ headerShown: false }}/>
      <Stack.Screen name="TopNav" component={TopNav}  options={{ headerShown: false }}/>
@@ -35,10 +35,10 @@ export default function App() {
     <Stack.Screen name="LogIn" component={LogInUser} />  
     <Stack.Screen name="Navigation" component={BottomNavigation}  options={{headerShown:false}}/>
     {/* <Stack.Screen name="Home" component={Home}  options={{headerShown:false}}/> */}
-    <Stack.Screen name="Search" component={Search} />  */}
+    <Stack.Screen name="Search" component={Search} />  
     <Stack.Screen name="ProductDetails" component={ProductDetails} /> 
-        {/* <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="EditProfile" component={EditProfile} />  */}
+       <Stack.Screen name="Profile" component={Profile}  />
+        <Stack.Screen name="EditProfile" component={EditProfile} /> 
   </Stack.Navigator>
     </NavigationContainer>
    </Provider>

@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Switch, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { APP_API_URL } from '../env';
 
-function ProfileScreen() {
+
+function ProfileScreen({route}) {
   const navigation = useNavigation();
+  const param=route.params.email
+  const [item, setItem] = useState([]);
+  const [FirstName, setFirstName] = useState('');
+  const [email, setEmail] = useState('');
+  const [LastName, setLastName] = useState('');
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true); // Initial state for notifications
-
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
+ const getEmail= async()=>{
+  const res= await axios.get(`${APP_API_URL}/owner/getOwner/${param}`)
+  try {
+  setEmail(res.data.email)
+  setFirstName(res.data[1].FirstName)
+  setLastName(res.data[1].LastName)
+  setItem(res.data[1])
+    console.log(res.data);
+  } catch (error) {
+    console.log(error);
+  }
+ }
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
   };
@@ -16,14 +35,16 @@ function ProfileScreen() {
   };
 
   const styles = createStyles(isDarkTheme);
-
+useEffect(()=>{
+getEmail()
+},[])
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
         <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.avatar} />
-        <Text style={styles.name}>Leo</Text>
-        <Text style={styles.email}>Leo@gmail.com</Text>
-        <Text style={styles.phone}>+45 234 567 89</Text>
+        <Text style={styles.name}>firstname{item.FirstName} </Text>
+        <Text style={styles.email}>last name{item.LastName}</Text>
+        <Text style={styles.phone}>email{item.email}</Text>
       </View>
       <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('EditProfile',{screen:"EditProfile"})}>
         <Text style={styles.optionText}>Edit profile information</Text>

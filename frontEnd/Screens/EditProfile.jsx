@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { Avatar } from 'react-native-elements';
+// import { Avatar } from 'react-native-elements';
 import axios from 'axios';
 import { Feather } from '@expo/vector-icons';
+import { APP_API_URL } from '../env';
 
 const EditProfile = () => {
   const [FirstName, setFirstName] = useState('');
@@ -14,7 +15,7 @@ const EditProfile = () => {
 
   const handleUpdate = async (id) => {
     try {
-      const response = await axios.put(`http://192.168.11.203:4000/api/user/upd/${1}`, {
+      const response = await axios.put(`${APP_API_URL}/user/upd/${1}`, {
         FirstName,
         lastName,
         email,
@@ -35,14 +36,14 @@ const EditProfile = () => {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <View style={styles.headerBackground}>
-          <Avatar
+          {/* <Avatar
             size="xlarge"
             rounded
             source={{ uri: 'https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?size=338&ext=jpg&ga=GA1.1.1141335507.1718841600&semt=ais_user' }} 
             containerStyle={styles.avatar}
           >
             <Feather name="camera" size={24} color="black" />
-          </Avatar>
+          </Avatar> */}
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>FirstName</Text>
