@@ -4,6 +4,7 @@ const sequelize=require("./database/db")
 const  cors = require('cors')
 const user=require('./Routes/UserRouter')
 const owner=require('./Routes/OwnerRouter')
+const property=require('./Routes/PropertyRouter')
 const app = express();
 app.use(cors());
 const PORT = process.env.PORT || 4000
@@ -13,10 +14,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/../client/dist"));
 app.use('/api/user',user)
 app.use('/api/owner',owner)
+app.use('/api/property',property)
 const initApp = async () => {
     console.log("Testing the database connection..");
 
-    try {
+    try {   
         await sequelize.sync()
         console.log("Connection has been established successfully.");
 

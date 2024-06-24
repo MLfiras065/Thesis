@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './Home';
+
 import Profile from './Profile';
 import Chat from './Chat';
 import WishList from './WishList';
@@ -9,13 +9,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import HomePage from './HomePage';
 const Tab = createBottomTabNavigator();
 const BottomNavigation=()=>{
   const navigation = useNavigation()
-const  onPressHome=()=>navigation.navigate("Home",{screen:"Home"})
+const  onPressHome=()=>navigation.navigate("HomePage",{screen:"HomePage"})
     return (
         <Tab.Navigator style={styles.mainContainer} >
-          <Tab.Screen name="Home" component={Home}
+          <Tab.Screen name="HomePage" component={HomePage}
            options={{
             
             tabBarIcon: () => (
