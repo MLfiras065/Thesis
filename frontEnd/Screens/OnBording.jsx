@@ -1,87 +1,102 @@
 import {
   View,
   Text,
-  SafeAreaView,
-  Image,
+  StyleSheet,
+  Dimensions,
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { useNavigation } from '@react-navigation/native'
-import { StatusBar } from "expo-status-bar";
-const OnBording = () => {
-    const navigation = useNavigation()
-  return (
-    <SafeAreaView style={{ flex: 1, fontSize: 29 }}>
-      <StatusBar hidden={true} />
-      <Image
-        source={require("../assets/9736aa20ec825a2ab2e66b3f8d92120c.jpg")}
-        resizeMode="cover"
-        style={{
-          height: "100%",
-          width: "auto",
-          marginBottom: 200,
-        }}
-      />
-      <Text
-        style={{
-          fontSize: 24,
-          marginVertical: 20,
-          marginTop: 380,
-          marginLeft: 30,
-          fontSize: 35,
-          textAlign: "center",
-          position: "absolute",
-        }}
-      >
-        Book your
-      </Text>
-      <Text
-        style={{
-          display: "flex",
-          marginVertical: 25,
-          marginTop: 430,
-          marginLeft: 30,
-          color: "black",
-          textAlign: "center",
-          position: "absolute",
-          fontSize: 35,
-        }}
-      >
-        favorite place
-      </Text>
-      <TouchableOpacity
-         onPress={()=>navigation.navigate('Role')}
-        style={{
-          fontSize: 46,
-          flex: 1,
-          marginTop: 600,
-          color: "black",
-          position: "absolute",
-          borderRadius: 15,
-          flex: 7,
-          marginLeft: 150,
-          marginHorizontal: 50,
-          justifyContent: "center",
-          alignItems: "center",
-          borderColor: "white",
-          backgroundColor: "#19A7CE",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 28,
-            justifyContent: "center",
-            marginTop: 2,
-            marginBottom: 4,
-            marginRight: 4,
-            marginLeft: 4,
-          }}
-        >
-          Explore
-        </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
-  );
-};
+import Onboarding from "react-native-onboarding-swiper";
+import Lottie from "lottie-react-native";
+import { useNavigation } from "@react-navigation/native";
 
-export default OnBording;
+
+const { width, height } = Dimensions.get("window");
+
+export default function OnboardingScreen() {
+  const navigation = useNavigation();
+
+ 
+
+  const handleDone = () => {
+    navigation.navigate("Role",{screen:"Role"});
+  };
+
+  const doneButton = ({ ...props }) => {
+    return (
+      <TouchableOpacity style={styles.doneButton} {...props}>
+        <Text>Done</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <Onboarding
+        containerStyles={{ paddingHorizontal: 15 }}
+        onSkip={handleDone}
+        onDone={handleDone}
+        DoneButtonComponent={doneButton}
+        pages={[
+          {
+            backgroundColor: "#fef3c7",
+            image: (
+              <View style={styles.lottie}>
+                <Lottie
+                  source={require("../assets/boost.json")}
+                  autoPlay
+                  loop
+                />
+              </View>
+            ),
+            title: "Boost Productivity",
+            subtitle: "Subscribe this channel to boost your productivity level",
+          },
+          {
+            backgroundColor: "#a7f3d0",
+            image: (
+              <View style={styles.lottie}>
+                <Lottie
+                  source={require("../assets/Animation - 1719053769865.json")}
+                  autoPlay
+                  loop
+                />
+              </View>
+            ),
+            title: "Work Seamlessly",
+            subtitle: "Get your work done seamlessly without interruption",
+          },
+          {
+            backgroundColor: "#a78bfa",
+            image: (
+              <View style={styles.lottie}>
+                <Lottie
+                  source={require("../assets/Animation - 1719053807323.json")}
+                  autoPlay
+                  loop
+                />
+              </View>
+            ),
+            title: "Achieve Higher Goals",
+            subtitle:
+              "By boosting your productivity we help you to achieve higher goals",
+          },
+        ]}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  lottie: {
+    width: width * 0.9,
+    height: width,
+  },
+  doneButton: {
+    padding: 20,
+  },
+});

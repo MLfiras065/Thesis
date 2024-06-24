@@ -7,7 +7,7 @@ const sequelize = new Sequelize("thesis", "root", "Aymen@2003", {
 sequelize
   .query("CREATE DATABASE IF NOT EXISTS thesis ")
   .then(() => {
-    console.log("data mawjouda");
+    console.log("data exist");
   })
   .catch((err) => console.log(err));
 

@@ -4,13 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { APP_API_URL } from '../env';
 
 const HomePage = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchProperties = () => {
-    fetch('http://192.168.104.13:4000/api/property/getAll')
+    fetch(`${APP_API_URL}/property/getAll`)
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
