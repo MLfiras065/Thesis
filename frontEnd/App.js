@@ -52,7 +52,6 @@ export default function App() {
     </StripeProvider>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
