@@ -33,11 +33,14 @@ const initApp = async () => {
             console.log(`Server is up and running at: http://localhost:${PORT}`);
         });
     } catch (error) {
+
+
         console.log( error);
     }
 };
 
 initApp()
+
 
 
 
