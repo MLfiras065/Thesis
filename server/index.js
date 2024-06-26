@@ -5,6 +5,7 @@ const  cors = require('cors')
 const user=require('./Routes/UserRouter')
 const owner=require('./Routes/OwnerRouter')
 const property=require('./Routes/PropertyRouter')
+const comment=require('./Routes/CommentRouter')
 const app = express();
 app.use(cors());
 const PORT = process.env.PORT || 4000
@@ -15,6 +16,7 @@ app.use(express.static(__dirname + "/../client/dist"));
 app.use('/api/user',user)
 app.use('/api/owner',owner)
 app.use('/api/property',property)
+app.use('/api/comment',comment)
 const initApp = async () => {
     console.log("Testing the database connection..");
 

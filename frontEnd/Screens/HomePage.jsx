@@ -80,7 +80,7 @@ const HomePage = () => {
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {properties.slice(0, 3).map((property) => (
+          {properties.slice(0, 5).map((property) => (
             <View key={property.id} style={styles.tripItem}>
               <Text style={styles.tripTitle}>{property.Name}</Text>
               <Image style={styles.tripImage} source={{ uri: property.image }} />
@@ -98,7 +98,7 @@ const HomePage = () => {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {properties.slice(0, 3).map((property) => (
+          {properties.slice(0, 5).map((property) => (
             <View key={property.id} style={styles.houseItem}>
               <Image style={styles.houseImage} source={{ uri: property.image }} />
               <View style={styles.houseInfo}>
