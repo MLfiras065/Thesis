@@ -54,12 +54,15 @@ const getOwnerEmail = async (req, res) => {
 const login = (req, res) => {
   console.log(req.body, "req.body");
   Owner.findOne({ where: { email: req.params.email } }).then((owner) => {
+    if(!owner){
+       return { success: false, message: 'owner  not found' }
+    }
     if (owner) {
       bcrypt
         .compare(req.body.Password, owner.Password)
         .then((passCheck) => {
           if (!passCheck) {
-            return res.status(400).json({ message: "Password wrong" });
+            return res.status(400).json({ message: " invalid owner" });
           }
           const token = jwt.sign(
             {
@@ -69,17 +72,12 @@ const login = (req, res) => {
             "RandomToken"
           );
 
-          owner
-            .update({ token: token })
-            .then(() => {
-              res
-                .status(200)
-                .json({ email: owner.email, token: token, id: owner.id });
-            })
-            .catch((err) => {
-              console.log(err);
-              res.status(500).json({ message: "Error saving token" });
-            });
+          owner.update({ token: token }).then(() => {
+         return    res.status(200).json({ email: owner.email, token: token, id: owner.id });
+          }).catch((err) => {
+            console.log(err);
+        return     res.status(500).json({ message: "Error saving token" });
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -115,7 +113,7 @@ Best regards,
       }
     });
   });
-};
+}
 const updateOwner = async (req, res) => {
   const updeted = await Owner.update(
     {
@@ -134,12 +132,28 @@ const updateOwner = async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-};
-module.exports = {
-  getOwner,
-  register,
-  login,
-  updateOwner,
-  acceptBooking,
-  getOwnerEmail,
-};
+}
+const markeAsPayed= async (req, res) => {
+  
+
+  try {
+  
+    const owner= await Owner.findOne({
+      where:{email:req.params.id}
+    });
+
+    if (!owner) {
+      return res.status(404).json({ message: 'owner not found' });
+    }
+
+    
+    owner.payed = 1;
+    await owner.save();
+
+    res.status(200).json({ message: 'Seller marked as payed', owner });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+}
+module.exports = { getOwner, register, login, updateOwner, getOwnerEmail,acceptBooking,markeAsPayed};

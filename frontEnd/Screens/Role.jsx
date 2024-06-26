@@ -26,7 +26,7 @@ style={{marginLeft:70,
 }}
       />
         <TouchableOpacity
-         onPress={()=>navigation.navigate('TopTabNav')}
+          onPress={() => navigation.navigate('TopTabNav', { showCINImage: true })}
         style={{
           fontSize: 46,
           flex: 1,
@@ -53,11 +53,11 @@ style={{marginLeft:70,
             marginLeft: 40,
           }}
         >
-          Client
+          Owner
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-         onPress={()=>navigation.navigate('TopNav',{screen:"TopNav"})}
+         onPress={()=>navigation.navigate('TopTabNav',{screen:"TopTabNav"})}
         style={{
           fontSize: 46,
           flex: 1,
@@ -84,7 +84,7 @@ style={{marginLeft:70,
             marginLeft: 40,
           }}
         >
-          Owner
+          Client
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

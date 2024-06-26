@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Switch, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { APP_API_URL } from '../env';
+import SessionStorage from 'react-native-session-storage';
+
 
 function ProfileScreen() {
   const navigation = useNavigation();
+  const [item, setItem] = useState([]);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true); // Initial state for notifications
-
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
+ const getEmail= async()=>{ 
+   try {
+     const emailUser=SessionStorage.getItem("email")
+     const emailOwner=SessionStorage.getItem("email")
+    if (emailUser) {
+      const res = await axios.get(`${APP_API_URL}/owner/${emailUser}`);
+      setItem(res.data);
+      console.log(res.data);
+    } else if(emailOwner) {
+     const res=await axios.get(`${APP_API_URL}/user/${emailOwner}`)
+     setItem(res.data)
+    }else {
+      console.log("no email provided");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+ }
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
   };
@@ -16,16 +38,18 @@ function ProfileScreen() {
   };
 
   const styles = createStyles(isDarkTheme);
-
+useEffect(()=>{
+getEmail()
+},[])
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
-        <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.avatar} />
-        <Text style={styles.name}>Leo</Text>
-        <Text style={styles.email}>Leo@gmail.com</Text>
-        <Text style={styles.phone}>+45 234 567 89</Text>
+        <Image source={{ uri: item.image }} style={styles.avatar} />
+        <Text style={styles.name}>firstname{item.FirstName} </Text>
+        <Text style={styles.email}>last name{item.LastName}</Text>
+        <Text style={styles.phone}>email{item.email}</Text>
       </View>
-      <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('EditProfile',{screen:"EditProfile"})}>
+      <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('EditProfile',{item:item})}>
         <Text style={styles.optionText}>Edit profile information</Text>
       </TouchableOpacity>
       <View style={styles.option}>
