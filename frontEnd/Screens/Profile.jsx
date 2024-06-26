@@ -3,25 +3,28 @@ import { View, Text, Image, TouchableOpacity, Switch, StyleSheet } from 'react-n
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { APP_API_URL } from '../env';
+import SessionStorage from 'react-native-session-storage';
 
 
-function ProfileScreen({route}) {
+function ProfileScreen() {
   const navigation = useNavigation();
-  const param=route.params.email
   const [item, setItem] = useState([]);
-  const [FirstName, setFirstName] = useState('');
-  const [email, setEmail] = useState('');
-  const [LastName, setLastName] = useState('');
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
- const getEmail= async()=>{
-  const res= await axios.get(`${APP_API_URL}/owner/getOwner/${param}`)
-  try {
-  setEmail(res.data.email)
-  setFirstName(res.data[1].FirstName)
-  setLastName(res.data[1].LastName)
-  setItem(res.data[1])
-    console.log(res.data);
+ const getEmail= async()=>{ 
+   try {
+     const emailUser=SessionStorage.getItem("email")
+     const emailOwner=SessionStorage.getItem("email")
+    if (emailUser) {
+      const res = await axios.get(`${APP_API_URL}/owner/${emailUser}`);
+      setItem(res.data);
+      console.log(res.data);
+    } else if(emailOwner) {
+     const res=await axios.get(`${APP_API_URL}/user/${emailOwner}`)
+     setItem(res.data)
+    }else {
+      console.log("no email provided");
+    }
   } catch (error) {
     console.log(error);
   }
@@ -41,7 +44,7 @@ getEmail()
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
-        <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.avatar} />
+        <Image source={{ uri: item.image }} style={styles.avatar} />
         <Text style={styles.name}>firstname{item.FirstName} </Text>
         <Text style={styles.email}>last name{item.LastName}</Text>
         <Text style={styles.phone}>email{item.email}</Text>

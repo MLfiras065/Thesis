@@ -5,16 +5,11 @@ import axios from "axios"
 import { APP_API_URL } from '../env'
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-const SignUp = () => {
-  const [facing, setFacing] = useState("back");
-  const [permission, requestPermission] = useCameraPermissions();
-  const [isCameraVisible, setIsCameraVisible] = useState(false);
 
-
-
+const SignUp = ({route}) => {
+  const { showCINImage } = route.params;
   const navigation = useNavigation()
   const [image,setImage]=useState(null)
   const [FirstName, setFirstName] = useState("");
@@ -24,43 +19,72 @@ const SignUp = () => {
   const [gender, setGender] = useState("");
   const [DateOfBirth, setDateOfBirth] = useState("");
   const [CINImage, setCINImage] = useState("");
-  function toggleCameraFacing() {
-    setFacing((current) => (current === "back" ? "back" : "front"));
-  }
+
   
-    const SignUp = (
-      image, 
+  const handleSignUp = async (
+    image,
+    FirstName,
+    LastName,
+    email,
+    Password,
+    DateOfBirth,
+    gender,
+    CINImage,
+    isOwner
+  ) => {
+    if (!image || !FirstName || !LastName || !email || !Password || !DateOfBirth || !gender) {
+      alert('Please enter your data');
+      return;
+    }
+
+    if (isOwner && !CINImage) {
+      alert('Please provide your CIN Image');
+      return;
+    }
+
+    const data = {
+      image,
       FirstName,
       LastName,
       email,
       Password,
       DateOfBirth,
       gender,
-    CINImage
-    ) => {
-      axios
-        .post(`${APP_API_URL}/owner/reg`, {
-          image:image,
-          FirstName:FirstName,
-          LastName:LastName,
-          email:email,
-          Password:Password,
-          DateOfBirth:DateOfBirth,
-          gender:gender,
-         CINImage:CINImage
-        })
-        .then((res) => {
-          alert("signup");
-          navigation.navigate('Login',{screen:"Login"})
-          console.log("sign", res.data);
-        })
-        .catch((error) => {
-          console.log( error);
-        });
     };
-    const pickImage = async () => {
-   
+
+    if (isOwner) {
+      data.CINImage = CINImage;
+    }
+
+    try {
+      const res = await axios.post(
+        `${APP_API_URL}/${isOwner ? 'owner' : 'user'}/reg`,
+        data
+      );
+      alert('Signup successful');
+      navigation.navigate('Login', { screen: 'Login' });
+      console.log('Signup:', res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const pickImage = async () => {
       let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      console.log(result);
+      setImage(result);
+  
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    };
+    const handleCameraLaunch = async () => {
+      let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [4, 3],
@@ -75,8 +99,7 @@ const SignUp = () => {
     };
   
   
-  
-    const handleSignup = () => {
+    const handleSignup = (isOwner) => {
       SignUp(
         image, 
         FirstName,
@@ -85,14 +108,11 @@ const SignUp = () => {
         Password,
         DateOfBirth,
         gender,
-        CINImage
+        CINImage,
+        isOwner
       );
     };
-    useEffect(() => {
-      if (!permission) {
-        requestPermission();
-      }
-    }, []);
+  
     return (
 
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -115,31 +135,13 @@ source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8
 style={styles.profimges} 
 
 />
+<Button title="Camera" onPress={async () => {
+              handleCameraLaunch(true);
+          }}  />
 </TouchableOpacity> 
 <View>
-                  {permission?.granted ? (
-                    <>
-                      {isCameraVisible && (
-                        <CameraView style={styles.camera}
-                        ratio="16:9"
-                        type={facing}>
-                          <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-                              <Text style={styles.text}>Flip Camera</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </CameraView>
-                      )}
-                      <TouchableOpacity onPress={() => setIsCameraVisible(!isCameraVisible)}>
-                        <Text>Toggle Camera</Text>
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <View style={styles.container}>
-                      <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-                      <Button onPress={requestPermission} title="Grant permission" />
-                    </View>
-                  )}
+  
+             
                 </View>
              </View>
              <View>
@@ -240,29 +242,35 @@ style={styles.profimges}
                  </View>
                </View>
              </View>
-             <Text style={styles.label}>CIN Image</Text>
-             <View>
-               <View style={styles.inputWrapper(touched.CINImage ? 'blue' : 'gray')}>
-                 <MaterialCommunityIcons
-                   name="lock-outline"
-                   size={20}
-                   color={'gray'}
-                 />
-                 <View style={{ marginLeft: 5 }}>
-                   <TextInput
-                     onChangeText={(e)=>setCINImage(e)}
-                    // //  value={values.CINImage}
-                     placeholder="CINImage"
-                     
-                   />
-                 </View>
-               </View>
-             </View>
+             {showCINImage && (
+                <View>
+                  <Text style={styles.label}>CIN Image</Text>
+                  <View style={styles.inputWrapper(touched.CINImage ? 'blue' : 'gray')}>
+                    <MaterialCommunityIcons
+                      name="lock-outline"
+                      size={20}
+                      color={'gray'}
+                    />
+                    <View style={{ marginLeft: 5 }}>
+                      <TextInput
+                        onChangeText={(e) => setCINImage(e)}
+                        placeholder="CINImage"
+                      />
+                    </View>
+                  </View>
+                </View>
+              )}
              <View  style={{marginTop:20}}>
              <Button title="SignUp" 
-             onPress={handleSignup}
+             onPress={()=>handleSignup(false)}
               style={{marginTop:20,borderRadius:12,borderWidth:1}} />
-
+ {showCINImage && (
+                  <Button
+                    title="Sign Up as Owner"
+                    onPress={() => handleSignup(true)}
+                    style={{ marginTop: 20, borderRadius: 12, borderWidth: 1 }}
+                  />
+                )}
              </View>
           </View>
              )}

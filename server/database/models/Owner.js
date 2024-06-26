@@ -40,7 +40,7 @@ const Owner = sequelize.define("Owner", {
     defaultValue:"owner"
 
   }
-
+  
 
 
 });
