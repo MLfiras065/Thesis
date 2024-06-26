@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
-
+const Owner=require('./Owner')
 const Property = sequelize.define("Property", {
   Name: {
     type: DataTypes.STRING(45),
@@ -44,6 +44,7 @@ const Property = sequelize.define("Property", {
     allowNull: false
   }
 });
-
+Owner.hasMany(Property,{foreignKey:"ownerid",as:"property"})
+Property.belongsTo(Owner,{foreignKey:"ownerid",as:"Owner"})
 
 module.exports = Property;
