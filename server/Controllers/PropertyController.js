@@ -72,5 +72,13 @@ function deleteProperty(req, res) {
       res.status(500).json({ message: 'Internal server error' });
     });
 }
+const getOwnerProperty=async(req,res)=>{
+  const userPost=await Post.findAll({where:{ownerid:req.params.ownerid}})
+  try {
+      res.json(userPost)
+  } catch (err) {
+      console.log(err);
+  }
+}
 
-module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, getProperty };
+module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, getProperty,getOwnerProperty };
