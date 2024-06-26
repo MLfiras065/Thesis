@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert 
 // import { Avatar } from 'react-native-elements';
 import axios from 'axios';
 import { Feather } from '@expo/vector-icons';
+import { APP_API_URL } from '../env';
 
 const EditProfile = () => {
   const [FirstName, setFirstName] = useState('');
@@ -14,7 +15,7 @@ const EditProfile = () => {
 
   const handleUpdate = async (id) => {
     try {
-      const response = await axios.put(`http://192.168.11.203:4000/api/user/upd/${1}`, {
+      const response = await axios.put(`${APP_API_URL}/user/upd/${1}`, {
         FirstName,
         lastName,
         email,

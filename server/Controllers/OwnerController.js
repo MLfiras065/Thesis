@@ -1,6 +1,15 @@
 const Owner = require("../database/models/Owner");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "zbouzid75@gmail.com",
+    pass: "serv fnus bjdk omce",
+  },
+});
+
 const getOwner = async (req, res) => {
   try {
     const owner = await Owner.findAll({});
@@ -32,7 +41,7 @@ const register = (req, res) => {
 };
 
 const getOwnerEmail = async (req, res) => {
-  console.log("testttssssss");
+  console.log("testtt");
   try {
     const ownerEmail = await Owner.findOne({
       where: { email: req.params.email },
@@ -56,22 +65,55 @@ const login = (req, res) => {
             {
               id: owner.id,
               email: owner.email,
-              
             },
             "RandomToken"
           );
 
-          owner.update({ token: token }).then(() => {
-            res.status(200).json({ email: owner.email, token: token, id: owner.id });
-          }).catch((err) => {
-            console.log(err);
-            res.status(500).json({ message: "Error saving token" });
-          });
+          owner
+            .update({ token: token })
+            .then(() => {
+              res
+                .status(200)
+                .json({ email: owner.email, token: token, id: owner.id });
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(500).json({ message: "Error saving token" });
+            });
         })
         .catch((err) => {
           console.log(err);
         });
     }
+  });
+};
+const acceptBooking = async (req, res) => {
+  console.log("test");
+  const { id } = req.params;
+  Owner.findByPk(id).then((owner) => {
+    console.log(owner.id);
+    const mailOptions = {
+      from: "zbouzid75@gmail.com",
+      to: "mlayehf@gmail.com",
+      subject: "Welcome to your place ",
+      text: `Dear ${Owner.username},
+      
+Your booking is confirmed  
+
+Thank you  for booking from us. We look forward to seeing you !
+
+Best regards,
+
+`,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
   });
 };
 const updateOwner = async (req, res) => {
@@ -93,4 +135,11 @@ const updateOwner = async (req, res) => {
     console.log(err);
   }
 };
-module.exports = { getOwner, register, login, updateOwner, getOwnerEmail };
+module.exports = {
+  getOwner,
+  register,
+  login,
+  updateOwner,
+  acceptBooking,
+  getOwnerEmail,
+};

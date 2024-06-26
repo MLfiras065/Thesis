@@ -11,35 +11,37 @@ import BottomNavigation from './Screens/BottomNavigation.jsx';
 import SignUp from './Screens/SignUp';
 import LogInUser from './Screens/ClientLogIn.jsx';
 import TopNav from './Screens/TopNav.jsx';
-import Subscribe from './Screens/Subscribe.jsx';
+// import Subscribe from './Screens/Subscribe.jsx';
 import Home from './Screens/Home.jsx';
 import Search from "./Screens/Search"
 import React from 'react';
 import ProductDetails from './Screens/ProductDetails'; 
 import Profile from "./Screens/Profile"
 import EditProfile from "./Screens/EditProfile"
+import HomePage from './Screens/HomePage';
 const Stack = createStackNavigator();
 export default function App() {
   return (
-    <Provider >
-  <NavigationContainer>
-     <Stack.Navigator>
-    <Stack.Screen name="OnBording" component={OnBording}options={{ headerShown: false }}/>
-    <Stack.Screen name="Sub" component={Subscribe}options={{ headerShown: false }}/>
-    <Stack.Screen name="Role" component={Role} options={{headerShown: false }} />
-    <Stack.Screen name="TopTabNav" component={TopTabNav}options={{ headerShown: false }}/>
-    <Stack.Screen name="TopNav" component={TopNav}options={{ headerShown: false }}/>
+   <Provider >
+    <NavigationContainer>
+    <Stack.Navigator>
+    
+    <Stack.Screen name="OnBording" component={OnBording}   options={{ headerShown: false }}/>
+     {/* <Stack.Screen name="Sub" component={Subscribe}   options={{ headerShown: false }}/> */}
+    <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
+     <Stack.Screen name="TopTabNav" component={TopTabNav}  options={{ headerShown: false }}/>
+     <Stack.Screen name="TopNav" component={TopNav}  options={{ headerShown: false }}/>
     <Stack.Screen name="Login" component={Login} />  
     <Stack.Screen name="SignUp" component={SignUp} /> 
     <Stack.Screen name="LogIn" component={LogInUser} />  
     <Stack.Screen name="Navigation" component={BottomNavigation}  options={{headerShown:false}}/>
-    <Stack.Screen name="Home" component={Home}  options={{headerShown:false}}/>
+    <Stack.Screen name="Home" component={HomePage} />
     <Stack.Screen name="Search" component={Search} />  
     <Stack.Screen name="ProductDetails" component={ProductDetails} /> 
-    <Stack.Screen name="Profile" component={Profile} />
-    <Stack.Screen name="EditProfile" component={EditProfile} /> 
-    </Stack.Navigator>
- </NavigationContainer>
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="EditProfile" component={EditProfile} /> 
+  </Stack.Navigator>
+    </NavigationContainer>
    </Provider>
   );
 }

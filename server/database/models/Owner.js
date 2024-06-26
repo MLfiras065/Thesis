@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
-
+const Property =require("./Property");
 
 const Owner = sequelize.define("Owner", {
   image: {
@@ -40,9 +40,21 @@ const Owner = sequelize.define("Owner", {
     defaultValue:"owner"
 
   }
-
+  
 
 
 });
+
+
+
+
+
+Owner.hasMany(Property);
+Property.belongsTo(Owner);
+
+
+
+
+
 
 module.exports=Owner
