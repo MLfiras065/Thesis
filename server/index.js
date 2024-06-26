@@ -1,7 +1,13 @@
 const express = require("express");
 const sequelize=require("./database/db")
 
+
 const  cors = require('cors')
+
+
+
+
+const wishlist=require('./Routes/WishRouter')
 const user=require('./Routes/UserRouter')
 const auth=require('./Routes/AuthRouter')
 const owner=require('./Routes/OwnerRouter')
@@ -9,11 +15,12 @@ const property=require('./Routes/PropertyRouter')
 const payment=require('./Routes/PaymentRouter')
 const app = express();
 app.use(cors());
-const PORT = process.env.PORT || 4000
-
+const PORT = process.env.PORT ||4000
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/../client/dist"));
+
+app.use('/api/wishlist', wishlist)
 app.use('/api/user',user)
 app.use('/api/Auth',auth)
 app.use('/api/owner',owner)
@@ -35,3 +42,6 @@ const initApp = async () => {
 };
 
 initApp()
+
+
+

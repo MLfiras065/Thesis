@@ -3,6 +3,7 @@
     "async-handler": "^0.0.3",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "expo": "^51.0.14",
     "express": "^4.19.2",
@@ -10,9 +11,10 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "mysql2": "^3.9.8",
-    "nodemon": "^3.1.1",
+    "nodemon": "^3.1.4",
     "sequelize": "^6.37.3",
-    "stripe": "^16.0.0"
+    "stripe": "^16.0.0",
+    "sqlite3": "^5.1.7"
   },
   "name": "server",
   "version": "1.0.0",

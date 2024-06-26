@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { APP_API_URL } from '../env';
 import SessionStorage from "react-native-session-storage";
-import { useNavigation } from '@react-navigation/native';
+
 
 const HomePage = () => {
   const navigation = useNavigation();
@@ -32,6 +33,7 @@ const HomePage = () => {
     fetchUserData();
   }, []);
 
+
   const fetchProperties = () => {
     fetch(`${APP_API_URL}/property/getAll`)
       .then((response) => response.json())
@@ -56,6 +58,10 @@ const HomePage = () => {
         console.error('Error fetching owner properties:', error);
         setLoading(false);
       });
+  };
+
+  const navigateToCategory = (category) => {
+    navigation.navigate('FilteredProperties', {category });
   };
 
   if (loading) {
@@ -84,19 +90,29 @@ const HomePage = () => {
       <View style={styles.categories}>
         <Text style={styles.sectionTitle}>Categories</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.categoryItem}><Text style={styles.categoryText}><FontAwesome6 name="house" size={18} color="black" /> House</Text></View>
-          <View style={styles.categoryItem}><Text style={styles.categoryText}><MaterialIcons name="apartment" size={20} color="black" /> Apartment</Text></View>
-          <View style={styles.categoryItem}><Text style={styles.categoryText}><MaterialCommunityIcons name="hoop-house" size={24} color="black" /> Traditionnel House</Text></View>
-          <View style={styles.categoryItem}><Text style={styles.categoryText}><MaterialCommunityIcons name="greenhouse" size={24} color="black" /> Guest House</Text></View>
+          <TouchableOpacity style={styles.categoryItem} onPress={() => navigateToCategory('House')}>
+            <Text style={styles.categoryText}><FontAwesome6 name="house" size={18} color="black" /> House</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.categoryItem} onPress={() => navigateToCategory('Apartment')}>
+            <Text style={styles.categoryText}><MaterialIcons name="apartment" size={20} color="black" /> Apartment</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.categoryItem} onPress={() => navigateToCategory('Traditionnel House')}>
+            <Text style={styles.categoryText}><MaterialCommunityIcons name="hoop-house" size={24} color="black" /> Traditionnel House</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.categoryItem} onPress={() => navigateToCategory('Guest House')}>
+            <Text style={styles.categoryText}><MaterialCommunityIcons name="greenhouse" size={24} color="black" /> Guest House</Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
           <Text style={styles.sectionTitle}>{userRole === 'owner' ? 'Your Properties' : 'Top Guest Houses'}</Text>
-          <TouchableOpacity><Text style={styles.seeAllText}>See All</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('AllProperties')}>
+            <Text style={styles.seeAllText}>See All</Text>
+          </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {displayedProperties.map((property) => (
+          {displayedProperties.slice(0, 3).map((property) => (
             <View key={property.id} style={styles.tripItem} >
               <TouchableOpacity onPress={()=>navigation.navigate('ProductDetails',{propertyid:property.id})}>
 
@@ -114,7 +130,7 @@ const HomePage = () => {
         <View style={styles.houseSection}>
           <View style={styles.tripsHeader}>
             <Text style={styles.sectionTitle}>Top Houses</Text>
-            <TouchableOpacity><Text style={styles.seeAllText}>See All</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('AllProperties')}><Text style={styles.seeAllText}>See All</Text></TouchableOpacity>
           </View>
           <ScrollView>
             {properties.map((property) => (
@@ -172,9 +188,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
+    marginBottom: 20,
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    
   },
   categoryItem: {
     backgroundColor: '#e0f7fa',
@@ -186,30 +203,34 @@ const styles = StyleSheet.create({
   categoryText: {
     color: '#00796b',
   },
-  tripsSection: {
-    marginBottom: 20,
-  },
   tripsHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
+    
   },
   seeAllText: {
-    color: '#00796b',
+    color: '#A9A9A9',
   },
   tripItem: {
     backgroundColor: '#fff',
     borderRadius: 10,
-    padding: 10,
+    padding: 9,
     marginRight: 10,
     width: 150,
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
+    elevation: 1,
   },
   tripImage: {
     width: '100%',
     height: 100,
     borderRadius: 10,
     marginBottom: 10,
+    
+    
   },
   tripTitle: {
     fontSize: 16,
@@ -231,6 +252,43 @@ const styles = StyleSheet.create({
   houseSection: {
     marginBottom: 20,
   },
+  houseItem: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  houseImage: {
+    width: 150,
+    height: 100,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  houseInfo: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  houseTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  houseLocation: {
+    color: '#757575',
+    marginTop: 5,
+  },
+  TopTitle:{
+    marginTop:30,
+    fontSize: 18,
+    fontWeight: 'bold',
+  }
 });
 
 export default HomePage;

@@ -4,10 +4,12 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { Feather } from '@expo/vector-icons';
 import { APP_API_URL } from '../env';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useRoute } from '@react-navigation/native';
 import SessionStorage from 'react-native-session-storage';
 
 const EditProfile = () => {
+  const route = useRoute();
+  const { item } = route.params;
   const navigation=useNavigation()
   const [FirstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
@@ -17,7 +19,7 @@ const EditProfile = () => {
 
   const handleUpdate = async (id) => {
     try {
-      const response = await axios.put(`${APP_API_URL}/user/upd/${ownerid}`, {
+      const response = await axios.put(`${APP_API_URL}/owner/upd/${ownerid}`, {
         FirstName,
         lastName,
         email,
@@ -25,6 +27,10 @@ const EditProfile = () => {
       });
 
       if (response.status === 200) {
+        setEmail(response.data.email)
+        setFirstName(response.data.FirstName)
+        setLastName(response.data.lastName)
+        console.log("updated",response.data);
         Alert.alert('Success', 'Profile updated successfully');
         navigation.navigate("Profile")
       } else {

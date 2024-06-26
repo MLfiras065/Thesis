@@ -49,7 +49,7 @@ getEmail()
         <Text style={styles.email}>last name{item.LastName}</Text>
         <Text style={styles.phone}>email{item.email}</Text>
       </View>
-      <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('EditProfile',{screen:"EditProfile"})}>
+      <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('EditProfile',{item:item})}>
         <Text style={styles.optionText}>Edit profile information</Text>
       </TouchableOpacity>
       <View style={styles.option}>
