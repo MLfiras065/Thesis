@@ -35,7 +35,12 @@ const Owner = sequelize.define("Owner", {
   CINImage:{
     type:DataTypes.STRING,
     allowNull:false
+  },role:{
+    type:DataTypes.STRING,
+    defaultValue:"owner"
+
   }
+
 
 
 });

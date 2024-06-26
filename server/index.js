@@ -1,16 +1,21 @@
 const express = require("express");
 const sequelize=require("./database/db")
+const WishRouter = require("./Routes/WishRouter")
 
 const  cors = require('cors')
-const user=require('./Routes/UserRouter')
+
+
+
+app.use('/api/wishlist', WishRouter)
+
+
 const app = express();
 app.use(cors());
-const PORT = process.env.PORT || 4000
-
+const PORT = process.env.PORT ||4000
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/../client/dist"));
-app.use('/api/user',user)
+
 const initApp = async () => {
     console.log("Testing the database connection..");
 
@@ -27,3 +32,6 @@ const initApp = async () => {
 };
 
 initApp()
+
+
+
