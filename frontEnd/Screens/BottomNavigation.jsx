@@ -60,6 +60,7 @@ const styles=StyleSheet.create({
     bottom: 55,
     backgroundColor: "#182028",
     borderRadius: 25,
+    
     // marginHorizontal: 0.1
   }
 })
