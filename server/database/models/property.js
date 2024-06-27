@@ -7,6 +7,7 @@ const Property = sequelize.define("Property", {
     allowNull: false
   },
   Price: {
+
     type: DataTypes.STRING(45),
     allowNull: false
   },
@@ -44,7 +45,8 @@ const Property = sequelize.define("Property", {
     allowNull: false
   }
 });
-Owner.hasMany(Property,{foreignKey:"ownerid",as:"property"})
-Property.belongsTo(Owner,{foreignKey:"ownerid",as:"Owner"})
+
+// Owner.hasMany(Property,{foreignKey:"ownerid",as:"property"})
+// Property.belongsTo(Owner,{foreignKey:"ownerid",as:"Owner"})
 
 module.exports = Property;
