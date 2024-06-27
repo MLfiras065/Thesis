@@ -5,7 +5,8 @@ import ResImage from '../Component/ResImg'
 import LogInUser from './ClientLogIn'
 import SignUp from './SignUp'
 const Tab=createMaterialTopTabNavigator()
-const TopNav = () => {
+const TopNav = ({route}) => {
+  const { showCINImage } = route.params;
   return (
     <View>
         <ScrollView>
@@ -18,7 +19,9 @@ const TopNav = () => {
 />
             <Tab.Navigator style={{height:600}}>
     <Tab.Screen  name='LogIn' component={LogInUser}/>
-    <Tab.Screen  name='SignUp' component={SignUp}/>
+    <Tab.Screen  name='SignUp' component={SignUp}
+    initialParams={{ showCINImage: showCINImage }}
+    />
       </Tab.Navigator>
             </View>
         </ScrollView>

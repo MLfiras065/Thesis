@@ -8,7 +8,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation,useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 
-const SignUp = ({route}) => {
+const SignUp = () => {
+  const route=useRoute()
   const { showCINImage } = route.params;
   const navigation = useNavigation()
   const [image,setImage]=useState(null)
@@ -21,7 +22,7 @@ const SignUp = ({route}) => {
   const [CINImage, setCINImage] = useState("");
 
   
-  const handleSignUp = async (
+  const SignUp = async (
     image,
     FirstName,
     LastName,
@@ -30,17 +31,17 @@ const SignUp = ({route}) => {
     DateOfBirth,
     gender,
     CINImage,
-    isOwner
+  
   ) => {
-    if (!image || !FirstName || !LastName || !email || !Password || !DateOfBirth || !gender) {
+    if (!image || !FirstName || !LastName || !email || !Password || !DateOfBirth || !gender||!CINImage) {
       alert('Please enter your data');
       return;
     }
 
-    if (isOwner && !CINImage) {
-      alert('Please provide your CIN Image');
-      return;
-    }
+    // if (!CINImage) {
+    //   alert('Please provide your CIN Image');
+    //   return;
+    // }
 
     const data = {
       image,
@@ -50,15 +51,16 @@ const SignUp = ({route}) => {
       Password,
       DateOfBirth,
       gender,
+      CINImage
     };
 
-    if (isOwner) {
-      data.CINImage = CINImage;
-    }
+    // if (isOwner) {
+    //   data.CINImage = CINImage;
+    // }
 
     try {
       const res = await axios.post(
-        `${APP_API_URL}/${isOwner ? 'owner' : 'user'}/reg`,
+        `${APP_API_URL}/owner/reg`,
         data
       );
       alert('Signup successful');
@@ -99,7 +101,7 @@ const SignUp = ({route}) => {
     };
   
   
-    const handleSignup = (isOwner) => {
+    const handleSignup = () => {
       SignUp(
         image, 
         FirstName,
@@ -109,7 +111,7 @@ const SignUp = ({route}) => {
         DateOfBirth,
         gender,
         CINImage,
-        isOwner
+        
       );
     };
   
@@ -261,15 +263,11 @@ style={styles.profimges}
                 </View>
               )}
              <View  style={{marginTop:20}}>
-             <Button title="SignUp" 
-             onPress={()=>handleSignup(false)}
-              style={{marginTop:20,borderRadius:12,borderWidth:1}} />
+           
  {showCINImage && (
-                  <Button
-                    title="Sign Up as Owner"
-                    onPress={() => handleSignup(true)}
-                    style={{ marginTop: 20, borderRadius: 12, borderWidth: 1 }}
-                  />
+                   <Button title="SignUp" 
+                   onPress={()=>{handleSignup()}}
+                    style={{marginTop:20,borderRadius:12,borderWidth:1}} />
                 )}
              </View>
           </View>

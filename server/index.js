@@ -7,7 +7,7 @@ const  cors = require('cors')
 
 
 
-const wishlist=require('./Routes/WishRouter')
+// const wishlist=require('./Routes/WishRouter')
 const user=require('./Routes/UserRouter')
 const auth=require('./Routes/AuthRouter')
 const owner=require('./Routes/OwnerRouter')
@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/../client/dist"));
 
-app.use('/api/wishlist', wishlist)
+// app.use('/api/wishlist', wishlist)
 app.use('/api/user',user)
 app.use('/api/Auth',auth)
 app.use('/api/owner',owner)

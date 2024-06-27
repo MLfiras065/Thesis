@@ -85,9 +85,7 @@ const updateOwner = async (req, res) => {
       FirstName: req.body.FirstName,
       LastName: req.body.LastName,
       email: req.body.email,
-      DateOfBirth: req.body.DateOfBirth,
-      gender: req.body.gender,
-      CINImage: req.body.CINImage,
+  
     },
     { where: { id: req.params.id } }
   );
