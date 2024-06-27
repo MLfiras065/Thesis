@@ -4,19 +4,18 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Image
 } from "react-native";
 import React from "react";
-import Onboarding from "react-native-onboarding-swiper";
-import Lottie from "lottie-react-native";
+import { OnboardFlow } from 'react-native-onboard';
 import { useNavigation } from "@react-navigation/native";
-
+// import LottieView from 'lottie-react-native';
+import ResImage from "../Component/ResImg";
 
 const { width, height } = Dimensions.get("window");
 
 export default function OnboardingScreen() {
   const navigation = useNavigation();
-
- 
 
   const handleDone = () => {
     navigation.navigate("Role",{screen:"Role"});
@@ -31,59 +30,21 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Onboarding
-        containerStyles={{ paddingHorizontal: 15 }}
-        onSkip={handleDone}
-        onDone={handleDone}
-        DoneButtonComponent={doneButton}
-        pages={[
-          {
-            backgroundColor: "#fef3c7",
-            image: (
-              <View style={styles.lottie}>
-                <Lottie
-                  source={require("../assets/boost.json")}
-                  autoPlay
-                  loop
-                />
-              </View>
-            ),
-            title: "Boost Productivity",
-            subtitle: "Subscribe this channel to boost your productivity level",
-          },
-          {
-            backgroundColor: "#a7f3d0",
-            image: (
-              <View style={styles.lottie}>
-                <Lottie
-                  source={require("../assets/Animation - 1719053769865.json")}
-                  autoPlay
-                  loop
-                />
-              </View>
-            ),
-            title: "Work Seamlessly",
-            subtitle: "Get your work done seamlessly without interruption",
-          },
-          {
-            backgroundColor: "#a78bfa",
-            image: (
-              <View style={styles.lottie}>
-                <Lottie
-                  source={require("../assets/Animation - 1719053807323.json")}
-                  autoPlay
-                  loop
-                />
-              </View>
-            ),
-            title: "Achieve Higher Goals",
-            subtitle:
-              "By boosting your productivity we help you to achieve higher goals",
-          },
-        ]}
-      />
-    </View>
+    <OnboardFlow
+    pages={[
+      {
+        title: 'Welcome to my app',
+        subtitle: 'This is page 1',
+        imageUri: 'https://media.istockphoto.com/id/1281244663/vector/happy-tourists-choosing-hotel-and-booking-room-online.jpg?s=612x612&w=0&k=20&c=zoapw5nusmW8lcnoyKjvlhtfvReSBQE6m8bVWlHRdEE=',
+      },
+      {
+        title: 'Page 2 header',
+        subtitle: 'This is page 2',
+        imageUri: 'https://media.istockphoto.com/id/1317765391/vector/online-booking-services-abstract-concept-vector-illustration.jpg?s=612x612&w=0&k=20&c=_50Ongy54IDZqlSLFV8jLLb5Jk_em1FTzU5C3PqAYH0=',
+      }
+    ]}
+    onDone={handleDone}
+    />
   );
 }
 
@@ -99,4 +60,9 @@ const styles = StyleSheet.create({
   doneButton: {
     padding: 20,
   },
+  image: {
+    width: width,
+    height: width,
+    resizeMode: 'contain'
+  }
 });
