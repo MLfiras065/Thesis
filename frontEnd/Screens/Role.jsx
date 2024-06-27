@@ -26,7 +26,7 @@ style={{marginLeft:70,
 }}
       />
         <TouchableOpacity
-          onPress={() => navigation.navigate('TopTabNav', { showCINImage: true })}
+          onPress={() => navigation.navigate('TopNav', { showCINImage: true })}
         style={{
           fontSize: 46,
           flex: 1,
@@ -57,7 +57,7 @@ style={{marginLeft:70,
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-         onPress={()=>navigation.navigate('TopTabNav',{screen:"TopTabNav"})}
+         onPress={()=>navigation.navigate('TopNav',{screen:"TopNav"})}
         style={{
           fontSize: 46,
           flex: 1,

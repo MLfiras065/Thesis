@@ -1,19 +1,21 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { PricingCard, lightColors } from '@rneui/themed';
+import { useNavigation } from '@react-navigation/native';
 
 
 
 const Subscribe = () => {
+  const navigation=useNavigation()
 return (
   <>
-    <ScrollView>
+    <ScrollView >
       <PricingCard
         color={lightColors.primary}
         title="Free trail"
         price="For one month"
         info={['1 User', 'add multiple home']}
-        button={{ title: ' GET STARTED'}}
+        button={{ title: ' GET STARTED',onPress:()=> navigation.navigate("Home")}}
       />
       <PricingCard
         color={lightColors.secondary}

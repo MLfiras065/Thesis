@@ -20,7 +20,7 @@ import HomePage from './Screens/HomePage';
 import FilteredProperties from './Screens/FilteredProperties.jsx';
 import AllPropertiesPage from './Screens/AllPropertiesPage';  // Import the new screen
 import { StripeProvider } from "@stripe/stripe-react-native";
-// import Chat from './Screens/Chat.jsx';
+import Chat from './Screens/Chat.jsx';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -37,6 +37,7 @@ export default function App() {
           <Stack.Screen name="SignUp" component={SignUp} /> 
           <Stack.Screen name="LogIn" component={LogInUser} />  
           <Stack.Screen name="Navigation" component={BottomNavigation} options={{ headerShown: false }}/>
+          <Stack.Screen name="Subscribe" component={Subscribe} />  
           <Stack.Screen name="Home" component={HomePage} />
           <Stack.Screen name="FilteredProperties" component={FilteredProperties} />
           <Stack.Screen name="AllProperties" component={AllPropertiesPage} options={{ title: 'All Properties' }} />
@@ -45,7 +46,7 @@ export default function App() {
           <Stack.Screen name="ProductDetails" component={ProductDetails} /> 
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="EditProfile" component={EditProfile} /> 
-          {/* <Stack.Screen name="Chat" component={Chat} />  */}
+          <Stack.Screen name="Chat" component={Chat} /> 
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
