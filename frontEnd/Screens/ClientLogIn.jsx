@@ -11,27 +11,33 @@ const LogInUser = () => {
   const [emailUser, setEmailUser] = useState("");
   const [Password, setPassword] = useState("");
   const [token, setToken] = useState("");
-  const logIn = async () => {
-    if (!email || !Password) {
+  const logIn = async (navigation) => {
+    if (!emailUser || !Password) {
       alert("Please enter both email and password");
       return;
     }
+
     try {
       const res = await axios.post(`${APP_API_URL}/user/log/${emailUser}`, {
         Password: Password,
       });
+
+      console.log("loguser", res.data);
       SessionStorage.setItem("emailUser", emailUser);
       SessionStorage.setItem("userid", res.data.id);
+      SessionStorage.setItem("userToken", res.data.token);
+      console.log("userid", res.data.id);
+      console.log("usertoken", res.data.token);
+      alert("Login successful");
 
-      alert("login");
+      navigation.navigate("Navigation", { screen: "BottomNavigation" });
     } catch (err) {
       console.error(err);
+      alert("Login failed. Please check your credentials and try again.");
     }
   };
-
   const handleLogIn = () => {
-    logIn();
-    navigation.navigate("Navigation", { screen: "BottomNavigation" });
+    logIn(navigation);
   };
   return (
     <View style={styles.container}>

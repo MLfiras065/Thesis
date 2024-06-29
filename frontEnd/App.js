@@ -1,26 +1,28 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { StripeProvider } from "@stripe/stripe-react-native";
 import { Provider } from './Component/Auth.jsx';
 import OnBording from './Screens/OnBording';
+import { StyleSheet } from 'react-native';
+import React from 'react';
 import Role from './Screens/Role';
 import Login from './Screens/Login';
 import TopTabNav from './Screens/TopTabNav';
 import BottomNavigation from './Screens/BottomNavigation.jsx';
-import SignUp from './Screens/SignUp';
 import LogInUser from './Screens/ClientLogIn.jsx';
 import TopNav from './Screens/TopNav.jsx';
+import SignUp from './Screens/SignUp';
 import Search from './Screens/Search';
+import Chat from './Screens/Chat.jsx';
+import Profile from './Screens/Profile';
+import Chats from './Screens/Chats.jsx';
+import HomePage from './Screens/HomePage';
+import AllChats from './Screens/AllChats.jsx';
+import EditProfile from './Screens/EditProfile';
 import Subscribe from './Screens/Subscribe.jsx';
 import ProductDetails from './Screens/ProductDetails'; 
-import Profile from './Screens/Profile';
-import EditProfile from './Screens/EditProfile';
-import HomePage from './Screens/HomePage';
+import AllPropertiesPage from './Screens/AllPropertiesPage';  
 import FilteredProperties from './Screens/FilteredProperties.jsx';
-import AllPropertiesPage from './Screens/AllPropertiesPage';  // Import the new screen
-import { StripeProvider } from "@stripe/stripe-react-native";
-import Chat from './Screens/Chat.jsx';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -47,6 +49,8 @@ export default function App() {
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="EditProfile" component={EditProfile} /> 
           <Stack.Screen name="Chat" component={Chat} /> 
+          <Stack.Screen name="AllChat" component={AllChats} />  
+           <Stack.Screen name="Chats" component={Chats} /> 
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
