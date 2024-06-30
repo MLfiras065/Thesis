@@ -1,5 +1,5 @@
-import { StyleSheet,View, Text, TextInput, Button,Image, ScrollView ,TouchableOpacity, KeyboardAvoidingView} from 'react-native'
 import React ,{useState,useEffect}from 'react'
+import { StyleSheet,View, Text, TextInput, Button,Image, ScrollView ,TouchableOpacity, KeyboardAvoidingView} from 'react-native'
 import { Formik } from 'formik'
 import axios from "axios"
 import { APP_API_URL } from '../env'
@@ -31,7 +31,7 @@ const SignUp = () => {
     DateOfBirth,
     gender,
     CINImage,
-  
+    // isOwner
   ) => {
     if (!image || !FirstName || !LastName || !email || !Password || !DateOfBirth || !gender||!CINImage) {
       alert('Please enter your data');

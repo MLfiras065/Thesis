@@ -112,7 +112,7 @@ const HomePage = () => {
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {displayedProperties.slice(0, 3).map((property) => (
+          {displayedProperties.slice(0, 5).map((property) => (
             <View key={property.id} style={styles.tripItem} >
               <TouchableOpacity onPress={()=>navigation.navigate('ProductDetails',{propertyid:property.id})}>
 

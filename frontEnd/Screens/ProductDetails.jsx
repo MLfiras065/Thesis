@@ -8,10 +8,16 @@ import { Provider } from "../Component/Auth";
 import { useStripe } from '@stripe/stripe-react-native';
 import { APP_API_URL } from '../env';
 import { useRoute,useNavigation } from '@react-navigation/native';
+import AddComment from './AddComment';
+import CommentCard from './CommentCard';
+import SessionStorage from 'react-native-session-storage';
+
 
 const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const route = useRoute();
+ 
   const propertyId = route.params?.propertyid;
+  
   const [property, setProperty] = useState(null);
   const [mainImage, setMainImage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -69,6 +75,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
       axios.get(`${APP_API_URL}/property/getone/${id}`)
         .then((res) => {
           setProperty(res.data);
+          SessionStorage.setItem("id",res.data.id);
           setMainImage(res.data.image);  
         })
         .catch((err) => console.log(err));
@@ -95,6 +102,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
 
 
   return (
+    <View style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.card}>
         <Image source={{ uri: mainImage }} style={styles.image} />
@@ -121,7 +129,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
         </View>
 
         <Text style={styles.description}>{property.description}</Text>
-
+        
         {isOwner && (
           <View style={styles.buttonsContainer}>
             <Button title="Update Product" onPress={() => switchView('update', property)} />
@@ -162,6 +170,9 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
         </Modal>
       </View>
     </ScrollView>
+        <CommentCard />
+<AddComment propertyId={propertyId} userId={userId} />
+    </View>
   );
 };
 

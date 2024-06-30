@@ -79,6 +79,9 @@ const EditProfile = () => {
     }
   };
 
+
+
+  
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>

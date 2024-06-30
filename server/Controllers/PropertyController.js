@@ -1,4 +1,4 @@
-const Property = require("../database/models/Property");
+const Property = require("../database/models/property");
 
 function getAllProperties(req, res) {
   Property.findAll()

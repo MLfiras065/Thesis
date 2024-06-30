@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
-const Property =require("./Property");
+const Property =require("./property");
 
 const Owner = sequelize.define("Owner", {
   image: {
