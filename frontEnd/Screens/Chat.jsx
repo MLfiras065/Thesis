@@ -1,87 +1,81 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
-import io from 'socket.io-client';
-import { View } from 'react-native';
-import styles from './ChatStyles.jsx';
-import { APP_API_URL } from '../env.js';
+import React, { useState, useEffect, useCallback } from "react";
+import { SafeAreaView, View,Text,Pressable ,FlatList} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import styles from "./ChatStyles";
+import AllChats from "./AllChats";
 
-const socket = io('http://localhost:3000');
 
 const Chat = () => {
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    fetch(`${APP_API_URL}/messages`)
-      .then((response) => response.json())
-      .then((data) => {
-        const formattedMessages = data.map((msg) => ({
-          _id: msg.id,
-          text: msg.message,
-          createdAt: new Date(msg.createdAt),
-          user: {
-            _id: msg.user,
-            name: msg.user,
-          },
-        }));
-        setMessages(formattedMessages.reverse());
-      });
-
-    socket.on('chat message', (msg) => {
-      setMessages((previousMessages) =>
-        GiftedChat.append(previousMessages, {
-          _id: msg.id,
-          text: msg.message,
-          createdAt: new Date(msg.createdAt),
-          user: {
-            _id: msg.user,
-            name: msg.user,
-          },
-        })
-      );
-    });
-
-    return () => {
-      socket.off('chat message');
-    };
-  }, []);
-
-  const onSend = useCallback((messages = []) => {
-    const message = messages[0];
-    socket.emit('chat message', {
-      user: message.user._id,
-      message: message.text,
-    });
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
-  }, []);
-
-  const renderBubble = (props) => {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          left: styles.chatBubble,
-          right: styles.chatBubbleRight,
-        }}
-        textStyle={{
-          left: styles.chatText,
-          right: styles.chatTextRight,
-        }}
-      />
-    );
-  };
+//   const [rooms,setRooms]=useState([])
+  const rooms = [
+    {
+        id: "1",
+        name: "Novu Hangouts",
+        messages: [
+            {
+                id: "1a",
+                text: "Hello guys, welcome!",
+                time: "07:50",
+                user: "Tomer",
+            },
+            {
+                id: "1b",
+                text: "Hi Tomer, thank you! 😇",
+                time: "08:50",
+                user: "David",
+            },
+        ],
+    },
+    {
+        id: "2",
+        name: "Hacksquad Team 1",
+        messages: [
+            {
+                id: "2a",
+                text: "Guys, who's awake? 🙏🏽",
+                time: "12:50",
+                user: "Team Leader",
+            },
+            {
+                id: "2b",
+                text: "What's up? 🧑🏻‍💻",
+                time: "03:50",
+                user: "Victoria",
+            },
+        ],
+    },
+];
 
   return (
-    <View style={styles.container}>
-      <GiftedChat
-        messages={messages}
-        onSend={(messages) => onSend(messages)}
-        user={{ _id: 1, name: 'User' }}
-        renderBubble={renderBubble}
-      />
-    </View>
-  );
-};
+    
+    <SafeAreaView style={styles.chatscreen}>
+    <View style={styles.chattopContainer}>
+        <View style={styles.chatheader}>
+            <Text style={styles.chatheading}>Chats</Text>
 
+   
+            <Pressable onPress={() => console.log("Button Pressed!")}>
+                <Feather name='edit' size={24} color='green' />
+            </Pressable>
+        </View>
+    </View>
+
+    <View style={styles.chatlistContainer}>
+        {rooms.length > 0 ? (
+            <FlatList
+                data={rooms}
+                renderItem={({ item }) => <AllChats item={item} />}
+                keyExtractor={(item) => item.id}
+            />
+        ) : (
+            <View style={styles.chatemptyContainer}>
+                <Text style={styles.chatemptyText}>there is no chat !</Text>
+                <Text>please chat with the owner  </Text>
+            </View>
+        )}
+    </View>
+</SafeAreaView>
+
+  );
+}
 export default Chat;
