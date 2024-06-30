@@ -22,7 +22,7 @@ const HomePage = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
-
+const [rated,setRated]=useState([])
   const userid = SessionStorage.getItem("userid");
 
   const fetchProperties = () => {
@@ -42,9 +42,30 @@ const HomePage = () => {
         setLoading(false);
       });
   };
+const getProperty=async()=>{
+  fetch(`${APP_API_URL}/property/getAll`)
+  .then((response) => response.json())
+  .
+ 
+then((data) => {
+const filteredData = data.filter(property => property.rating > 3);
+    
+    
+
+   
+
+ 
+setRated(filteredData);
+  }).
+catch((error) => {
+console.error("Error fetching properties:", error);
+setLoading(false);
+  });
+}
 
   useEffect(() => {
     fetchProperties();
+    getProperty()
   }, []);
 
   const navigateToCategory = (category) => {
@@ -149,7 +170,7 @@ const HomePage = () => {
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {properties.slice(0, 3).map((property) => (
+          {rated.slice(0, 3).map((property) => (
             <View key={property.id} style={styles.tripItem}>
               <TouchableOpacity
                 onPress={() =>
