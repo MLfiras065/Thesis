@@ -17,10 +17,14 @@ import { useStripe } from "@stripe/stripe-react-native";
 import { APP_API_URL } from "../env";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
+import AddComment from './AddComment';
+import CommentCard from './CommentCard';
+
+
 
 const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const route = useRoute();
-  // const navigation=useNavigation()
+ 
   const propertyId = route.params?.propertyid;
   const userid = route.params?.userid;
   console.log("useridproperty", userid);
@@ -74,7 +78,8 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
         .get(`${APP_API_URL}/property/getone/${id}`)
         .then((res) => {
           setProperty(res.data);
-          setMainImage(res.data.image);
+          SessionStorage.setItem("id",res.data.id);
+          setMainImage(res.data.image);  
         })
         .catch((err) => console.log(err));
     };
@@ -122,6 +127,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   };
 
   return (
+    <View style={styles.container}>
     <ScrollView style={styles.container}>
       <View style={styles.card}>
         <Image source={{ uri: mainImage }} style={styles.image} />
@@ -158,7 +164,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
         </View>
 
         <Text style={styles.description}>{property.description}</Text>
-
+        
         {isOwner && (
           <View style={styles.buttonsContainer}>
             <Button
@@ -216,6 +222,9 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
         </Modal>
       </View>
     </ScrollView>
+        <CommentCard />
+<AddComment propertyId={propertyId} userId={userId} />
+    </View>
   );
 };
 

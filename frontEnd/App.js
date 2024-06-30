@@ -23,6 +23,7 @@ import Subscribe from './Screens/Subscribe.jsx';
 import ProductDetails from './Screens/ProductDetails'; 
 import AllPropertiesPage from './Screens/AllPropertiesPage';  
 import FilteredProperties from './Screens/FilteredProperties.jsx';
+import Photo from './Screens/Owner/ImgPicker.jsx';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -50,6 +51,7 @@ export default function App() {
           <Stack.Screen name="EditProfile" component={EditProfile} /> 
           <Stack.Screen name="Chat" component={Chat} /> 
           <Stack.Screen name="AllChat" component={AllChats} />  
+          <Stack.Screen name="addImg" component={Photo} />
            <Stack.Screen name="Chats" component={Chats} /> 
         </Stack.Navigator>
       </NavigationContainer>
@@ -57,6 +59,7 @@ export default function App() {
     </StripeProvider>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -65,3 +68,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+

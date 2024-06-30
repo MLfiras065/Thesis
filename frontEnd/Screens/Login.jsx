@@ -16,7 +16,7 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post(`${APP_API_URL}/owner/log/${email}`, {
+      const res = await axios.post(`${APP_API_URL}/user/log/${email}`, {
         Password: Password,
       });
 
