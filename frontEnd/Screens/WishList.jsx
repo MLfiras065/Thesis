@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, Alert, TouchableOpacity } from 'react-native';
 import axios from 'axios';
-import styles from './styles.js';
+import styles from './styles.jsx';
 import { APP_API_URL } from '../env.js';
 
 const Wishlist = () => {

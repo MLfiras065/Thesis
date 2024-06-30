@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import io from 'socket.io-client';
 import { View } from 'react-native';
-import styles from './ChatStyles.js';
+import styles from './ChatStyles.jsx';
 import { APP_API_URL } from '../env.js';
 
 const socket = io('http://localhost:3000');
