@@ -4,7 +4,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { APP_API_URL } from "../env";
 import SessionStorage from "react-native-session-storage";
-
 import axios from "axios";
 const Login = () => {
   const navigation = useNavigation();
@@ -34,7 +33,21 @@ const Login = () => {
       console.error(err);
       alert("Login failed. Please check your credentials and try again.");
     }
-    
+    try {
+      const resUser = await axios.post(`${APP_API_URL}/user/log/${email}`, {
+        Password: Password,
+      });
+
+      console.log(resUser.data);
+      SessionStorage.setItem("email", email);
+      SessionStorage.setItem("userid", resUser.data.userid);
+      alert("Login successful");
+
+      navigation.navigate("Subscribe", { screen: "Subscribe" });
+      
+    } catch (error) {
+      
+    }
   };
   const handleLogIn = () => {
     logIn(navigation);

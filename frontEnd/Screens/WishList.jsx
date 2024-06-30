@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, Alert, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import styles from './styles.jsx';
+import { APP_API_URL } from '../env.js';
 
 const Wishlist = () => {
     const [userId, setUserId] = useState(1); 
@@ -14,7 +15,7 @@ const Wishlist = () => {
     }, []);
 
     const fetchWishlist = () => {
-        axios.get(`http://localhost:3000/wishlist/${userId}`)
+        axios.get(`${APP_API_URL}/wishlist/${userId}`)
             .then(response => {
                 setWishlist(response.data);
             })
@@ -24,7 +25,7 @@ const Wishlist = () => {
     };
 
     const addToWishlist = () => {
-        axios.post('http://localhost:3000/wishlist', {
+        axios.post(`${APP_API_URL}/wishlist`, {
             userId,
             productId,
             productName,
@@ -40,7 +41,7 @@ const Wishlist = () => {
     };
 
     const removeFromWishlist = (id) => {
-        axios.delete(`http://localhost:3000/wishlist/${id}`)
+        axios.delete(`${APP_API_URL}/wishlist/${id}`)
         .then(() => {
             setWishlist(wishlist.filter(item => item.id !== id));
         })

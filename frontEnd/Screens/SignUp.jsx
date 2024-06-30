@@ -38,7 +38,10 @@ const SignUp = () => {
       return;
     }
 
-  
+    // if (!CINImage) {
+    //   alert('Please provide your CIN Image');
+    //   return;
+    // }
 
     const data = {
       image,
@@ -51,7 +54,10 @@ const SignUp = () => {
       CINImage
     };
 
-  
+    // if (isOwner) {
+    //   data.CINImage = CINImage;
+    // }
+
     try {
       const res = await axios.post(
         `${APP_API_URL}/owner/reg`,
@@ -105,7 +111,7 @@ const SignUp = () => {
         DateOfBirth,
         gender,
         CINImage,
-       
+        
       );
     };
   
@@ -257,15 +263,11 @@ style={styles.profimges}
                 </View>
               )}
              <View  style={{marginTop:20}}>
-             {/* <Button title="SignUp" 
-             onPress={()=>handleSignup()}
-              style={{marginTop:20,borderRadius:12,borderWidth:1}} /> */}
+           
  {showCINImage && (
-                  <Button
-                    title="Sign Up as Owner"
-                    onPress={() => handleSignup()}
-                    style={{ marginTop: 20, borderRadius: 12, borderWidth: 1 }}
-                  />
+                   <Button title="SignUp" 
+                   onPress={()=>{handleSignup()}}
+                    style={{marginTop:20,borderRadius:12,borderWidth:1}} />
                 )}
              </View>
           </View>

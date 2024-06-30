@@ -1,38 +1,49 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert,Image,Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert, Image, Button } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-import { Feather } from '@expo/vector-icons';
-import { APP_API_URL } from '../env';
-import { useNavigation,useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import SessionStorage from 'react-native-session-storage';
+import { APP_API_URL } from '../env';
 
 const EditProfile = () => {
   const route = useRoute();
-  const { item } = route.params;
-  const navigation=useNavigation()
+  const navigation = useNavigation();
   const [FirstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [LastName, setLastName] = useState('');
   const [image, setImage] = useState('');
- const ownerid=SessionStorage.getItem('ownerid')
+  const [ownerid, setOwnerId] = useState(null);
 
-  const handleUpdate = async (id) => {
+  useEffect(() => {
+    const fetchOwnerId = async () => {
+      const id = await SessionStorage.getItem('ownerid');
+      setOwnerId(id);
+    };
+    fetchOwnerId();
+  }, []);
+
+  const handleUpdate = async () => {
+    if (!ownerid) {
+      Alert.alert('Error', 'Owner ID is not available');
+      return;
+    }
+
     try {
       const response = await axios.put(`${APP_API_URL}/owner/upd/${ownerid}`, {
         FirstName,
-        lastName,
+        LastName,
         email,
-        image
+        image,
       });
 
       if (response.status === 200) {
-        setEmail(response.data.email)
-        setFirstName(response.data.FirstName)
-        setLastName(response.data.lastName)
-        console.log("updated",response.data);
+        setEmail(response.data.email);
+        setFirstName(response.data.FirstName);
+        setLastName(response.data.LastName);
+        console.log('Updated', response.data);
         Alert.alert('Success', 'Profile updated successfully');
-        navigation.navigate("Profile")
+        navigation.navigate('Profile');
       } else {
         Alert.alert('Error', 'Failed to update profile');
       }
@@ -41,6 +52,7 @@ const EditProfile = () => {
       Alert.alert('Error', 'An error occurred while updating the profile');
     }
   };
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -49,13 +61,11 @@ const EditProfile = () => {
       quality: 1,
     });
 
-    console.log(result);
-    setImage(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
+
   const handleCameraLaunch = async () => {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -63,8 +73,6 @@ const EditProfile = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -78,53 +86,38 @@ const EditProfile = () => {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <View style={styles.headerBackground}>
-        <TouchableOpacity 
-
-onPress={pickImage}
-   >
-            <Image 
-source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s' }}
-style={styles.avatar} 
-
-/>
-<Button title="Camera" onPress={async () => {
-              handleCameraLaunch(true);
-          }}  />
-</TouchableOpacity> 
+          <TouchableOpacity onPress={pickImage}>
+            <Image
+              source={{ uri: image || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s' }}
+              style={styles.avatar}
+            />
+            <Button title="Camera" onPress={handleCameraLaunch} />
+          </TouchableOpacity>
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>FirstName</Text>
+          <Text style={styles.label}>First Name</Text>
           <TextInput
             style={styles.input}
-            // value={FirstName}
+            value={FirstName}
             onChangeText={setFirstName}
           />
         </View>
         <View style={styles.inputContainer}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>LastName</Text>
-            <TextInput
-              style={styles.input}
-              // value={password}
-              onChangeText={setLastName}
-            />
+          <Text style={styles.label}>Last Name</Text>
+          <TextInput
+            style={styles.input}
+            value={LastName}
+            onChangeText={setLastName}
+          />
+        </View>
+        <View style={styles.inputContainer}>
           <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
-            // value={email}
+            value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
           />
-        </View>
-        {/* <View style={styles.inputContainer}>
-          <Text style={styles.label}>Phone Number</Text>
-          <TextInput
-            style={styles.input}
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="phone-pad"
-          />
-        </View> */}
         </View>
         <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
           <Text style={styles.updateButtonText}>Update</Text>
@@ -148,7 +141,7 @@ const styles = StyleSheet.create({
   headerBackground: {
     width: '100%',
     height: 200,
-    backgroundColor:"#f0f0f0" , // Blue background
+    backgroundColor: '#f0f0f0',
     borderBottomLeftRadius: 100,
     borderBottomRightRadius: 100,
     alignItems: 'center',
