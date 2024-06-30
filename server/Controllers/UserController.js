@@ -88,7 +88,7 @@ const updateUser=async(req,res)=>{
       console.log(err);
     }
 }
-markAsPayed= async (req, res) => {
+const markAsPayed= async (req, res) => {
   
 
   try {
@@ -110,5 +110,5 @@ markAsPayed= async (req, res) => {
     console.error(error);
     res.status(500).json({ message: 'An error occurred' });
   }
-},
+}
 module.exports={getUser,register,login,updateUser,getUserEmail,markAsPayed}
