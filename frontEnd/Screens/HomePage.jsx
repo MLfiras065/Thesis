@@ -19,9 +19,7 @@ import SessionStorage from "react-native-session-storage";
 
 const HomePage = () => {
   const navigation = useNavigation();
-
   const [properties, setProperties] = useState([]);
-  // const [ownerProperties, setOwnerProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
 
@@ -29,9 +27,14 @@ const HomePage = () => {
 
   const fetchProperties = () => {
     fetch(`${APP_API_URL}/property/getAll`)
-      .then((response) => response.json())
+      .then((response) => response.json()
+    
+    )
+    
       .then((data) => {
         setProperties(data);
+        SessionStorage.setItem("ownerid",data[0].ownerid)
+        console.log("property",data[0].ownerid)
         setLoading(false);
       })
       .catch((error) => {

@@ -6,7 +6,7 @@ import AllChats from "./AllChats";
 
 
 const Chat = () => {
-  // const [rooms,setRooms]=useState([])
+//   const [rooms,setRooms]=useState([])
   const rooms = [
     {
         id: "1",
@@ -45,23 +45,6 @@ const Chat = () => {
         ],
     },
 ];
-
-  // useEffect(() => {
-  //   const socket = io(`http://192.168.17.186:3000`);
-    
-  //   socket.on('connect', () => {
-  //     console.log('chat Connected to server');
-  //   });
-
-  //   socket.on('message', (data) => {
-  //     console.log('Received message:', data);
-  //   });
-
-  //   return () => {
-  //     socket.disconnect();
-  //     console.log("user disconnect");
-  //   };
-  // }, []);
 
   return (
     

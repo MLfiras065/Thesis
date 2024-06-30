@@ -16,15 +16,16 @@ const AllChats = ({item}) => {
             
         });
     };
-    // const handleCreateRoom = () => {
-    //     socket.emit("createRoom", "test");
+    const handleCreateRoom = () => {
+        socket.emit("createRoom", "test");
         
-    // };
-    let socket
+    };
+    
+    const socket = io("http://192.168.17.186:3000");
     console.log(socket,"socketttttt");
     useEffect(()=>{
         try {
-            const socket = io(`http://192.168.17.186:3000`);
+            const socket = io("http://192.168.17.186:3000");
           
             console.log("socket=>",socket);} 
         catch (error) {
@@ -34,7 +35,7 @@ const AllChats = ({item}) => {
     },[])
   return (
     <Pressable style={styles.cchat} 
-    onPress={()=>{handleNavigation()}}
+    onPress={()=>{handleCreateRoom(),handleNavigation()}}
     >
         <Ionicons
             name='person-circle-outline'
@@ -48,7 +49,7 @@ const AllChats = ({item}) => {
                 <Text style={styles.cusername}>{item.user}</Text>
 
                 <Text style={styles.cmessage}>
-                    {item?.text ? item.text : "Tap to start chatting"}
+                    {item?.message ? item.message : "Tap to start chatting"}
                 </Text>
             </View>
             <View>
@@ -58,7 +59,5 @@ const AllChats = ({item}) => {
             </View>
         </View>
     </Pressable>
-  )
-}
-
+)}
 export default AllChats
