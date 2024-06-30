@@ -1,27 +1,38 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
-// import { Avatar } from 'react-native-elements';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert,Image,Button } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { Feather } from '@expo/vector-icons';
+import { APP_API_URL } from '../env';
+import { useNavigation,useRoute } from '@react-navigation/native';
+import SessionStorage from 'react-native-session-storage';
 
 const EditProfile = () => {
+  const route = useRoute();
+  const { item } = route.params;
+  const navigation=useNavigation()
   const [FirstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
   const [lastName, setLastName] = useState('');
- 
-//   const [phone, setPhone] = useState('');
-//   const [password, setPassword] = useState('');
+  const [image, setImage] = useState('');
+ const ownerid=SessionStorage.getItem('ownerid')
 
   const handleUpdate = async (id) => {
     try {
-      const response = await axios.put(`http://192.168.11.203:4000/api/user/upd/${1}`, {
+      const response = await axios.put(`${APP_API_URL}/owner/upd/${ownerid}`, {
         FirstName,
         lastName,
         email,
+        image
       });
 
       if (response.status === 200) {
+        setEmail(response.data.email)
+        setFirstName(response.data.FirstName)
+        setLastName(response.data.lastName)
+        console.log("updated",response.data);
         Alert.alert('Success', 'Profile updated successfully');
+        navigation.navigate("Profile")
       } else {
         Alert.alert('Error', 'Failed to update profile');
       }
@@ -30,19 +41,56 @@ const EditProfile = () => {
       Alert.alert('Error', 'An error occurred while updating the profile');
     }
   };
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
+    console.log(result);
+    setImage(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+  const handleCameraLaunch = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+
+
+  
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <View style={styles.headerBackground}>
-          {/* <Avatar
-            size="xlarge"
-            rounded
-            source={{ uri: 'https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?size=338&ext=jpg&ga=GA1.1.1141335507.1718841600&semt=ais_user' }} 
-            containerStyle={styles.avatar}
-          >
-            <Feather name="camera" size={24} color="black" />
-          </Avatar> */}
+        <TouchableOpacity 
+
+onPress={pickImage}
+   >
+            <Image 
+source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s' }}
+style={styles.avatar} 
+
+/>
+<Button title="Camera" onPress={async () => {
+              handleCameraLaunch(true);
+          }}  />
+</TouchableOpacity> 
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>FirstName</Text>
@@ -107,8 +155,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   avatar: {
-    marginTop: 40,
-    marginBottom: 20,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
   },
   inputContainer: {
     width: '100%',

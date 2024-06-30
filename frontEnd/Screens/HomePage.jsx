@@ -6,11 +6,33 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { APP_API_URL } from '../env';
+import SessionStorage from "react-native-session-storage";
+
 
 const HomePage = () => {
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+
+  const [properties, setProperties] = useState([]);
+  const [ownerProperties, setOwnerProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const role = await SessionStorage.getItem('userRole');
+      const userid = await SessionStorage.getItem('userid');
+      setUserRole(role);
+
+      if (role === 'owner') {
+        fetchOwnerProperties(userid);
+      } else {
+        fetchProperties();
+      }
+    };
+    
+    fetchUserData();
+  }, []);
+
 
   const fetchProperties = () => {
     fetch(`${APP_API_URL}/property/getAll`)
@@ -18,7 +40,6 @@ const HomePage = () => {
       .then((data) => {
         setProperties(data);
         setLoading(false);
-        console.log(data);
       })
       .catch((error) => {
         console.error('Error fetching properties:', error);
@@ -26,12 +47,21 @@ const HomePage = () => {
       });
   };
 
-  useEffect(() => {
-    fetchProperties();
-  }, []);
+  const fetchOwnerProperties = (userid) => {
+    fetch(`${APP_API_URL}/property/getAllByOwner/${userid}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setOwnerProperties(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching owner properties:', error);
+        setLoading(false);
+      });
+  };
 
   const navigateToCategory = (category) => {
-    navigation.navigate('FilteredProperties', { category });
+    navigation.navigate('FilteredProperties', {category });
   };
 
   if (loading) {
@@ -41,6 +71,8 @@ const HomePage = () => {
       </View>
     );
   }
+
+  const displayedProperties = userRole === 'owner' ? ownerProperties : properties;
 
   return (
     <ScrollView style={styles.container}>
@@ -74,41 +106,46 @@ const HomePage = () => {
       </View>
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
-          <Text style={styles.sectionTitle}>Top Guest Houses</Text>
+          <Text style={styles.sectionTitle}>{userRole === 'owner' ? 'Your Properties' : 'Top Guest Houses'}</Text>
           <TouchableOpacity onPress={() => navigation.navigate('AllProperties')}>
             <Text style={styles.seeAllText}>See All</Text>
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {properties.slice(0, 5).map((property) => (
-            <View key={property.id} style={styles.tripItem}>
+          {displayedProperties.slice(0, 5).map((property) => (
+            <View key={property.id} style={styles.tripItem} >
+              <TouchableOpacity onPress={()=>navigation.navigate('ProductDetails',{propertyid:property.id})}>
+
+              
               <Text style={styles.tripTitle}>{property.Name}</Text>
-              <Image style={styles.tripImage} source={{ uri: property.image }} />
+              <Image style={styles.tripImage} source={{ uri: property.image }}  />
               <Text style={styles.tripLocation}><MaterialIcons name="location-pin" size={18} color="grey" />{property.location}</Text>
-              <Text style={styles.tripPrice}>dt {property.Price} / Visit        <Ionicons name="heart-outline" size={20} color="#000" style={styles.headerIcon} /></Text>
+              <Text style={styles.tripPrice}>dt {property.Price} / Visit <Ionicons name="heart-outline" size={20} color="#000" style={styles.headerIcon} /></Text>
+              </TouchableOpacity>
             </View>
           ))}
         </ScrollView>
       </View>
-      <View style={styles.houseSection}>
-        <View style={styles.tripsHeader}>
-          <Text style={styles.TopTitle}>Houses</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('AllProperties')}>
-            <Text style={styles.seeAllText}>See All</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView>
-          {properties.slice(0, 5).map((property) => (
-            <View key={property.id} style={styles.houseItem}>
-              <Image style={styles.houseImage} source={{ uri: property.image }} />
-              <View style={styles.houseInfo}>
-                <Text style={styles.houseTitle}>{property.Name}</Text>
-                <Text style={styles.houseLocation}><Ionicons name="location-outline" size={14} color="grey" /> {property.location}</Text>
+      {userRole !== 'owner' && (
+        <View style={styles.houseSection}>
+          <View style={styles.tripsHeader}>
+            <Text style={styles.sectionTitle}>Top Houses</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('AllProperties')}><Text style={styles.seeAllText}>See All</Text></TouchableOpacity>
+          </View>
+          <ScrollView>
+            {properties.map((property) => (
+              <View key={property.id} style={styles.tripItem}>
+                <TouchableOpacity onPress={()=>navigation.navigate('ProductDetails',{propertyid:property.id})}>
+
+                <Image style={styles.tripImage} source={{ uri: property.image }} />
+                <Text style={styles.tripTitle}>{property.Name}</Text>
+                <Text style={styles.tripPrice}>dt {property.Price} / Visit <Ionicons name="heart-outline" size={20} color="#000" style={styles.headerIcon} /></Text>
+                </TouchableOpacity>
               </View>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
+            ))}
+          </ScrollView>
+        </View>
+      )}
     </ScrollView>
   );
 };

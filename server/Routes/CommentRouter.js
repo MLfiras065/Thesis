@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { getAllComments, createComment, updateComment, deleteComment } = require('../Controllers/comments');
+const { getComments, addComment, updateComment, removeComment } = require('../Controllers/comments');
 
-router.get('/getAll', getAllComments);
-
-router.post('/post', createComment);
-
+router.get('/getAll/:propertyId', getComments);
+router.post('/post/:userId/:idProperty', addComment);
 router.put('/update/:id', updateComment);
-
-router.delete('/delete/:id', deleteComment);
+router.delete('/delete/:id', removeComment);
 
 module.exports = router;

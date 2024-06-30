@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Profile from './Profile';
-import Chat from './Chat';
+// import Chat from './Chat';
 import WishList from './WishList';
 import { AntDesign } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
@@ -10,8 +10,11 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import HomePage from './HomePage';
+import SessionStorage from 'react-native-session-storage';
+
 const Tab = createBottomTabNavigator();
 const BottomNavigation=()=>{
+  const email=SessionStorage.getItem('email')
   const navigation = useNavigation()
 const  onPressHome=()=>navigation.navigate("HomePage",{screen:"HomePage"})
     return (
@@ -31,16 +34,16 @@ const  onPressHome=()=>navigation.navigate("HomePage",{screen:"HomePage"})
                 <EvilIcons name="heart" size={34} color="black" />
               ),
             }}/>
-          <Tab.Screen name="Chat" component={Chat}
+          {/* <Tab.Screen name="Chat" component={Chat}
             options={{
               
               tabBarIcon: () => (
                 <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
               
               ),
-            }} />
+            }} /> */}
         
-          <Tab.Screen name="Profile" component={Profile}
+          <Tab.Screen name="Profile" component={Profile} 
               options={{
                 
                 tabBarIcon: () => (

@@ -1,55 +1,98 @@
+import React ,{useState,useEffect}from 'react'
 import { StyleSheet,View, Text, TextInput, Button,Image, ScrollView ,TouchableOpacity, KeyboardAvoidingView} from 'react-native'
-import React ,{useState,}from 'react'
 import { Formik } from 'formik'
 import axios from "axios"
 import { APP_API_URL } from '../env'
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useRoute } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+
 const SignUp = () => {
-    const navigation = useNavigation()
-    const [image ,setImage] = useState("");
-    const [FirstName, setFirstName] = useState("");
-    const [LastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [Password, setPassword] = useState("");
-    const [gender, setGender] = useState("");
-    const [DateOfBirth, setDateOfBirth] = useState("");
-    const [CINImage, setCINImage] = useState("");
+  const route=useRoute()
+  const { showCINImage } = route.params;
+  const navigation = useNavigation()
+  const [image,setImage]=useState(null)
+  const [FirstName, setFirstName] = useState("");
+  const [LastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+  const [gender, setGender] = useState("");
+  const [DateOfBirth, setDateOfBirth] = useState("");
+  const [CINImage, setCINImage] = useState("");
 
   
-    const SignUp = (
-      image, 
+  const SignUp = async (
+    image,
+    FirstName,
+    LastName,
+    email,
+    Password,
+    DateOfBirth,
+    gender,
+    CINImage,
+    // isOwner
+  ) => {
+    if (!image || !FirstName || !LastName || !email || !Password || !DateOfBirth || !gender||!CINImage) {
+      alert('Please enter your data');
+      return;
+    }
+
+  
+
+    const data = {
+      image,
       FirstName,
       LastName,
       email,
       Password,
       DateOfBirth,
       gender,
-    CINImage
-    ) => {
-      axios
-        .post(`${APP_API_URL}/owner/reg`, {
-          image:image,
-          FirstName:FirstName,
-          LastName:LastName,
-          email:email,
-          Password:Password,
-          DateOfBirth:DateOfBirth,
-          gender:gender,
-         CINImage:CINImage
-        })
-        .then((res) => {
-          alert("signup");
-          navigation.navigate('Login',{screen:"Login"})
-          console.log("sign", res.data);
-        })
-        .catch((error) => {
-          console.log( error);
-        });
+      CINImage
     };
+
   
+    try {
+      const res = await axios.post(
+        `${APP_API_URL}/owner/reg`,
+        data
+      );
+      alert('Signup successful');
+      navigation.navigate('Login', { screen: 'Login' });
+      console.log('Signup:', res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
   
+      console.log(result);
+      setImage(result);
+  
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    };
+    const handleCameraLaunch = async () => {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      console.log(result);
+  
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    };
   
   
     const handleSignup = () => {
@@ -61,7 +104,8 @@ const SignUp = () => {
         Password,
         DateOfBirth,
         gender,
-        CINImage
+        CINImage,
+       
       );
     };
   
@@ -80,14 +124,21 @@ const SignUp = () => {
              <View>
    <TouchableOpacity 
 
-
+onPress={pickImage}
    >
             <Image 
-source={{ uri: 'https://c4.wallpaperflare.com/wallpaper/365/244/884/uchiha-itachi-naruto-shippuuden-anbu-silhouette-wallpaper-preview.jpg' }}
+source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s' }}
 style={styles.profimges} 
 
 />
+<Button title="Camera" onPress={async () => {
+              handleCameraLaunch(true);
+          }}  />
 </TouchableOpacity> 
+<View>
+  
+             
+                </View>
              </View>
              <View>
                <Text style={styles.label}>FirstName</Text>
@@ -187,29 +238,35 @@ style={styles.profimges}
                  </View>
                </View>
              </View>
-             <Text style={styles.label}>CIN Image</Text>
-             <View>
-               <View style={styles.inputWrapper(touched.CINImage ? 'blue' : 'gray')}>
-                 <MaterialCommunityIcons
-                   name="lock-outline"
-                   size={20}
-                   color={'gray'}
-                 />
-                 <View style={{ marginLeft: 5 }}>
-                   <TextInput
-                     onChangeText={(e)=>setCINImage(e)}
-                    // //  value={values.CINImage}
-                     placeholder="CINImage"
-                     
-                   />
-                 </View>
-               </View>
-             </View>
+             {showCINImage && (
+                <View>
+                  <Text style={styles.label}>CIN Image</Text>
+                  <View style={styles.inputWrapper(touched.CINImage ? 'blue' : 'gray')}>
+                    <MaterialCommunityIcons
+                      name="lock-outline"
+                      size={20}
+                      color={'gray'}
+                    />
+                    <View style={{ marginLeft: 5 }}>
+                      <TextInput
+                        onChangeText={(e) => setCINImage(e)}
+                        placeholder="CINImage"
+                      />
+                    </View>
+                  </View>
+                </View>
+              )}
              <View  style={{marginTop:20}}>
-             <Button title="SignUp" 
-             onPress={handleSignup}
-              style={{marginTop:20,borderRadius:12,borderWidth:1}} />
-
+             {/* <Button title="SignUp" 
+             onPress={()=>handleSignup()}
+              style={{marginTop:20,borderRadius:12,borderWidth:1}} /> */}
+ {showCINImage && (
+                  <Button
+                    title="Sign Up as Owner"
+                    onPress={() => handleSignup()}
+                    style={{ marginTop: 20, borderRadius: 12, borderWidth: 1 }}
+                  />
+                )}
              </View>
           </View>
              )}
@@ -265,10 +322,23 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
   },
+  camera: {
+    height: 800,
+    justifyContent: 'flex-end',
+  },
   buttonContainer: {
-    marginTop: 20,
-    borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#007BFF',
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    margin: 20,
+  },
+  button: {
+    flex: 0.1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    color: 'white',
   },
 });

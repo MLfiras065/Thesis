@@ -1,21 +1,49 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Button, StyleSheet, Alert,Text } from 'react-native';
 import axios from 'axios';
 import { APP_API_URL } from '../env';
+import SessionStorage from 'react-native-session-storage';
 
-const AddComment = ({ paramkey, navigation }) => {
+const AddComment = ({ propertyId }) => {
   const [content, setContent] = useState("");
+  const [userId, setUserId] = useState(null);
+  const id =  SessionStorage.getItem('userid');
+  console.log('Fetched user ID:', id);
 
-  const handleAddComment = () => {
-    axios.post(`${APP_API_URL}/comments/post`, { content })
-      .then(() => {
-        setContent("");
-        navigation.goBack(); // Refresh or navigate back after adding a comment
-      })
-      .catch(err => {
+  // useEffect(() => {
+  //   const fetchUserId = async () => {
+  //     try {
+  //       setUserId(id);
+  //     } catch (error) {
+  //       console.error('Error fetching user ID:', error);
+  //     }
+  //   };
+  //   fetchUserId();
+  // }, []);
+
+  const handleAddComment = async () => {
+    console.log("UserID:", id);
+    console.log("PropertyID:", propertyId);
+    console.log("Content:", content);
+
+    if (id && propertyId && content.trim()) {
+      try {
+        const res = await axios.post(`${APP_API_URL}/comment/post/${id}/${propertyId}`, { content, userId:id, idProperty: propertyId });
+        setContent('');  // Reset the content input field
+        Alert.alert('Comment added successfully');
+        console.log(res.data, "comment");
+      } catch (err) {
         console.error(err);
-      });
+        Alert.alert('Error adding comment');
+      }
+    } else {
+      Alert.alert('Please enter a comment');
+    }
   };
+
+  // if (userId === null) {
+  //   return <View><Text>Loading...</Text></View>; 
+  // }
 
   return (
     <View style={styles.container}>

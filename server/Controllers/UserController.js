@@ -42,14 +42,18 @@ const getUserEmail=async(req,res)=>{
   }
 }
 const login=(req,res)=>{
+  
   console.log(req.body,"req.body");
     User.findOne({ where: { email: req.params.email } }).then((user) => {
+      // if(!user){
+      //   return { success: false, message: 'User not found' }
+      // }
       if(user){
                 bcrypt
           .compare(req.body.Password,user.Password)
           .then((passCheck) => {
             if (!passCheck) {
-              return res.status(400).json({ message: "Password wrong" });
+              return res.status(400).json({ message: "invalid user " });
             }
             const token = jwt.sign(
               {
@@ -59,8 +63,7 @@ const login=(req,res)=>{
               "RandomToken",
            
             );
-            
-            res.status(200).json({ email: user.email,token:token,id:user.id });
+            return   res.status(200).json({ email: user.email,token:token,id:user.id });
           })
           .catch((err) => {
             console.log(err);
@@ -85,4 +88,27 @@ const updateUser=async(req,res)=>{
       console.log(err);
     }
 }
-module.exports={getUser,register,login,updateUser,getUserEmail}
+const markAsPayed= async (req, res) => {
+  
+
+  try {
+  
+    const client = await User.findOne({
+      where:{email:req.params.id}
+    });
+
+    if (!client) {
+      return res.status(404).json({ message: 'client not found' });
+    }
+
+    
+    client.payed = 1;
+    await client.save();
+
+    res.status(200).json({ message: 'client marked as payed', client });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+}
+module.exports={getUser,register,login,updateUser,getUserEmail,markAsPayed}

@@ -3,15 +3,20 @@ import axios from 'axios';
 import { APP_API_URL } from '../env';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import AddComment from './AddComment';
+import { useNavigation,useRoute } from '@react-navigation/native';
 
-const CommentCard = ({ navigation, route }) => {
-  const paramkey = route.params.post;
+
+const CommentCard = () => {
+  // const navigation=useNavigation()
+  const route = useRoute()
+  const propertyId = route.params?.propertyid;
   const [comments, setComments] = useState([]);
-
+  const [FirstName,setFirstName] = useState("")
   const getComments = () => {
-    axios.get(`${APP_API_URL}/comments/getAll`)
+    axios.get(`${APP_API_URL}/comment/getAll/${propertyId}`)
       .then(res => {
         setComments(res.data);
+        console.log('res',res.data[0].user.FirstName);
       })
       .catch(err => {
         console.error(err);
@@ -33,6 +38,7 @@ const CommentCard = ({ navigation, route }) => {
           <View style={styles.container}>
             <View style={styles.content}>
               <View style={styles.contentHeader}>
+                <Text style={styles.name}> {item.user.FirstName}</Text>
                 <Text style={styles.name}>{item.content}</Text>
                 <Text style={styles.time}>9:58 am</Text>
               </View>
@@ -40,7 +46,7 @@ const CommentCard = ({ navigation, route }) => {
           </View>
         )}
       />
-      <AddComment paramkey={paramkey} navigation={navigation} />
+      {/* <AddComment  /> */}
       
     </View>
   );

@@ -1,60 +1,52 @@
 const Comment = require("../database/models/comments");
+const User = require("../database/models/User");
+const Property = require("../database/models/property");
 
+const addComment = async (req, res) => {
+  try {
+    const { userId, idProperty, content } = req.body;
+    const comment = await Comment.create({ userId, idProperty, content });
+    res.status(201).json(comment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-function getAllComments(req, res) {
-  Comment.findAll()
-    .then(comments => res.json(comments))
-    .catch(error => {
-      console.error('Error fetching comments:', error);
-      res.status(500).json({ message: 'Internal server error' });
+const getComments = async (req, res) => {
+  try {
+    const { propertyId } = req.params;
+    const comments = await Comment.findAll({
+      where: { idProperty: propertyId },
+      include: [
+        { model: User, as: 'user' },
+        { model: Property ,as:"property"}
+      ]
     });
-}
+    res.status(200).json(comments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
+const removeComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Comment.destroy({ where: { idcomment: id } });
+    res.status(200).json({ message: "comment removed" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-function createComment(req, res) {
-  const { content } = req.body;
+const updateComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { content } = req.body;
+    await Comment.update({ content }, { where: { idcomment: id } });
+    res.status(200).json({ message: "comment updated" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-  Comment.create({ content })
-    .then(newComment => res.status(201).json(newComment))
-    .catch(error => {
-      console.error('Error creating comment:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    });
-}
-
-
-function updateComment(req, res) {
-  const { id } = req.params;
-  const { content } = req.body;
-
-  Comment.update({ content }, { where: { id } })
-    .then(([rowsUpdated]) => {
-      if (rowsUpdated === 0) {
-        return res.status(404).json({ message: 'Comment not found' });
-      }
-      res.json({ message: 'Comment updated successfully' });
-    })
-    .catch(error => {
-      console.error('Error updating comment:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    });
-}
-
-
-function deleteComment(req, res) {
-  const { id } = req.params;
-
-  Comment.destroy({ where: { id } })
-    .then(deleted => {
-      if (!deleted) {
-        return res.status(404).json({ message: 'Comment not found' });
-      }
-      res.json({ message: 'Comment deleted successfully' });
-    })
-    .catch(error => {
-      console.error('Error deleting comment:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    });
-}
-
-module.exports = { getAllComments, createComment, updateComment, deleteComment };
+module.exports = { getComments, addComment, updateComment, removeComment };
