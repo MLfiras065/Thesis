@@ -45,9 +45,9 @@ getEmail()
     <View style={styles.container}>
       <View style={styles.profileHeader}>
         <Image source={{ uri: item.image }} style={styles.avatar} />
-        <Text style={styles.name}>firstname{item.FirstName} </Text>
-        <Text style={styles.email}>last name{item.LastName}</Text>
-        <Text style={styles.phone}>email{item.email}</Text>
+        <Text style={styles.name}>{item.FirstName} </Text>
+        <Text style={styles.email}>{item.LastName}</Text>
+        <Text style={styles.phone}>{item.email}</Text>
       </View>
       <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('EditProfile',{item:item})}>
         <Text style={styles.optionText}>Edit profile information</Text>

@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   lottie: {
-    width: width * 0.9,
+    width: width * 1,
     height: width,
   },
   doneButton: {

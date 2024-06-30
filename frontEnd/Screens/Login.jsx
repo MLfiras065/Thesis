@@ -4,7 +4,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { APP_API_URL } from "../env";
 import SessionStorage from "react-native-session-storage";
-
 import axios from "axios";
 const Login = () => {
   const navigation = useNavigation();
@@ -25,7 +24,8 @@ const Login = () => {
 
       console.log(res.data);
       SessionStorage.setItem("email", email);
-      SessionStorage.setItem("ownerid", res.data.ownerid);
+      SessionStorage.setItem("ownerid", res.data.id);
+      console.log(res.data.id);
       alert("Login successful");
 
       navigation.navigate("Navigation", { screen: "BottomNavigation" });
@@ -43,7 +43,7 @@ const Login = () => {
       SessionStorage.setItem("userid", resUser.data.userid);
       alert("Login successful");
 
-      navigation.navigate("Navigation", { screen: "BottomNavigation" });
+      navigation.navigate("Subscribe", { screen: "Subscribe" });
       
     } catch (error) {
       
