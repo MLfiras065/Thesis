@@ -5,40 +5,40 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#f9f9f9",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-    color: "#333",
-    textAlign: "center",
-  },
-  input: {
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 12,
-    paddingHorizontal: 8,
+  },propertyItem: {
     backgroundColor: "#fff",
-  },
-  tripImage: {
-    width: "100%",
-    height: 100,
     borderRadius: 10,
+    padding: 10,
     marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 1,
   },
-  tripTitle: {
+  propertyImage: {
+    width: 150,
+    height: 100,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  propertyDetails: {
+    flex: 1,
+  },
+  propertyTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 35,
   },
-  tripLocation: {
-    color: "#757575",
-    marginBottom: 5,
-  },
-  tripPrice: {
+  propertyPrice: {
     color: "#00796b",
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   removeButton: {
     backgroundColor: "#ff6b6b",

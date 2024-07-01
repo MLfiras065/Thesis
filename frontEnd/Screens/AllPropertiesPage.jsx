@@ -6,12 +6,17 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { APP_API_URL } from "../env";
+import { useNavigation } from "@react-navigation/native";
+import SessionStorage from "react-native-session-storage";
 
 const AllPropertiesPage = () => {
+  const navigation = useNavigation();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const userid = SessionStorage.getItem("userid");
 
   const fetchProperties = () => {
     fetch(`${APP_API_URL}/property/getAll`)
@@ -42,11 +47,19 @@ const AllPropertiesPage = () => {
   return (
     <ScrollView style={styles.container}>
       {properties.map((property) => (
+        <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("ProductDetails", {
+            propertyid: property.id,
+            userid: userid,
+          })}
+        >
+
         <View key={property.id} style={styles.propertyItem}>
           <Image
             style={styles.propertyImage}
             source={{ uri: property.image }}
-          />
+            />
           <View style={styles.propertyDetails}>
             <Text style={styles.propertyTitle}>{property.Name}</Text>
             <Text style={styles.propertyPrice}>
@@ -54,6 +67,7 @@ const AllPropertiesPage = () => {
             </Text>
           </View>
         </View>
+            </TouchableOpacity>
       ))}
     </ScrollView>
   );

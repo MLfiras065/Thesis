@@ -19,6 +19,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
 import AddComment from './AddComment';
 import CommentCard from './CommentCard';
+import Bottomsheet from "../Component/Bottomsheet";
 
 
 
@@ -52,13 +53,13 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
       const { error } = await presentPaymentSheet();
 
       if (error) {
-        Alert.alert(`Error code: ${error.code}`, error.message);
+      alert(`Error code: ${error.code}`, error.message);
         console.error("Error presenting payment sheet:", error);
       } else {
         axios
-          .get(`${APP_API_URL}/user/payed/${userId}`)
+          .get(`${APP_API_URL}/owner/booked/${userId}`)
           .then(() => {
-            Alert.alert(
+          alert(
               "Payment Successful",
               "Your payment has been processed successfully!"
             );
@@ -86,7 +87,8 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
 
     if (propertyId) {
       getProperty(propertyId);
-    }
+    };
+fetchPaymentSheetParams()
   }, [propertyId]);
 
   const openImageModal = (img) => {
@@ -222,8 +224,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
         </Modal>
       </View>
     </ScrollView>
-        <CommentCard />
-<AddComment propertyId={propertyId} userId={userId} />
+     <Bottomsheet/>
     </View>
   );
 };

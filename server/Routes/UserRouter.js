@@ -6,6 +6,6 @@ route.get('/get',getUser)
 route.get('/:email',getUserEmail)
 route.post('/reg',register)
 route.post("/log/:email",login)
-route.put("/upd/:id",autoriser,updateUser)
+route.put("/upd/:id",updateUser)
 route.get("/payed/:id",markAsPayed)
 module.exports=route

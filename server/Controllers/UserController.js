@@ -31,14 +31,17 @@ user.save().then((result)=>{
 } 
 
 const getUserEmail=async(req,res)=>{
-  console.log("test");
+  console.log("email",req.params.email);
+  
   try {
     const userEmail=await User.findOne({
       where:{email:req.params.email}
+      
     })
     res.json(userEmail)
   } catch (err) {
     console.log(err)
+    res.send("error")
   }
 }
 const login=(req,res)=>{
@@ -73,11 +76,7 @@ const updateUser=async(req,res)=>{
   const  updeted=await User.update({image:req.body.image,
     FirstName:req.body.FirstName,
     LastName:req.body.LastName,
-    username:req.body.username,
     email:req.body.email,
-    DateOfBirth:req.body.DateOfBirth,
-    gender:req.body.gender,
-
     
 },
     { where: { id: req.params.id } })
