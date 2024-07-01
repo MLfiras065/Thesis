@@ -208,38 +208,31 @@ setLoading(false);
           <View style={styles.tripsHeader}>
             <Text style={styles.sectionTitle}>Top Houses</Text>
             <TouchableOpacity
+            //  onPress={() =>
+            //   navigation.navigate("ProductDetails", {
+            //     propertyid: property.id,
+            //   })
+            // }
               onPress={() => navigation.navigate("AllProperties")}
             >
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
           <ScrollView>
-            {properties.map((property) => (
-              <View key={property.id} style={styles.tripItem}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("ProductDetails", {
-                      propertyid: property.id,
-                    })
-                  }
-                >
-                  <Image
-                    style={styles.tripImage}
-                    source={{ uri: property.image }}
-                  />
-                  <Text style={styles.tripTitle}>{property.Name}</Text>
-                  <Text style={styles.tripPrice}>
-                    dt {property.Price} / Visit{" "}
-                    <Ionicons
-                      name="heart-outline"
-                      size={20}
-                      color="#000"
-                      style={styles.headerIcon}
-                    />
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ))}
+          {properties.map((property) => (
+        <View key={property.id} style={styles.propertyItem}>
+          <Image
+            style={styles.propertyImage}
+            source={{ uri: property.image }}
+          />
+          <View style={styles.propertyDetails}>
+            <Text style={styles.propertyTitle}>{property.Name}</Text>
+            <Text style={styles.propertyPrice}>
+              dt {property.Price} / Visit
+            </Text>
+          </View>
+        </View>
+      ))}
           </ScrollView>
         </View>
       )}
@@ -381,6 +374,41 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontSize: 18,
     fontWeight: "bold",
+  },
+  propertyItem: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  propertyImage: {
+    width: 150,
+    height: 100,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  propertyDetails: {
+    flex: 1,
+  },
+  propertyTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 35,
+  },
+  propertyPrice: {
+    color: "#00796b",
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

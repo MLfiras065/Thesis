@@ -6,19 +6,22 @@ import {
   Alert,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import axios from "axios";
-import { Ionicons } from "@expo/vector-icons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AntDesign } from '@expo/vector-icons';
+
 import styles from "./styles.jsx";
 import { APP_API_URL } from "../env.js";
 import SessionStorage from "react-native-session-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const Wishlist = () => {
+  const navigation = useNavigation();
   const userid = SessionStorage.getItem("userid");
   const [wishlist, setWishlist] = useState([]);
   const [upd, setUpd] = useState(false);
-
+  // const userid = SessionStorage.getItem("userid");
   const fetchWishlist = async () => {
     try {
       const response = await axios.get(`${APP_API_URL}/wishlist/get/${userid}`);
@@ -57,34 +60,39 @@ const Wishlist = () => {
   };
 
   return (
+    <ScrollView>
+
     <View>
+      <TouchableOpacity onPress={() =>
+          navigation.navigate("ProductDetails", {
+            propertyid: property.id,
+            userid: userid,
+          })}>
+
       <FlatList
         data={wishlist}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View>
-            <Text style={styles.tripTitle}>{item.Name}</Text>
-            <Image style={styles.tripImage} source={{ uri: item.image }} />
-            <Text style={styles.tripLocation}>
-              <MaterialIcons name="location-pin" size={18} color="grey" />
-              {item.location}
+          <View key={item.id} style={styles.propertyItem}>
+          <Image
+            style={styles.propertyImage}
+            source={{ uri: item.image }}
+            />
+          <View style={styles.propertyDetails}>
+            <Text style={styles.propertyTitle}>{item.Name}</Text>
+            <Text style={styles.propertyPrice}>
+              dt {item.Price} / Visit
             </Text>
-            <Text style={styles.tripPrice}>
-              dt {item.Price} / Visit{" "}
-              <Ionicons
-                name="heart-outline"
-                size={20}
-                color="#000"
-                style={styles.headerIcon}
-              />
-            </Text>
-            <TouchableOpacity onPress={() => confirmRemove(item.id)}>
-              <Text>Remove</Text>
-            </TouchableOpacity>
           </View>
+        <TouchableOpacity onPress={() => confirmRemove(item.id)}>
+        <AntDesign name="delete" size={20} color="black" />
+            </TouchableOpacity>
+        </View>
         )}
-      />
+        />
+        </TouchableOpacity>
     </View>
+        </ScrollView>
   );
 };
 
