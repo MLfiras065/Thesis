@@ -1,22 +1,34 @@
-const chat = require("../database/models/Chat")
+const Chat = require("../database/models/Chat")
+const Owner = require('../database/models/Owner');
+const User = require('../database/models/User');
+const getMessages=async(req,res) =>{
+    try {
+        const { userId, ownerId } = req.params;
 
-exports.getMessages = (req,res) =>{
-    chat.findAll()
-    .then(messages=>{
-        res.json(messages)
-    })
-   .catch(error=>{
-    res.status(500).send(error.message)
-   })
+        const chats = await Chat.findAll({
+            where: {
+                userId,
+                ownerId
+            },
+            include: [
+                { model: Owner, as: 'Owner' },
+                { model: User, as: 'User' }
+            ]
+        });
+        res.status(200).json(chats);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }
+const addMessage=async(req,res)=>{
+    try {
+        const { userId, ownerId } = req.params;
+        const { message } = req.body;
 
-exports.postMessages= (req,res)=>{
-    const{user,message}=req.body
-    chat.create({user,message})
-    .then(newMessage=>{
-        res.status(201).json(newMessage)
-    })
-    .catch(error=>{
-        res.status(500).send(error.message)
-    })
+        const newChat = await Chat.create({ message, userId, ownerId });
+        res.status(201).json(newChat);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }
+module.exports={getMessages,addMessage}

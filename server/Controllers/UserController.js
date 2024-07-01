@@ -45,9 +45,7 @@ const login=(req,res)=>{
   
   console.log(req.body,"req.body");
     User.findOne({ where: { email: req.params.email } }).then((user) => {
-      // if(!user){
-      //   return { success: false, message: 'User not found' }
-      // }
+     
       if(user){
                 bcrypt
           .compare(req.body.Password,user.Password)
@@ -59,6 +57,7 @@ const login=(req,res)=>{
               {
                 id: user.id,
                 email: user.email,
+                
               },
               "RandomToken",
            

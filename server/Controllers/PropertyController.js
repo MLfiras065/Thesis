@@ -1,6 +1,8 @@
+const Owner = require("../database/models/Owner");
 const Property = require("../database/models/property");
 
 function getAllProperties(req, res) {
+
   Property.findAll()
     .then(properties => res.json(properties))
     .catch(error => {
@@ -27,10 +29,10 @@ function getProperty(req, res) {
 
 function createProperty(req, res) {
   const { Name, Price, image, description, category, Booked, rating, ownershpImg, extra, location } = req.body;
-  
+  const {ownerid}=req.params
   const extraString = Array.isArray(extra) ? extra.join(',') : extra;
 
-  Property.create({ Name, Price, image, description, category, Booked, rating, ownershpImg, extra: extraString, location })
+  Property.create({ Name, Price, image, description, category, Booked, rating, ownershpImg, extra: extraString, location,ownerid })
     .then(newProperty => res.status(201).json(newProperty))
     .catch(error => {
       console.error('Error creating property:', error);
@@ -41,7 +43,7 @@ function createProperty(req, res) {
 function updateProperty(req, res) {
   const { id } = req.params;
   const { Name, Price, image, description, category, Booked, rating, ownershpImg, extra, location } = req.body;
-
+  
   const extraString = Array.isArray(extra) ? extra.join(',') : extra;
 
   Property.update({ Name, Price, image, description, category, Booked, rating, ownershpImg, extra: extraString, location }, { where: { id } })
@@ -73,7 +75,7 @@ function deleteProperty(req, res) {
     });
 }
 const getOwnerProperty=async(req,res)=>{
-  const userPost=await Post.findAll({where:{ownerid:req.params.ownerid}})
+  const userPost=await Property.findAll({where:{ownerid:req.params.ownerid}})
   try {
       res.json(userPost)
   } catch (err) {
