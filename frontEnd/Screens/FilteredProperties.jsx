@@ -6,16 +6,19 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { APP_API_URL } from "../env";
+import SessionStorage from "react-native-session-storage";
 
 const FilteredProperties = () => {
+  const navigation = useNavigation();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const route = useRoute();
   const { category } = route.params;
-
+  const userid = SessionStorage.getItem("userid");
   const fetchProperties = () => {
     fetch(`${APP_API_URL}/property/getAll`)
       .then((response) => response.json())
@@ -47,11 +50,17 @@ const FilteredProperties = () => {
   return (
     <ScrollView style={styles.container}>
       {properties.map((property) => (
+        <TouchableOpacity onPress={() =>
+          navigation.navigate("ProductDetails", {
+            propertyid: property.id,
+            userid: userid,
+          })}>
+
         <View key={property.id} style={styles.propertyItem}>
           <Image
             style={styles.propertyImage}
             source={{ uri: property.image }}
-          />
+            />
           <View style={styles.propertyInfo}>
             <Text style={styles.propertyTitle}>{property.Name}</Text>
             <Text style={styles.propertyLocation}>{property.location}</Text>
@@ -60,6 +69,7 @@ const FilteredProperties = () => {
             </Text>
           </View>
         </View>
+            </TouchableOpacity>
       ))}
     </ScrollView>
   );

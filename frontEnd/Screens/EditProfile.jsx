@@ -31,14 +31,22 @@ const EditProfile = () => {
     const fetchOwnerId = async () => {
       const id = await SessionStorage.getItem("ownerid");
       const userid = await SessionStorage.getItem("userid");
+      
       setOwnerId(id);
-    };
+    }
+    const fetchuserId = async () => {
+
+      const userid = await SessionStorage.getItem("userid");
+      
+      setUserId(userid);
+    }
     fetchOwnerId();
+    fetchuserId()
   }, []);
 
   const handleUpdate = async () => {
     if (!ownerid) {
-      Alert.alert("Error", "Owner ID is not available");
+      alert("Error", "Owner ID is not available");
       return;
     }
 
@@ -51,19 +59,20 @@ const EditProfile = () => {
       });
 
       if (response.status === 200) {
+          SessionStorage.setItem('emailUser',email)
         setEmail(response.data.email);
         setFirstName(response.data.FirstName);
         setLastName(response.data.LastName);
-        setToken(response.data.Password)
+        setImage(response.data.image);
         console.log("Updated", response.data);
-        Alert.alert("Success", "Profile updated successfully");
+        alert("Success", "Profile updated successfully");
         navigation.navigate("Profile");
       } else {
-        Alert.alert("Error", "Failed to update profile");
+        alert("Error", "Failed to update profile");
       }
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", "An error occurred while updating the profile");
+      alert("Error", "An error occurred while updating the profile");
     }
   };
 
@@ -77,6 +86,7 @@ const EditProfile = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      console.log(result.assets[0]);
     }
   };
 

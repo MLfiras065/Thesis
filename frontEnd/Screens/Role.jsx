@@ -51,29 +51,32 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 28,
     textAlign: "center",
+    marginBottom:-50,
     marginVertical: 20,
   },
   image: {
     width: "80%",
     height: 200,
-    marginVertical: 20,
-    marginBottom: 100,
+    marginVertical: 90,
+    marginBottom: 300,
   },
   buttonContainer: {
+    marginTop:20,
     flex: 1,
     justifyContent: "flex-end",
-    width: "100%",
+    width: "90%",
   },
   button: {
-    backgroundColor: "#19A7CE",
-    borderRadius: 15,
+    
+    backgroundColor: "#008080",
+    borderRadius: 100,
     paddingVertical: 10,
-    marginVertical: 10,
+    marginVertical: 50,
     marginHorizontal: 20,
     alignItems: "center",
   },
   buttonText: {
-    fontSize: 28,
+    fontSize: 22,
     color: "white",
   },
 });

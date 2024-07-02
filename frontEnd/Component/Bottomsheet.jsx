@@ -49,7 +49,7 @@ const Bottomsheet= () => {
           </BottomSheetView>
         </BottomSheetModal>
       </View>
-    </BottomSheetModalProvider>
+     </BottomSheetModalProvider>
   );
 };
 export default Bottomsheet

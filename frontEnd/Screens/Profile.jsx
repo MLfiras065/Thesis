@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { Feather } from '@expo/vector-icons';
 import { APP_API_URL } from "../env";
 import SessionStorage from "react-native-session-storage";
 
@@ -22,8 +23,9 @@ function ProfileScreen() {
     try {
       const emailUser = SessionStorage.getItem("emailUser");
       const emailOwner = SessionStorage.getItem("emailOwner");
-      const ownerToken = SessionStorage.getItem("ownerToken");
-      const userToken = SessionStorage.getItem("userToken");
+      console.log("email",emailUser);
+      // const ownerToken = SessionStorage.getItem("ownerToken");
+      // const userToken = SessionStorage.getItem("userToken");
       if (emailOwner) {
         const res = await axios.get(`${APP_API_URL}/owner/${emailOwner}`);
         setItem(res.data);
@@ -31,8 +33,9 @@ function ProfileScreen() {
         console.log(res.data);
       } else if (emailUser) {
         const res = await axios.get(`${APP_API_URL}/user/${emailUser}`);
+        SessionStorage.getItem('emailUser')
         setItem(res.data);
-        setToken(res.data.Password)
+        // setToken(res.data.Password)
         console.log('profuser',res.data);
       } else {
         console.log("no email provided");
@@ -48,23 +51,28 @@ function ProfileScreen() {
   const toggleNotifications = () => {
     setIsNotificationsEnabled((previousState) => !previousState);
   };
+  const logout=()=>{
+    SessionStorage.clear('emailUser')
+    navigation.navigate("Login")
+  }
 
   const styles = createStyles(isDarkTheme);
   useEffect(() => {
     getEmail();
   }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
-        <Image source={{ uri: item.image }} style={styles.avatar} />
-        <Text style={styles.name}>firstname{item.FirstName} </Text>
-        <Text style={styles.email}>last name{item.LastName}</Text>
-        <Text style={styles.phone}>email{item.email}</Text>
+        <Image  source={{ uri: item?item.image :"" }} style={styles.avatar} />
+        <Text style={styles.name}>{item?item.FirstName :"" } </Text>
+        <Text style={styles.email}>{item?item.LastName :"" }</Text>
+        <Text style={styles.phone}>{item?item.email:''}</Text>
         
       </View>
       <TouchableOpacity
         style={styles.option}
-        onPress={() => navigation.navigate("EditProfile", { item: item,setToken:setToken, })}
+        onPress={() => navigation.navigate("EditProfile", { item: item })}
       >
         <Text style={styles.optionText}>Edit profile information</Text>
       </TouchableOpacity>
@@ -92,6 +100,9 @@ function ProfileScreen() {
       </TouchableOpacity>
       <TouchableOpacity style={styles.option}>
         <Text style={styles.optionText}>Privacy policy</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.option} onPress={logout}>
+      <Feather name="log-out" size={24} color="black" />
       </TouchableOpacity>
     </View>
   );
