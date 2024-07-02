@@ -214,7 +214,6 @@ const Photo = () => {
           </View>
         </View>
         <View style={{ marginVertical: 10 }}>
-          <Text>Add picture of yourself</Text>
           <TouchableOpacity activeOpacity={0.8} style={{ marginTop: 40, marginLeft: 'auto' }}>
             <AntDesign name="rightcircleo" size={24} color="#900C3F" style={{ alignSelf: 'center', marginTop: 20, marginRight: 20 }} />
           </TouchableOpacity>
