@@ -31,23 +31,24 @@ user.save().then((result)=>{
 } 
 
 const getUserEmail=async(req,res)=>{
-  console.log("test");
+  console.log("email",req.params.email);
+  
   try {
     const userEmail=await User.findOne({
       where:{email:req.params.email}
+      
     })
     res.json(userEmail)
   } catch (err) {
     console.log(err)
+    res.send("error")
   }
 }
 const login=(req,res)=>{
   
   console.log(req.body,"req.body");
     User.findOne({ where: { email: req.params.email } }).then((user) => {
-      // if(!user){
-      //   return { success: false, message: 'User not found' }
-      // }
+     
       if(user){
                 bcrypt
           .compare(req.body.Password,user.Password)
@@ -59,6 +60,7 @@ const login=(req,res)=>{
               {
                 id: user.id,
                 email: user.email,
+                
               },
               "RandomToken",
            
@@ -74,11 +76,7 @@ const updateUser=async(req,res)=>{
   const  updeted=await User.update({image:req.body.image,
     FirstName:req.body.FirstName,
     LastName:req.body.LastName,
-    username:req.body.username,
     email:req.body.email,
-    DateOfBirth:req.body.DateOfBirth,
-    gender:req.body.gender,
-
     
 },
     { where: { id: req.params.id } })

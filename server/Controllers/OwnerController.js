@@ -122,7 +122,7 @@ const updateOwner = async (req, res) => {
       FirstName: req.body.FirstName,
       LastName: req.body.LastName,
       email: req.body.email,
-  
+    
     },
     { where: { id: req.params.id } }
   );

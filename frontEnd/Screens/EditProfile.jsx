@@ -1,36 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert, Image, Button } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import SessionStorage from 'react-native-session-storage';
-import { APP_API_URL } from '../env';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Image,
+  Button,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import SessionStorage from "react-native-session-storage";
+import { APP_API_URL } from "../env";
 
 const EditProfile = () => {
   const route = useRoute();
+  const Password=route.params?.Password
   const navigation = useNavigation();
-  const [FirstName, setFirstName] = useState('');
-  const [email, setEmail] = useState('');
-  const [LastName, setLastName] = useState('');
-  const [image, setImage] = useState('');
+  const [FirstName, setFirstName] = useState("");
+  const [email, setEmail] = useState("");
+  const [LastName, setLastName] = useState("");
+  const [image, setImage] = useState("");
   const [ownerid, setOwnerId] = useState(null);
+  const [userid, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchOwnerId = async () => {
-      const id = await SessionStorage.getItem('ownerid');
+      const id = await SessionStorage.getItem("ownerid");
+      const userid = await SessionStorage.getItem("userid");
+      
       setOwnerId(id);
-    };
+    }
+    const fetchuserId = async () => {
+
+      const userid = await SessionStorage.getItem("userid");
+      
+      setUserId(userid);
+    }
     fetchOwnerId();
+    fetchuserId()
   }, []);
 
   const handleUpdate = async () => {
     if (!ownerid) {
-      Alert.alert('Error', 'Owner ID is not available');
+      alert("Error", "Owner ID is not available");
       return;
     }
 
     try {
-      const response = await axios.put(`${APP_API_URL}/owner/upd/${ownerid}`, {
+      const response = await axios.put(`${APP_API_URL}/user/upd/${userid}`, {
         FirstName,
         LastName,
         email,
@@ -38,18 +59,20 @@ const EditProfile = () => {
       });
 
       if (response.status === 200) {
+          SessionStorage.setItem('emailUser',email)
         setEmail(response.data.email);
         setFirstName(response.data.FirstName);
         setLastName(response.data.LastName);
-        console.log('Updated', response.data);
-        Alert.alert('Success', 'Profile updated successfully');
-        navigation.navigate('Profile');
+        setImage(response.data.image);
+        console.log("Updated", response.data);
+        alert("Success", "Profile updated successfully");
+        navigation.navigate("Profile");
       } else {
-        Alert.alert('Error', 'Failed to update profile');
+        alert("Error", "Failed to update profile");
       }
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'An error occurred while updating the profile');
+      alert("Error", "An error occurred while updating the profile");
     }
   };
 
@@ -63,6 +86,7 @@ const EditProfile = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      console.log(result.assets[0]);
     }
   };
 
@@ -79,13 +103,20 @@ const EditProfile = () => {
     }
   };
 
+
+
+  
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <View style={styles.headerBackground}>
           <TouchableOpacity onPress={pickImage}>
             <Image
-              source={{ uri: image || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s' }}
+              source={{
+                uri:
+                  image ||
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s",
+              }}
               style={styles.avatar}
             />
             <Button title="Camera" onPress={handleCameraLaunch} />
@@ -127,22 +158,22 @@ const EditProfile = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
-    alignItems: 'center',
+    backgroundColor: "#f0f0f0",
+    alignItems: "center",
     padding: 20,
   },
   headerBackground: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderBottomLeftRadius: 100,
     borderBottomRightRadius: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   avatar: {
     width: 100,
@@ -151,31 +182,31 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputContainer: {
-    width: '100%',
+    width: "100%",
     marginBottom: 20,
   },
   label: {
     marginBottom: 8,
-    color: '#000',
+    color: "#000",
     fontSize: 16,
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   updateButton: {
     marginTop: 20,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     paddingVertical: 10,
     paddingHorizontal: 40,
     borderRadius: 5,
   },
   updateButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
 });

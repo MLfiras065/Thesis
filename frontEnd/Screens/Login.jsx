@@ -7,10 +7,9 @@ import SessionStorage from "react-native-session-storage";
 import axios from "axios";
 const Login = () => {
   const navigation = useNavigation();
-
   const [email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  const [token, setToken] = useState("");
+  const [token,setToken]=useState('')
   const logIn = async (navigation) => {
     if (!email || !Password) {
       alert("Please enter both email and password");
@@ -18,14 +17,16 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post(`${APP_API_URL}/owner/log/${email}`, {
+      const res = await axios.post(`${APP_API_URL}/user/log/${email}`, {
         Password: Password,
       });
 
-      console.log(res.data);
-      SessionStorage.setItem("email", email);
+      console.log("data", res.data);
+      SessionStorage.setItem("emailOwner", email);
       SessionStorage.setItem("ownerid", res.data.id);
-      console.log(res.data.id);
+      SessionStorage.setItem("ownerToken", res.data.token);
+      console.log("ownerid", res.data.id);
+      console.log("ownertoken", res.data.token);
       alert("Login successful");
 
       navigation.navigate("Navigation", { screen: "BottomNavigation" });
@@ -33,25 +34,12 @@ const Login = () => {
       console.error(err);
       alert("Login failed. Please check your credentials and try again.");
     }
-    try {
-      const resUser = await axios.post(`${APP_API_URL}/user/log/${email}`, {
-        Password: Password,
-      });
-
-      console.log(resUser.data);
-      SessionStorage.setItem("email", email);
-      SessionStorage.setItem("userid", resUser.data.userid);
-      alert("Login successful");
-
-      navigation.navigate("Subscribe", { screen: "Subscribe" });
-      
-    } catch (error) {
-      
-    }
   };
+
   const handleLogIn = () => {
     logIn(navigation);
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.container}>
@@ -93,7 +81,9 @@ const Login = () => {
             <View style={{ marginTop: 30, borderRadius: 50 }}>
               <Button
                 title="Login"
-                onPress={handleLogIn}
+                onPress={() => {
+                  handleLogInUser(navigation);
+                }}
                 style={{ marginTop: 30, borderRadius: 80, borderWidth: 5 }}
               />
             </View>
@@ -109,7 +99,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-  
   },
   inputWrapper: (borderColor) => ({
     borderColor: borderColor,
