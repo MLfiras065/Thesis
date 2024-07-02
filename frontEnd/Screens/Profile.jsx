@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
+  RefreshControl,
   View,
   Text,
   Image,
   TouchableOpacity,
   Switch,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -14,18 +16,26 @@ import { APP_API_URL } from "../env";
 import SessionStorage from "react-native-session-storage";
 
 function ProfileScreen() {
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   const navigation = useNavigation();
   const [item, setItem] = useState([]);
+  const [email,setEmail]=useState(SessionStorage.getItem("emailUser"))
   const [token, setToken] = useState();
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
   const getEmail = async () => {
     try {
+      console.log("etest");
       const emailUser = SessionStorage.getItem("emailUser");
       const emailOwner = SessionStorage.getItem("emailOwner");
       console.log("email",emailUser);
-      // const ownerToken = SessionStorage.getItem("ownerToken");
-      // const userToken = SessionStorage.getItem("userToken");
       if (emailOwner) {
         const res = await axios.get(`${APP_API_URL}/owner/${emailOwner}`);
         setItem(res.data);
@@ -35,7 +45,6 @@ function ProfileScreen() {
         const res = await axios.get(`${APP_API_URL}/user/${emailUser}`);
         SessionStorage.getItem('emailUser')
         setItem(res.data);
-        // setToken(res.data.Password)
         console.log('profuser',res.data);
       } else {
         console.log("no email provided");
@@ -53,16 +62,21 @@ function ProfileScreen() {
   };
   const logout=()=>{
     SessionStorage.clear('emailUser')
-    navigation.navigate("Login")
+    navigation.navigate("Role")
   }
 
   const styles = createStyles(isDarkTheme);
   useEffect(() => {
     getEmail();
-  }, []);
+  }, [refreshing]);
 
   return (
     <View style={styles.container}>
+      <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+      >
       <View style={styles.profileHeader}>
         <Image  source={{ uri: item?item.image :"" }} style={styles.avatar} />
         <Text style={styles.name}>{item?item.FirstName :"" } </Text>
@@ -104,6 +118,7 @@ function ProfileScreen() {
       <TouchableOpacity style={styles.option} onPress={logout}>
       <Feather name="log-out" size={24} color="black" />
       </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }

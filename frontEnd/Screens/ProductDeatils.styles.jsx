@@ -77,7 +77,7 @@ export const styles = StyleSheet.create({
   },
   bookButtonText: {
     fontSize: 18,
-    color: "#fff",
+    // color: "#008080",
   },
   likeButton: {
     padding: 15,

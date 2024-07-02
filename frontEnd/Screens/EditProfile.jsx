@@ -66,7 +66,7 @@ const EditProfile = () => {
         setImage(response.data.image);
         console.log("Updated", response.data);
         alert("Success", "Profile updated successfully");
-        navigation.navigate("Profile");
+        navigation.goBack("Profile",{});
       } else {
         alert("Error", "Failed to update profile");
       }
@@ -119,7 +119,7 @@ const EditProfile = () => {
               }}
               style={styles.avatar}
             />
-            <Button title="Camera" onPress={handleCameraLaunch} />
+            <Button title="Camera" style={{backgroundColor:"#008080"}} onPress={handleCameraLaunch} />
           </TouchableOpacity>
         </View>
         <View style={styles.inputContainer}>
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     marginTop: 20,
-    backgroundColor: "#000",
+    backgroundColor: "#008080",
     paddingVertical: 10,
     paddingHorizontal: 40,
     borderRadius: 5,

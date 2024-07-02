@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import { View, TextInput, Button, StyleSheet, Alert,Text } from 'react-native';
 import axios from 'axios';
 import { APP_API_URL } from '../env';
@@ -6,20 +6,8 @@ import SessionStorage from 'react-native-session-storage';
 
 const AddComment = ({ propertyId }) => {
   const [content, setContent] = useState("");
-  const [userId, setUserId] = useState(null);
   const id =  SessionStorage.getItem('userid');
-  console.log('Fetched user ID:', id);
-
-  // useEffect(() => {
-  //   const fetchUserId = async () => {
-  //     try {
-  //       setUserId(id);
-  //     } catch (error) {
-  //       console.error('Error fetching user ID:', error);
-  //     }
-  //   };
-  //   fetchUserId();
-  // }, []);
+  console.log(' user ID:', id);
 
   const handleAddComment = async () => {
     console.log("UserID:", id);
@@ -29,7 +17,7 @@ const AddComment = ({ propertyId }) => {
     if (id && propertyId && content.trim()) {
       try {
         const res = await axios.post(`${APP_API_URL}/comment/post/${id}/${propertyId}`, { content, userId:id, idProperty: propertyId });
-        setContent('');  // Reset the content input field
+        setContent('')
         Alert.alert('Comment added successfully');
         console.log(res.data, "comment");
       } catch (err) {
@@ -39,12 +27,7 @@ const AddComment = ({ propertyId }) => {
     } else {
       Alert.alert('Please enter a comment');
     }
-  };
-
-  // if (userId === null) {
-  //   return <View><Text>Loading...</Text></View>; 
-  // }
-
+  }
   return (
     <View style={styles.container}>
       <TextInput
@@ -57,19 +40,35 @@ const AddComment = ({ propertyId }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     padding: 10,
+    backgroundColor: '#f8f9fa',
+    borderTopWidth: 1,
+    borderTopColor: '#ececec',
+    width: '100%',
+    flexDirection: 'column',
   },
   input: {
-    flex: 1,
-    borderColor: 'gray',
+    borderColor: '#ced4da',
     borderWidth: 1,
-    marginRight: 10,
-    padding: 5,
+    borderRadius: 8,
+    padding: 10,
+    backgroundColor: '#fff',
+    marginBottom: 10,
+    width: '100%',
+  },
+  button: {
+    backgroundColor: '#008080',
+    borderRadius: 8,
+    paddingVertical: 10,
+    alignItems: 'center',
+    width: '100%',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
-
 export default AddComment;
