@@ -208,11 +208,7 @@ setLoading(false);
           <View style={styles.tripsHeader}>
             <Text style={styles.sectionTitle}>Top Houses</Text>
             <TouchableOpacity
-            //  onPress={() =>
-            //   navigation.navigate("ProductDetails", {
-            //     propertyid: property.id,
-            //   })
-            // }
+             
               onPress={() => navigation.navigate("AllProperties")}
             >
               <Text style={styles.seeAllText}>See All</Text>
@@ -221,16 +217,27 @@ setLoading(false);
           <ScrollView>
           {properties.map((property) => (
         <View key={property.id} style={styles.propertyItem}>
+          <TouchableOpacity
+               onPress={() =>
+                navigation.navigate("ProductDetails", {
+                  propertyid: property.id,
+                  userid: userid,
+                })
+              }
+          >
+
           <Image
             style={styles.propertyImage}
             source={{ uri: property.image }}
-          />
+            />
           <View style={styles.propertyDetails}>
             <Text style={styles.propertyTitle}>{property.Name}</Text>
+            {/* <Text style={styles.ratingText}>⭐ {property.rating}</Text> */}
             <Text style={styles.propertyPrice}>
               dt {property.Price} / Visit
             </Text>
           </View>
+            </TouchableOpacity>
         </View>
       ))}
           </ScrollView>
@@ -250,6 +257,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
+  },
+  ratingText: {
+    fontSize: 16,
+    color: "#555",
   },
   locationText: {
     flex: 1,

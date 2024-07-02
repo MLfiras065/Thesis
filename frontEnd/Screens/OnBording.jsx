@@ -29,6 +29,7 @@ export default function OnboardingScreen() {
         },
       ]}
       onDone={handleDone}
+    
     />
   );
 }

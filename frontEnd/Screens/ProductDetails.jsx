@@ -222,9 +222,14 @@ fetchPaymentSheetParams()
             </View>
           </View>
         </Modal>
+     <Bottomsheet/>
       </View>
     </ScrollView>
-     <Bottomsheet/>
+     {/* <View>
+            <CommentCard />
+
+              </View>
+            <AddComment propertyId={propertyId} userId={userId} /> */}
     </View>
   );
 };

@@ -78,7 +78,7 @@ const SignUp = () => {
     try {
       const res = await axios.post(`${APP_API_URL}/owner/reg`, data);
       alert("Signup successful");
-      navigation.navigate("Login", { screen: "Login" });
+      navigation.goBack("TopTabNav");
       console.log("Signup:", res.data);
     } catch (error) {
       console.error(error);
@@ -120,7 +120,7 @@ const SignUp = () => {
     try {
       const res = await axios.post(`${APP_API_URL}/user/reg`, data);
       alert("Signup successful");
-      navigation.navigate("Login", { screen: "LoginUser" });
+      navigation.goBack("TopTabNav");
       console.log("Signup:", res.data);
     } catch (error) {
       console.error(error);
@@ -203,6 +203,7 @@ const SignUp = () => {
                   />
                   <Button
                     title="Camera"
+                    style={{backgroundColor:"#008080"}}
                     onPress={async () => {
                       handleCameraLaunch(true);
                     }}
@@ -351,7 +352,7 @@ const SignUp = () => {
                 <Button
                   title="SignUp"
                   onPress={handleSignupButtonClick}
-                  style={{ marginTop: 20, borderRadius: 12, borderWidth: 1 }}
+                  style={{ marginTop: 20, borderRadius: 12, borderWidth: 1,backgroundColor:"#008080" }}
                 />
               </View>
             </View>

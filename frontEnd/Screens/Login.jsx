@@ -84,7 +84,7 @@ const Login = () => {
                 onPress={() => {
                   handleLogInUser(navigation);
                 }}
-                style={{ marginTop: 30, borderRadius: 80, borderWidth: 5 }}
+                style={{ marginTop: 30, borderRadius: 80, borderWidth: 5 ,backgroundColor:"#008080"}}
               />
             </View>
           </View>
