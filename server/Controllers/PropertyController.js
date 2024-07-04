@@ -1,3 +1,4 @@
+
 const Owner = require("../database/models/Owner");
 const Property = require("../database/models/property");
 
@@ -39,14 +40,24 @@ function createProperty(req, res) {
   const extraString = Array.isArray(extra) ? extra.join(',') : extra;
 
   Property.create({ Name, Price, image, description, category, Booked, rating, ownershpImg, extra: extraString, location,ownerid })
-    .then(newProperty => res.status(201).json(newProperty))
+    .then(newProperty => {res.status(201).json(newProperty),console.log(newProperty.dataValues.image);})
     .catch(error => {
       console.error('Error creating property:', error);
       res.status(500).json({ message: 'Internal server error' });
     });
 }
+function addImages(req, res) {
+  console.log(req.body)
+ Property.update({...req.body},{where:{id:req.params.id}})
+   .then(images => {res.status(201).json(images)})
+   .catch(error => {
+     console.error('Error creating property:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   });
+}
 
 function updateProperty(req, res) {
+  console.log("update",req.body);
   const { id } = req.params;
   const { Name, Price, image, description, category, Booked, rating, ownershpImg, extra, location } = req.body;
 
@@ -89,4 +100,4 @@ const getOwnerProperty=async(req,res)=>{
   }
 }
 
-module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, getProperty,getOwnerProperty };
+module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, addImages,getProperty,getOwnerProperty };
