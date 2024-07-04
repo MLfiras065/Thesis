@@ -14,11 +14,11 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 
 const EditProfile = () => {
   const route = useRoute();
-  const Password=route.params?.Password
+  const Password = route.params?.Password;
   const navigation = useNavigation();
   const [FirstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,22 +26,19 @@ const EditProfile = () => {
   const [image, setImage] = useState("");
   const [ownerid, setOwnerId] = useState(null);
   const [userid, setUserId] = useState(null);
+  const [PhoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
     const fetchOwnerId = async () => {
       const id = await SessionStorage.getItem("ownerid");
-      const userid = await SessionStorage.getItem("userid");
-      
       setOwnerId(id);
-    }
-    const fetchuserId = async () => {
-
+    };
+    const fetchUserId = async () => {
       const userid = await SessionStorage.getItem("userid");
-      
       setUserId(userid);
-    }
+    };
     fetchOwnerId();
-    fetchuserId()
+    fetchUserId();
   }, []);
 
   const handleUpdate = async () => {
@@ -56,17 +53,19 @@ const EditProfile = () => {
         LastName,
         email,
         image,
+        PhoneNumber,
       });
 
       if (response.status === 200) {
-          SessionStorage.setItem('emailUser',email)
+        SessionStorage.setItem("emailUser", email);
         setEmail(response.data.email);
         setFirstName(response.data.FirstName);
         setLastName(response.data.LastName);
         setImage(response.data.image);
+        setPhoneNumber(response.data.PhoneNumber);
         console.log("Updated", response.data);
         alert("Success", "Profile updated successfully");
-        navigation.goBack("Profile",{});
+        navigation.goBack("Profile", {});
       } else {
         alert("Error", "Failed to update profile");
       }
@@ -102,6 +101,7 @@ const EditProfile = () => {
       setImage(result.assets[0].uri);
     }
   };
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -115,7 +115,11 @@ const EditProfile = () => {
               }}
               style={styles.avatar}
             />
-            <Button title="Camera" style={{backgroundColor:"#008080"}} onPress={handleCameraLaunch} />
+            <Button
+              title="img"
+              style={{ backgroundColor: "#008080" }}
+              onPress={handleCameraLaunch}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.inputContainer}>
@@ -141,6 +145,15 @@ const EditProfile = () => {
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Phone Number</Text>
+          <TextInput
+            style={styles.input}
+            value={PhoneNumber}
+            onChangeText={setPhoneNumber}
+            keyboardType="phone-pad"
           />
         </View>
         <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>

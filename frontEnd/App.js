@@ -23,8 +23,17 @@ import Subscribe from './Screens/Subscribe.jsx';
 import ProductDetails from './Screens/ProductDetails'; 
 import AllPropertiesPage from './Screens/AllPropertiesPage';  
 import FilteredProperties from './Screens/FilteredProperties.jsx';
-import Photo from './Screens/Owner/ImgPicker.jsx';
 import Bottomsheet from './Component/Bottomsheet.jsx';
+import add from "./Screens/Owner/Add.jsx"
+import Photo from './Screens/Owner/ImgPicker.jsx';
+import EditProfilee from './Screens/Owner/EditProfilee';
+import Profilee from './Screens/Owner/Profilee';
+import ProductsDetails from './Screens/Owner/ProductsDetails.jsx';
+
+
+
+
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -33,6 +42,7 @@ export default function App() {
     <Provider>
       <NavigationContainer>
         <Stack.Navigator >
+{/*        
           <Stack.Screen name="OnBording" component={OnBording} options={{ headerShown: false }}/>
           <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
           <Stack.Screen name="TopTabNav" component={TopTabNav} options={{ headerShown: false }}/>
@@ -52,9 +62,15 @@ export default function App() {
           <Stack.Screen name="EditProfile" component={EditProfile} /> 
           <Stack.Screen name="Chat" component={Chat} /> 
           <Stack.Screen name="AllChat" component={AllChats} />  
-          <Stack.Screen name="addImg" component={Photo} />
            <Stack.Screen name="Chats" component={Chats} /> 
-           <Stack.Screen name="bottom" component={Bottomsheet} /> 
+           <Stack.Screen name="bottom" component={Bottomsheet} />  */}
+
+        <Stack.Screen name="add" component={add} options={{ headerShown: false }}  />
+           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
+          {/* <Stack.Screen name="EditProfilee" component={EditProfilee} /> 
+          <Stack.Screen name="Profilee" component={Profilee} />  */}
+          {/* <Stack.Screen name="ProductsDetails" component={ProductsDetails} options={{ headerShown: false }}  /> */}
+           
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

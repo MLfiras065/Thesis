@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { APP_API_URL } from '../env';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import AddComment from './AddComment';
-import { useNavigation,useRoute } from '@react-navigation/native';
+import { RefreshControl,StyleSheet, Text, View, FlatList, ScrollView } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+
 
 
 const CommentCard = () => {
-  // const navigation=useNavigation()
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   const route = useRoute()
   const propertyId = route.params?.propertyid;
   const [comments, setComments] = useState([]);
-  const [FirstName,setFirstName] = useState("")
+
   const getComments = () => {
     axios.get(`${APP_API_URL}/comment/getAll/${propertyId}`)
       .then(res => {
@@ -28,7 +35,11 @@ const CommentCard = () => {
   }, []);
 
   return (
-    <View>
+    <ScrollView
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+    >
       <FlatList
         style={styles.root}
         data={comments}
@@ -36,55 +47,75 @@ const CommentCard = () => {
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.container}>
+            <ScrollView>
+
             <View style={styles.content}>
               <View style={styles.contentHeader}>
-                <Text style={styles.name}> {item.user.FirstName}</Text>
+                <Text style={styles.firstname}> {item.user.FirstName}</Text>
                 <Text style={styles.name}>{item.content}</Text>
                 <Text style={styles.time}>9:58 am</Text>
               </View>
             </View>
+            </ScrollView>
           </View>
         )}
-      />
-      {/* <AddComment  /> */}
-      
-    </View>
+      />    
+    </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   root: {
-    backgroundColor: '#ffffff',
-    marginTop: 10,
+    backgroundColor: '#f8f9fa',
+    padding: 10,
   },
   container: {
-    paddingLeft: 19,
-    paddingRight: 16,
-    paddingVertical: 12,
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+    marginBottom: 10,
   },
   content: {
-    marginLeft: 16,
     flex: 1,
+    marginLeft: 10,
   },
   contentHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 6,
   },
   separator: {
     height: 1,
-    backgroundColor: '#CCCCCC',
+    backgroundColor: '#ececec',
+    marginVertical: 10,
   },
   time: {
-    fontSize: 11,
-    color: '#808080',
+    fontSize: 12,
+    color: '#6c757d',
+    flex: 1,
+    textAlign: 'right',
   },
   name: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
+    color: '#212529',
+    textAlign: 'center',
+    flex: 2,
+  },
+  firstname: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#212529',
+    flex: 1,
+    textAlign: 'left',
   },
 });
-
 export default CommentCard;

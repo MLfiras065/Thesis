@@ -16,7 +16,7 @@ export default function OnboardingScreen() {
     <OnboardFlow
       pages={[
         {
-          title: "Welcome to my app",
+          title: "Welcome to TuniGo",
           subtitle: "you have the best places to book here ",
           imageUri:
             "https://media.istockphoto.com/id/1281244663/vector/happy-tourists-choosing-hotel-and-booking-room-online.jpg?s=612x612&w=0&k=20&c=zoapw5nusmW8lcnoyKjvlhtfvReSBQE6m8bVWlHRdEE=",
@@ -29,6 +29,7 @@ export default function OnboardingScreen() {
         },
       ]}
       onDone={handleDone}
+    
     />
   );
 }

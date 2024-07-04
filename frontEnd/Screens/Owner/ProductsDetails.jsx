@@ -10,20 +10,20 @@ import {
   ScrollView,
 } from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
-import { styles } from "./ProductDeatils.styles";
+import { styles } from "./ProductsDetails.styles";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
-import AddComment from './AddComment';
-import CommentCard from './CommentCard';
-import Bottomsheet from "../Component/Bottomsheet";
+// import AddComment from './AddComment';
+// import CommentCard from './CommentCard';
+import Bottomsheet from "../../Component/Bottomsheet";
 
 
 
-const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
+const ProductsDetails = ({  deleteProduct, switchView, isOwner }) => {
   const route = useRoute();
  
   const propertyId = route.params?.propertyid;
@@ -167,7 +167,7 @@ fetchPaymentSheetParams()
 
         <Text style={styles.description}>{property.description}</Text>
         
-        {/* {isOwner && (
+        {isOwner && (
           <View style={styles.buttonsContainer}>
             <Button
               title="Update Product"
@@ -178,7 +178,7 @@ fetchPaymentSheetParams()
               onPress={() => deleteProduct(property.id)}
             />
           </View>
-        )} */}
+        )}
 
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity
@@ -234,4 +234,4 @@ fetchPaymentSheetParams()
   );
 };
 
-export default ProductDetails;
+export default ProductsDetails;

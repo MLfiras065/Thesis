@@ -7,12 +7,11 @@ const Property = sequelize.define("Property", {
     allowNull: false
   },
   Price: {
-
     type: DataTypes.STRING(45),
     allowNull: false
   },
   image: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.ARRAY(DataTypes.STRING),
     allowNull: false
   },
   description: {

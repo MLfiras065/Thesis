@@ -10,6 +10,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
+
 const getOwner = async (req, res) => {
   try {
     const owner = await Owner.findAll({});
