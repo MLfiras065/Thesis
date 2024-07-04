@@ -6,25 +6,30 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
+import axios  from 'axios';
 
 const Photo = () => {
   const navigation = useNavigation();
   const ownerid=SessionStorage.getItem('ownerId')
-  const [image, setImage] = useState(['', '', '', '', '', '']);
   const [Category, setcategory] = useState('');
   const [OwnershpImg,setOwnershpImg]=useState("")
   const [Extra,setExtra]=useState("")
   const [Location,setLocation]=useState("")
+  const [Name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [Price, setPrice] = useState('');
   const [Property,setProperty]=useState([])
+  const product=SessionStorage.getItem('productData')
+  const [images,setImages]=useState(["","","","",""])
 
-const addProperty =({Name,Price,image,description,category,ownershpImg,extra,location})=>{
-  const  res =axios.post(`${APP_API_URL}/property/post/${1}`,{Name:Name,Price:Price,image:image,description:description,category:category,ownershpImg:ownershpImg,extra:extra,location:location})
-  try {
-   
-    setOwnershpImg(res.data.OwnershpImg)
-    setExtra(res.data.Extra)
-    setLocation(res.data.Location)
-SessionStorage.getItem('productData')
+
+
+  const updateProperty =async()=>{
+    const  res =await axios.put(`${APP_API_URL}/property/update/${1}`,{image:images})
+    try {
+  console.log("res images",res);
+      setImages(res.data)
+console.log("added");
    setProperty(res.data) 
   } catch (error) {
     console.error(error)
@@ -39,14 +44,14 @@ SessionStorage.getItem('productData')
     });
 
     if (!result.canceled) {
-      const updatedUrls = [...image];
+      const updatedUrls = [...images];
       updatedUrls[index] = result.assets[0].uri;
-      setImage(updatedUrls);
+      setImages(updatedUrls);
       alert('Image added');
     }
   };
 const handelAdd=()=>{
-  addProperty()
+  updateProperty()
 }
   return (
     <SafeAreaView>
@@ -54,7 +59,7 @@ const handelAdd=()=>{
         <Text style={{ fontSize: 35, fontWeight: 'bold' }}>Pick your photos and videos</Text>
         <View style={{ marginTop: 20, marginRight: 12 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20, marginRight: 10 }}>
-            {image.slice(0, 3).map((url, index) => (
+            {images.slice(0, 3).map((url, index) => (
               <TouchableOpacity
                 style={{
                   borderColor: '#581845',
@@ -80,7 +85,7 @@ const handelAdd=()=>{
         </View>
         <View style={{ marginTop: 20, marginRight: 12 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20, marginRight: 10 }}>
-            {image.slice(3).map((url, index) => (
+            {images.slice(3).map((url, index) => (
               <TouchableOpacity
                 style={{
                   borderColor: '#581845',

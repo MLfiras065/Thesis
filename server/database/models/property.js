@@ -3,44 +3,44 @@ const sequelize = require('../db');
 const Owner=require('./Owner')
 const Property = sequelize.define("Property", {
   Name: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING,
     allowNull: false
   },
   Price: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING,
     allowNull: false
   },
   image: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
-    allowNull: false
+    type: DataTypes.JSON,
+    allowNull: true
   },
   description: {
     type: DataTypes.TEXT,
     allowNull: false
   },
   category: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: true
   },
   Booked: {
     type: DataTypes.TINYINT,
-    allowNull: false,
+    allowNull: true,
     defaultValue: 0
   },
   rating: {
     type: DataTypes.DECIMAL(3, 2),  
-    allowNull: false
+    allowNull: true
   },
   ownershpImg: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: true
   },
   extra: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   location: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING,
     allowNull: false
   }
 });
