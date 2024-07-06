@@ -1,105 +1,106 @@
-import { Text, View ,FlatList,TextInput,Pressable} from 'react-native'
-import React ,{useState,useEffect}from 'react'
-import styles from './ChatStyles'
-import { APP_API_URL } from '../env'
-import SessionStorage from 'react-native-session-storage'
-import {io} from 'socket.io-client';
-import AllChats from './AllChats'
-import axios from 'axios'
-
+import React, { useState, useEffect, useCallback } from 'react';
+import { View } from 'react-native';
+import SessionStorage from 'react-native-session-storage';
+import { io } from 'socket.io-client';
+import axios from 'axios';
+import { GiftedChat } from 'react-native-gifted-chat';
+import styles from './ChatStyles';
+import { APP_API_URL } from '../env';
 
 const Chats = () => {
     const userId = SessionStorage.getItem("userid");
     const ownerId = SessionStorage.getItem("ownerid");
-    const [message, setMessage] = useState("");
-    const [chatMessages, setChatMessages] = useState([]);
+    const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
-  
-    const getMessage = () => {
-      axios.get(`${APP_API_URL}/chat/getmsg/${userId}/${ownerId}`).then((res) => {
-        setChatMessages(res.data);
-      }).catch((err) => console.log(err));
-    }
-  
-    const addsMessage = (message) => {
-      if (socket) {
-        socket.emit("send-message", message);
-      }
-      axios.post(`${APP_API_URL}/chat/addmsg/${userId}/${ownerId}`, { message })
-        .then((res) => {
-          setMessage(res.data);
-          getMessage(res.data);
-        })
-        .catch((err) => console.log(err));
-    }
-  
-    const handleAdd = () => {
-      addsMessage(message);
-    }
-  
+
     useEffect(() => {
-      const socketConnection = io("http://192.168.17.186:3000");
-      setSocket(socketConnection);
-  
-      socketConnection.on("connect", () => {
-        console.log("Socket connected.");
-      });
-  
-      socketConnection.on("disconnect", () => {
-        console.log("Socket disconnected.");
-      });
-  
-      return () => {
-        if (socketConnection) {
-          socketConnection.disconnect();
+        const getMessage = async () => {
+            try {
+                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${userId}/${ownerId}`);
+                const formattedMessages = res.data.map(msg => ({
+                    _id: msg.id,
+                    text: msg.message,
+                    createdAt: new Date(msg.createdAt),
+                    user: {
+                        _id: msg.senderId,
+                        name: msg.FirstName,
+                        avatar: 'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg'
+                    }
+                }));
+                setMessages(formattedMessages);
+                console.log("msg",msg);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        getMessage();
+    }, [userId, ownerId]);
+
+    useEffect(() => {
+        const socketConnection = io("http://192.168.164.186:3000");
+        setSocket(socketConnection);
+
+        socketConnection.on("connect", () => {
+            console.log("Socket connected.");
+        });
+
+        socketConnection.on("disconnect", () => {
+            console.log("Socket disconnected.");
+        });
+
+        socketConnection.on("receive-message", message => {
+            setMessages(previousMessages => GiftedChat.append(previousMessages, {
+                _id: message.id,
+                text: message.message,
+                createdAt: new Date(message.createdAt),
+                user: {
+                    _id: message.senderId,
+                    name: message.senderName,
+                    avatar: 'https://placeimg.com/140/140/any'
+                }
+            }));
+        });
+
+        return () => {
+            if (socketConnection) {
+                socketConnection.disconnect();
+            }
+        };
+    }, []);
+
+    const handleSend = useCallback(async (messages = []) => {
+        const newMessage = messages[0];
+        setMessages(previousMessages => GiftedChat.append(previousMessages, newMessage));
+
+        try {
+            await axios.post(`${APP_API_URL}/chat/addmsg/${userId}/${ownerId}`, {
+                message: newMessage.text
+            });
+
+            if (socket) {
+                socket.emit("send-message", newMessage);
+            }
+        } catch (err) {
+            console.log(err);
         }
-      };
-    }, []);
-  
-    useEffect(() => {
-      getMessage();
-    }, []);
-  
+    }, [userId, ownerId, socket]);
+
     return (
         <View style={styles.messagingscreen}>
-        <View
-            style={[
-                styles.messagingscreen,
-                { paddingVertical: 15, paddingHorizontal: 10 ,color:'black'},
-            ]}
-        >
-            {chatMessages ? (
-                <FlatList
-                    data={chatMessages}
-                    renderItem={({ item }) => (
-                        <AllChats item={item}  />
-                    )}
-                    keyExtractor={(item) => item.id}
-                />
-            ) : (
-                "there is no messages "
-            )}
-        </View>
-    
-        <View style={styles.messaginginputContainer}>
-            <TextInput
-                    value={message}
-                style={styles.messaginginput}
-                onChangeText={(value) => setMessage(value)}
+            <GiftedChat
+                messages={messages}
+                onSend={handleSend}
+                user={{
+                    _id: userId,
+                    name: "user.FirstName",
+                    avatar: 'https://placeimg.com/140/140/any'
+                }}
+                inverted={false}
+                
             />
-            <Pressable
-            
-                style={styles.messagingbuttonContainer}
-                onPress={()=>handleAdd()}
-            >
-                <View>
-                    <Text style={{ color: "#f2f0f1", fontSize: 20 }}>SEND</Text>
-                </View>
-            </Pressable>
         </View>
-    </View>
     );
-  }
+};
 
-export default Chats
-
+export default Chats;

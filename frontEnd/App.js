@@ -25,6 +25,9 @@ import AllPropertiesPage from './Screens/AllPropertiesPage';
 import FilteredProperties from './Screens/FilteredProperties.jsx';
 import Photo from './Screens/Owner/ImgPicker.jsx';
 import Bottomsheet from './Component/Bottomsheet.jsx';
+import Calender from './Screens/Calender.jsx';
+import Map from './Screens/Map.jsx';
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -55,6 +58,8 @@ export default function App() {
           <Stack.Screen name="addImg" component={Photo} />
            <Stack.Screen name="Chats" component={Chats} /> 
            <Stack.Screen name="bottom" component={Bottomsheet} /> 
+           <Stack.Screen name="calender" component={Calender} /> 
+           <Stack.Screen name="Map" component={Map} /> 
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
+import {RefreshControl,
   View,
   Text,
   FlatList,
@@ -14,9 +14,21 @@ import { AntDesign } from '@expo/vector-icons';
 import styles from "./styles.jsx";
 import { APP_API_URL } from "../env.js";
 import SessionStorage from "react-native-session-storage";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const Wishlist = () => {
+  const route = useRoute();
+ 
+  const propertyId = route.params?.propertyid;
+  const userId = route.params?.userid;
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   const navigation = useNavigation();
   const userid = SessionStorage.getItem("userid");
   const [wishlist, setWishlist] = useState([]);
@@ -26,16 +38,16 @@ const Wishlist = () => {
     try {
       const response = await axios.get(`${APP_API_URL}/wishlist/get/${userid}`);
 
-      setWishlist(response.data);
+      setWishlist(response.data[0].Properties);
       setUpd(!upd);
-      console.log("wishlist", response.data);
+      console.log("wishlist", response.data[0].Properties);
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
     fetchWishlist();
-  }, []);
+  }, [refreshing]);
 
   const removeFromWishlist = (id) => {
     axios
@@ -60,13 +72,17 @@ const Wishlist = () => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+    >
 
     <View>
       <TouchableOpacity onPress={() =>
           navigation.navigate("ProductDetails", {
-            propertyid: property.id,
-            userid: userid,
+            propertyid: propertyId,
+            userid: userId,
           })}>
 
       <FlatList

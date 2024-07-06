@@ -10,6 +10,7 @@ import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import HomePage from "./HomePage";
 import SessionStorage from "react-native-session-storage";
+import Map from "./Map";
 
 const Tab = createBottomTabNavigator();
 const BottomNavigation = () => {
@@ -44,6 +45,15 @@ const BottomNavigation = () => {
       <Tab.Screen
         name="Chat"
         component={Chat}
+        options={{
+          tabBarIcon: () => (
+            <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Map"
+        component={Map}
         options={{
           tabBarIcon: () => (
             <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
