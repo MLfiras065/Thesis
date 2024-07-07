@@ -1,102 +1,34 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import React from "react";
-import Onboarding from "react-native-onboarding-swiper";
-import Lottie from "lottie-react-native";
+import { OnboardFlow } from "react-native-onboard";
 import { useNavigation } from "@react-navigation/native";
 
-
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export default function OnboardingScreen() {
   const navigation = useNavigation();
 
- 
-
   const handleDone = () => {
-    navigation.navigate("Role",{screen:"Role"});
-  };
-
-  const doneButton = ({ ...props }) => {
-    return (
-      <TouchableOpacity style={styles.doneButton} {...props}>
-        <Text>Done</Text>
-      </TouchableOpacity>
-    );
+    navigation.navigate("Role", { screen: "Role" });
   };
 
   return (
-    <View style={styles.container}>
-      <Onboarding
-        containerStyles={{ paddingHorizontal: 15 }}
-        onSkip={handleDone}
-        onDone={handleDone}
-        DoneButtonComponent={doneButton}
-        pages={[
-          {
-            backgroundColor: "#fef3c7",
-            image: (
-              <View style={styles.lottie}>
-                <Lottie
-                  source={require("../assets/boost.json")}
-                  autoPlay
-                  loop
-                />
-              </View>
-            ),
-            title: "Boost Productivity",
-            subtitle: "Subscribe this channel to boost your productivity level",
-          },
-          {
-            backgroundColor: "#a7f3d0",
-            image: (
-              <View style={styles.lottie}>
-                <Lottie
-                  source={require("../assets/Animation - 1719053769865.json")}
-                  autoPlay
-                  loop
-                />
-              </View>
-            ),
-            title: "Work Seamlessly",
-            subtitle: "Get your work done seamlessly without interruption",
-          },
-          {
-            backgroundColor: "#a78bfa",
-            image: (
-              <View style={styles.lottie}>
-                <Lottie
-                  source={require("../assets/Animation - 1719053807323.json")}
-                  autoPlay
-                  loop
-                />
-              </View>
-            ),
-            title: "Achieve Higher Goals",
-            subtitle:
-              "By boosting your productivity we help you to achieve higher goals",
-          },
-        ]}
-      />
-    </View>
+    <OnboardFlow
+      pages={[
+        {
+          title: "Welcome to my app",
+          subtitle: "you have the best places to book here ",
+          imageUri:
+            "https://media.istockphoto.com/id/1281244663/vector/happy-tourists-choosing-hotel-and-booking-room-online.jpg?s=612x612&w=0&k=20&c=zoapw5nusmW8lcnoyKjvlhtfvReSBQE6m8bVWlHRdEE=",
+        },
+        {
+          title: "You have a place  ",
+          subtitle: "you can add it here that our customer can enjoy it ",
+          imageUri:
+            "https://media.istockphoto.com/id/1317765391/vector/online-booking-services-abstract-concept-vector-illustration.jpg?s=612x612&w=0&k=20&c=_50Ongy54IDZqlSLFV8jLLb5Jk_em1FTzU5C3PqAYH0=",
+        },
+      ]}
+      onDone={handleDone}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  lottie: {
-    width: width * 1,
-    height: width,
-  },
-  doneButton: {
-    padding: 20,
-  },
-});

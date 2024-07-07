@@ -8,7 +8,7 @@ router.get('/getAll',getAllProperties);
 router.get('/getone/:id', getProperty);
 router.get('/getAll/:id', getOwnerProperty);
 
-router.post('/post',createProperty);
+router.post('/post/:ownerid',createProperty);
 
 router.put('/update/:id', updateProperty);
 

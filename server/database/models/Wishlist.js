@@ -1,18 +1,26 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 const User = require('./User');
-const property=require('./property')
+const Property=require('./property')
 const Wishlist = sequelize.define('Wishlist', {
-//   userId: {
-//     type: DataTypes.INTEGER, 
-//     allowNull: false,
-//     references: {
-//       model: User,
-//       key: 'id'
-//     }
-// },
+    UserId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: User,
+          key: 'id'
+        },
+        allowNull: false
+      },
+      PropertyId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: Property,
+          key: 'id'
+        },
+        allowNull: false
+      }
 
 });
-// User.hasMany(property);
-// property.belongsTo(User,{ through:'wishlists' });
+User.belongsToMany(Property, { through:Wishlist, foreignKey: 'UserId' });
+Property.belongsToMany(User, { through:Wishlist, foreignKey: 'PropertyId' });
 module.exports = Wishlist;

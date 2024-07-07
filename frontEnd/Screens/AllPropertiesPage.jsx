@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
-import { APP_API_URL } from '../env';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  ActivityIndicator,
+} from "react-native";
+import { APP_API_URL } from "../env";
 
 const AllPropertiesPage = () => {
   const [properties, setProperties] = useState([]);
@@ -15,7 +22,7 @@ const AllPropertiesPage = () => {
         console.log(data);
       })
       .catch((error) => {
-        console.error('Error fetching properties:', error);
+        console.error("Error fetching properties:", error);
         setLoading(false);
       });
   };
@@ -36,10 +43,15 @@ const AllPropertiesPage = () => {
     <ScrollView style={styles.container}>
       {properties.map((property) => (
         <View key={property.id} style={styles.propertyItem}>
-          <Image style={styles.propertyImage} source={{ uri: property.image }} />
+          <Image
+            style={styles.propertyImage}
+            source={{ uri: property.image }}
+          />
           <View style={styles.propertyDetails}>
             <Text style={styles.propertyTitle}>{property.Name}</Text>
-            <Text style={styles.propertyPrice}>dt {property.Price} / Visit</Text>
+            <Text style={styles.propertyPrice}>
+              dt {property.Price} / Visit
+            </Text>
           </View>
         </View>
       ))}
@@ -49,17 +61,17 @@ const AllPropertiesPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
   },
   propertyItem: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
     marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#000',
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
@@ -76,16 +88,16 @@ const styles = StyleSheet.create({
   },
   propertyTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 35,
   },
   propertyPrice: {
-    color: '#00796b',
+    color: "#00796b",
   },
   loader: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 export default AllPropertiesPage;
