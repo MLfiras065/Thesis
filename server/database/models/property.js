@@ -3,50 +3,52 @@ const sequelize = require('../db');
 const Owner=require('./Owner')
 const Property = sequelize.define("Property", {
   Name: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING,
     allowNull: false
   },
   Price: {
-
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING,
     allowNull: false
   },
   image: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.JSON,
+    allowNull: true,
+  
   },
   description: {
     type: DataTypes.TEXT,
-    allowNull: false
+    allowNull: false,
+    
   },
   category: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue:""
   },
   Booked: {
     type: DataTypes.TINYINT,
-    allowNull: false,
+    allowNull: true,
     defaultValue: 0
   },
   rating: {
     type: DataTypes.DECIMAL(3, 2),  
-    allowNull: false
+    allowNull: true,
+    defaultValue:0
   },
   ownershpImg: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue:""
   },
   extra: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true,
+    defaultValue:""
   },
   location: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING,
     allowNull: false
   }
 });
-
-// Owner.hasMany(Property,{foreignKey:"ownerid",as:"Property"})
-// Property.belongsTo(Owner,{foreignKey:"ownerid",as:"Owner"})
 
 module.exports = Property;

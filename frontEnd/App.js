@@ -1,10 +1,10 @@
+import React from 'react';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { Provider } from './Component/Auth.jsx';
 import OnBording from './Screens/OnBording';
-import { StyleSheet } from 'react-native';
-import React from 'react';
 import Role from './Screens/Role';
 import Login from './Screens/Login';
 import TopTabNav from './Screens/TopTabNav';
@@ -23,10 +23,16 @@ import Subscribe from './Screens/Subscribe.jsx';
 import ProductDetails from './Screens/ProductDetails'; 
 import AllPropertiesPage from './Screens/AllPropertiesPage';  
 import FilteredProperties from './Screens/FilteredProperties.jsx';
-import Photo from './Screens/Owner/ImgPicker.jsx';
 import Bottomsheet from './Component/Bottomsheet.jsx';
-import Calender from './Screens/Calender.jsx';
-import Map from './Screens/Map.jsx';
+import Calender from './Screens/Calender.jsx'
+import add from "./Screens/Owner/Add.jsx"
+import Photo from './Screens/Owner/ImgPicker.jsx';
+import EditProfilee from './Screens/Owner/EditProfilee';
+import Profilee from './Screens/Owner/Profilee';
+import ProductsDetails from './Screens/Owner/ProductsDetails.jsx';
+
+
+
 
 const Stack = createStackNavigator();
 
@@ -55,11 +61,17 @@ export default function App() {
           <Stack.Screen name="EditProfile" component={EditProfile} /> 
           <Stack.Screen name="Chat" component={Chat} /> 
           <Stack.Screen name="AllChat" component={AllChats} />  
-          <Stack.Screen name="addImg" component={Photo} />
            <Stack.Screen name="Chats" component={Chats} /> 
            <Stack.Screen name="bottom" component={Bottomsheet} /> 
            <Stack.Screen name="calender" component={Calender} /> 
-           <Stack.Screen name="Map" component={Map} /> 
+           {/* <Stack.Screen name="Map" component={Map} />  */}
+
+        {/* <Stack.Screen name="add" component={add} options={{ headerShown: false }}  />
+           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
+          <Stack.Screen name="ProductsDetails" component={ProductsDetails} options={{ headerShown: false }}  /> */}
+          {/* <Stack.Screen name="EditProfilee" component={EditProfilee} /> 
+          <Stack.Screen name="Profilee" component={Profilee} />  */}
+           
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

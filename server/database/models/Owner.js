@@ -39,9 +39,13 @@ const Owner = sequelize.define("Owner", {
     type:DataTypes.STRING,
     defaultValue:"owner"
 
+  }, PhoneNumber:{
+    type:DataTypes.STRING,
+   
   }
   
 });
-Owner.hasMany(Property,{foreignKey:"ownerid",as:"Property"})
-Property.belongsTo(Owner,{foreignKey:"ownerid",as:"Owner"})
+// Owner.hasMany(Property,{foreignKey:"ownerid",as:"Property"})
+// Property.belongsTo(Owner,{foreignKey:"ownerid",as:"Owner"})
+
 module.exports=Owner

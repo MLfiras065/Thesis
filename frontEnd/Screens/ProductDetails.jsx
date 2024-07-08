@@ -175,20 +175,20 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
             </Text>
           </View>
 
-          <Text style={styles.description}>{property.description}</Text>
-
-          {isOwner && (
-            <View style={styles.buttonsContainer}>
-              <Button
-                title="Update Product"
-                onPress={() => switchView("update", property)}
-              />
-              <Button
-                title="Delete Product"
-                onPress={() => deleteProduct(property.id)}
-              />
-            </View>
-          )}
+        <Text style={styles.description}>{property.description}</Text>
+        
+        {/* {isOwner && (
+          <View style={styles.buttonsContainer}>
+            <Button
+              title="Update Product"
+              onPress={() => switchView("update", property)}
+            />
+            <Button
+              title="Delete Product"
+              onPress={() => deleteProduct(property.id)}
+            />
+          </View>
+        )} */}
 
           <View style={styles.actionButtonsContainer}>
             <TouchableOpacity

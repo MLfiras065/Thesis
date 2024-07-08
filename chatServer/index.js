@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
     socket.emit("roomsList", chatRooms);
     console.log("Chat rooms:", chatRooms);
   });
-
+ 
   socket.on("send-message", (data) => {
     console.log("Message data:", data);
     if (data !== undefined && chatRooms.length > 0) {

@@ -8,7 +8,6 @@ import { useRoute } from '@react-navigation/native';
 
 const CommentCard = () => {
   const [refreshing, setRefreshing] = React.useState(false);
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -32,6 +31,10 @@ const CommentCard = () => {
 
   useEffect(() => {
     getComments();
+   
+
+    
+   
   }, []);
 
   return (
