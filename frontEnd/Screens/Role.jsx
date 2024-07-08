@@ -15,13 +15,15 @@ const Role = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.headerText}>Let's start</Text>
-      <Image
-        source={require("../assets/Forfait-internationnaux.webp")}
-        resizeMode="cover"
-        style={styles.image}
-      />
-      <View style={styles.buttonContainer}>
+      <View style={styles.topContainer}>
+        <Text style={styles.headerText}>Let's start!</Text>
+        <Image
+          src="https://github.com/Minte-grace/React-Native-Onboarding/blob/master/images/1.png?raw=true"
+          resizeMode="cover"
+          style={styles.image}
+        />
+      </View>
+      <View style={styles.bottomContainer}>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("TopTabNav", { showCINImage: true })
@@ -45,38 +47,43 @@ const Role = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     padding: 20,
+    justifyContent: "space-between", 
+  },
+  topContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomContainer: {
+    alignItems: "center",
+    marginBottom: 50, 
   },
   headerText: {
     fontSize: 28,
+    fontStyle: "italic",
+    fontVariant: ["small-caps"],
+    fontWeight: "bold", 
+    lineHeight: 32, 
+    fontFamily: "cursive", 
     textAlign: "center",
-    marginBottom:-50,
-    marginVertical: 20,
+    marginBottom: 20, 
   },
   image: {
     width: "80%",
-    height: 200,
-    marginVertical: 90,
-    marginBottom: 300,
-  },
-  buttonContainer: {
-    marginTop:20,
-    flex: 1,
-    justifyContent: "flex-end",
-    width: "90%",
+    height: 380,
   },
   button: {
-    
-    backgroundColor: "#008080",
+    backgroundColor: "#4d8790",
     borderRadius: 100,
     paddingVertical: 10,
-    marginVertical: 50,
-    marginHorizontal: 20,
+    paddingHorizontal: 30,
+    marginVertical: 10, 
+    width: "90%",
     alignItems: "center",
   },
   buttonText: {
-    fontSize: 22,
+    fontSize: 20,
     color: "white",
   },
 });

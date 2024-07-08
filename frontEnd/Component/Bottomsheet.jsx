@@ -16,7 +16,7 @@ const Bottomsheet= () => {
   const userid = route.params?.userid;
 
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
+  const snapPoints = useMemo(() => ['25%', '50%',"100%"], []);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -31,8 +31,8 @@ const Bottomsheet= () => {
       <View style={styles.container}>
         <Button
           onPress={handlePresentModalPress}
-          title="Present Modal"
-          color="black"
+          title="Comments"
+          color="#008080"
         />
         <BottomSheetModal
           ref={bottomSheetModalRef}
@@ -40,13 +40,16 @@ const Bottomsheet= () => {
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
         >
-          <BottomSheetView style={styles.contentContainer}>
-            <Text>comments</Text>
-            <ScrollView>
-            <CommentCard/>
+          <ScrollView>
+
+          <BottomSheetView >
+            <Text>Comments </Text>
+            
+            <CommentCard  />              
             <AddComment propertyId={propertyId} userId={userid} />
-                               </ScrollView>
+             
           </BottomSheetView>
+          </ScrollView>
         </BottomSheetModal>
       </View>
      </BottomSheetModalProvider>
@@ -54,14 +57,50 @@ const Bottomsheet= () => {
 };
 export default Bottomsheet
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    justifyContent: 'center',
-    backgroundColor: 'grey',
-  },
   contentContainer: {
     flex: 1,
     alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#f8f9fa',
+    display:"flex"
+  },
+  containerCard: {
+    flexDirection: 'row',
+    padding: 10,
+  },
+  input: {
+    flex: 1,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginRight: 10,
+    padding: 5,
+  },
+  container: {
+    padding: 20,
+    flexDirection: 'row',
+    // alignItems: 'flex-start',
+  },
+  content: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#ececec',
+    marginVertical: 10,
+  },
+  time: {
+    fontSize: 12,
+    color: '#6c757d',
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#212529',
   },
 });

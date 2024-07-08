@@ -25,6 +25,8 @@ import AllPropertiesPage from './Screens/AllPropertiesPage';
 import FilteredProperties from './Screens/FilteredProperties.jsx';
 import Photo from './Screens/Owner/ImgPicker.jsx';
 import Bottomsheet from './Component/Bottomsheet.jsx';
+// import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -33,7 +35,7 @@ export default function App() {
     <Provider>
       <NavigationContainer>
         <Stack.Navigator >
-          <Stack.Screen name="OnBording" component={OnBording} options={{ headerShown: false }}/>
+           <Stack.Screen name="OnBording" component={OnBording} options={{ headerShown: false }}/>
           <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
           <Stack.Screen name="TopTabNav" component={TopTabNav} options={{ headerShown: false }}/>
           <Stack.Screen name="TopNav" component={TopNav} options={{ headerShown: false }}/>
@@ -54,7 +56,9 @@ export default function App() {
           <Stack.Screen name="AllChat" component={AllChats} />  
           <Stack.Screen name="addImg" component={Photo} />
            <Stack.Screen name="Chats" component={Chats} /> 
-           <Stack.Screen name="bottom" component={Bottomsheet} /> 
+           <Stack.Screen name="bottom" component={Bottomsheet} />  
+           {/* <Stack.Screen name="HomePage" component={OwnerHomePage} /> */}
+           
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

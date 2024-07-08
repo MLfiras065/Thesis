@@ -29,8 +29,8 @@ const Property = sequelize.define("Property", {
     defaultValue: 0
   },
   rating: {
-    type: DataTypes.DECIMAL(3, 2),  
-    allowNull: false
+    type: DataTypes.DECIMAL(0, 0),  
+  
   },
   ownershpImg: {
     type: DataTypes.STRING(255),
