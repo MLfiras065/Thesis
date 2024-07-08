@@ -48,7 +48,7 @@ person:{
   allowNull:true
 },
 Ac:{
-  type:DataTypes.INTEGER,
+  type:DataTypes.STRING,
   allowNull:true
 },
 Pool:{

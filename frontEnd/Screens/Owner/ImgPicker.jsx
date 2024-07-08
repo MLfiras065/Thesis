@@ -51,12 +51,11 @@ console.log("added");
       const updatedUrls = [...images];
       updatedUrls[index] = result.assets[0].uri;
       setImages(updatedUrls);
-      // alert('Image added');
     }
   };
 const handelAdd=()=>{
   updateProperty()
-  navigation.navigate ('productsDetails',{propertyid})
+  navigation.navigate ('ProductsDetails',{propertyid})
 }
   return (
     <SafeAreaView>

@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
-import { styles } from "./ProductsDetails.styles";
+import { styles } from "../Owner/ProductsDetails.styles";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
@@ -23,9 +23,9 @@ import Bottomsheet from "../../Component/Bottomsheet";
 
 
 
-const ProductsDetails = ({  deleteProduct, switchView, isOwner }) => {
+const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
   const route = useRoute();
- const {propertyid}=route.params
+ 
   const propertyId = route.params?.propertyid;
   const userid = route.params?.userid;
   console.log("useridproperty", userid);
@@ -38,7 +38,7 @@ const ProductsDetails = ({  deleteProduct, switchView, isOwner }) => {
   const [userId, setUserId] = useState(null);
 
   console.log("idpropertydetailes", propertyId);
-console.log("ownerprop",propid);
+
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
     const { paymentIntent } = response.data;
@@ -72,15 +72,16 @@ console.log("ownerprop",propid);
       console.error("Error presenting payment sheet:", error);
     }
   };
-
+ 
   useEffect(() => {
     const getProperty = (id) => {
       axios
-        .get(`${APP_API_URL}/property/getone/${propertyid}`)
+        .get(`${APP_API_URL}/property/getone/${id}`)
         .then((res) => {
           setProperty(res.data);
           SessionStorage.setItem("id",res.data.id);
-          setMainImage(res.data.image);  
+          setMainImage(res.data.image[0]);  
+          console.log('data',res.data);
         })
         .catch((err) => console.log(err));
     };
@@ -167,7 +168,7 @@ fetchPaymentSheetParams()
 
         <Text style={styles.description}>{property.description}</Text>
         
-        {isOwner && (
+        {/* {isOwner && (
           <View style={styles.buttonsContainer}>
             <Button
               title="Update Product"
@@ -178,7 +179,7 @@ fetchPaymentSheetParams()
               onPress={() => deleteProduct(property.id)}
             />
           </View>
-        )}
+        )} */}
 
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity
@@ -234,4 +235,4 @@ fetchPaymentSheetParams()
   );
 };
 
-export default ProductsDetails;
+export default ProductDetails;
