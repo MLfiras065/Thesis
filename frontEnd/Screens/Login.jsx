@@ -32,7 +32,7 @@ const Login = () => {
       console.log("ownertoken", res.data.token);
       alert("Login successful");
 
-      navigation.navigate("Navigation", { screen: "BottomNavigation" });
+      navigation.navigate("OwnerNav", { screen: "BottomNavigation" });;
     } catch (err) {
       console.error(err);
       alert("Login failed. Please check your credentials and try again.");

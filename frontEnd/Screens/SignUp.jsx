@@ -70,6 +70,7 @@ const SignUp = () => {
       const res = await axios.post(`${APP_API_URL}/owner/reg`, data);
       alert("Signup successful");
       navigation.goBack("TopTabNav");
+      
     } catch (error) {
       console.error(error);
     }
@@ -111,7 +112,7 @@ const SignUp = () => {
     try {
       const res = await axios.post(`${APP_API_URL}/user/reg`, data);
       alert("Signup successful");
-      navigation.goBack("TopTabNav");
+      navigation.goBack("TopNav");
     } catch (error) {
       console.error(error);
     }

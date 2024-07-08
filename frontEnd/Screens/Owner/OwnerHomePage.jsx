@@ -74,7 +74,7 @@ const OwnerHomePage = () => {
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
           <Text style={styles.sectionTitle}>Your Properties</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("AddProperty")}>
+          <TouchableOpacity onPress={() => navigation.navigate("add")}>
             <Text style={styles.seeAllText}>Add New Property</Text>
           </TouchableOpacity>
         </View>

@@ -1,3 +1,4 @@
+
 const Owner = require("../database/models/Owner");
 const Property = require("../database/models/property");
 const UserRating = require("../database/models/UserRating"); // Import UserRating model
@@ -11,7 +12,6 @@ function getAllProperties(req, res) {
       res.status(500).json({ message: 'Internal server error' });
     });
 }
-
 function getProperty(req, res) {
   const { id } = req.params;
 
@@ -29,19 +29,38 @@ function getProperty(req, res) {
 }
 
 function createProperty(req, res) {
-  const { Name, Price, image, description, category, Booked, ownershpImg, extra, location } = req.body;
-  const { ownerid } = req.params;
+  const { Name, Price, image, description, category, Booked, Bedroom,Bathroom,person,Ac,Pool,rating, ownershpImg, extra, location } = req.body;
+  const {ownerid}=req.params
   const extraString = Array.isArray(extra) ? extra.join(',') : extra;
 
-  Property.create({ Name, Price, image, description, category, Booked,  ownershpImg, extra: extraString, location, ownerid })
-    .then(newProperty => res.status(201).json(newProperty))
+  Property.create({ Name, Price, image, description, category, Booked,Bedroom,Bathroom,person,Ac,Pool, rating, ownershpImg, extra: extraString, location,ownerid })
+    .then(newProperty => {res.status(201).json(newProperty),console.log(newProperty.dataValues.image);})
     .catch(error => {
       console.error('Error creating property:', error);
       res.status(500).json({ message: 'Internal server error' });
     });
 }
+function addImages(req, res) {
+  console.log(req.body)
+ Property.update({...req.body},{where:{id:req.params.id}})
+   .then(images => {res.status(201).json(images)})
+   .catch(error => {
+     console.error('Error creating property:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   });
+}
+function addExtra(req, res) {
+  console.log(req.body)
+ Property.update({...req.body},{where:{id:req.params.id}})
+   .then(extra => {res.status(201).json(extra)})
+   .catch(error => {
+     console.error('Error creating property:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   });
+}
 
 function updateProperty(req, res) {
+  console.log("update",req.body);
   const { id } = req.params;
   const { Name, Price, image, description, category, Booked,  ownershpImg, extra, location } = req.body;
 
@@ -142,4 +161,4 @@ async function getPropertyRating(req, res) {
   }
 }
 
-module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, getProperty, getOwnerProperty, rateProperty, getPropertyRating };
+module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, getProperty,addExtra,addImages ,getOwnerProperty, rateProperty, getPropertyRating };

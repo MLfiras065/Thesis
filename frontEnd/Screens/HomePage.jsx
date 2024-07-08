@@ -30,7 +30,9 @@ const HomePage = () => {
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
-        SessionStorage.setItem("ownerid", data[0].ownerid);
+        SessionStorage.setItem("ownerid",data[0].ownerid)
+        // console.log("property",data[0].ownerid)
+        console.log('prop',data);
         setLoading(false);
       })
       .catch((error) => {
@@ -121,14 +123,17 @@ const HomePage = () => {
             <View key={property.id} style={styles.tripItem}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("ProductDetails", {
+                  navigation.navigate("ProductsDetails", {
                     propertyid: property.id,
                     userid: userid,
                   })
                 }
               >
                 <Text style={styles.tripTitle}>{property.Name}</Text>
-                <Image style={styles.tripImage} source={{ uri: property.image }} />
+                <Image
+                  style={styles.tripImage}
+                  source={{ uri: property.image[0] }}
+                />
                 <Text style={styles.tripLocation}>
                   <MaterialIcons name="location-pin" size={18} color="grey" />
                   {property.location}
@@ -311,3 +316,8 @@ const styles = StyleSheet.create({
 });
 
 export default HomePage;
+
+
+
+
+

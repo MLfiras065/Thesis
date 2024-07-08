@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Profile from "./Profile";
-import Chat from "./Chat";
-import WishList from "./WishList";
+import ProfileScreen from "./Profilee";
+// import Chat from "./Chat";
+// import WishList from "./WishList";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,7 +12,7 @@ import OwnerHomePage from "./OwnerHomePage";
 import SessionStorage from "react-native-session-storage";
 
 const Tab = createBottomTabNavigator();
-const BottomNavigation = () => {
+const OwnerBottomNavigation = () => {
   const email = SessionStorage.getItem("email");
   const ownerid = SessionStorage.getItem("ownerid");
   const navigation = useNavigation();
@@ -34,14 +34,14 @@ const BottomNavigation = () => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="WishList"
         component={WishList}
         options={{
           tabBarIcon: () => <EvilIcons name="heart" size={34} color="black" />,
         }}
-      />
-      <Tab.Screen
+      /> */}
+      {/* <Tab.Screen
         name="Chat"
         component={Chat}
         options={{
@@ -49,11 +49,11 @@ const BottomNavigation = () => {
             <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
           ),
         }}
-      />
+      /> */}
 
       <Tab.Screen
         name="Profile"
-        component={Profile}
+        component={ProfileScreen}
         options={{
           tabBarIcon: () => (
             <SimpleLineIcons name="user" size={24} color="black" />
@@ -64,7 +64,7 @@ const BottomNavigation = () => {
     </Tab.Navigator>
   );
 };
-export default BottomNavigation;
+export default OwnerBottomNavigation;
 const styles = StyleSheet.create({
   mainContainer: {
     flexDirection: "row",

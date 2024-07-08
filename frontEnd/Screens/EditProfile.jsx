@@ -102,10 +102,6 @@ const EditProfile = () => {
       setImage(result.assets[0].uri);
     }
   };
-
-
-
-  
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>

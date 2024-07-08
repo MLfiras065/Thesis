@@ -80,8 +80,8 @@ function ProfileScreen() {
       <View style={styles.profileHeader}>
         <Image  source={{ uri: item?item.image :"" }} style={styles.avatar} />
         <Text style={styles.name}>{item?item.FirstName :"" } </Text>
-        <Text style={styles.email}>{item?item.LastName :"" }</Text>
-        <Text style={styles.phone}>{item?item.email:''}</Text>
+        <Text style={styles.lastname}>{item?item.LastName :"" }</Text>
+        <Text style={styles.email}>{item?item.email:''}</Text>
         
       </View>
       <TouchableOpacity

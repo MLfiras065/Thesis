@@ -29,8 +29,8 @@ const LogInUser = () => {
       console.log("userid", res.data.id);
       console.log("usertoken", res.data.token);
       alert("Login successful");
-
-      navigation.navigate("Navigation", { screen: "BottomNavigation" });
+      navigation.navigate("Navigation", { screen: "Navigation" })
+      
     } catch (err) {
       console.error(err);
       alert("Login failed. Please check your credentials and try again.");

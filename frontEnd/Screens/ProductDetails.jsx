@@ -13,8 +13,7 @@ import CommentCard from './CommentCard';
 import Bottomsheet from "../Component/Bottomsheet";
 import { AirbnbRating } from "react-native-ratings";
 
-
-const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
+const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
   const route = useRoute();
   const propertyId = route.params?.propertyid;
   const userid = route.params?.userid;
@@ -56,25 +55,18 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
       console.error("Error presenting payment sheet:", error);
     }
   };
-
+ 
   useEffect(() => {
-    const getProperty = async (id) => {
-      try {
-        const res = await axios.get(`${APP_API_URL}/property/getone/${id}`);
-        setProperty(res.data);
-        setMainImage(res.data.image);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    const getPropertyRating = async (id) => {
-      try {
-        const res = await axios.get(`${APP_API_URL}/property/rate/${id}`);
-        setAvgRating(res.data.avgRating);
-      } catch (err) {
-        console.log(err);
-      }
+    const getProperty = (id) => {
+      axios
+        .get(`${APP_API_URL}/property/getone/${id}`)
+        .then((res) => {
+          setProperty(res.data);
+          SessionStorage.setItem("id",res.data.id);
+          setMainImage(res.data.image[0]);  
+          console.log('data',res.data);
+        })
+        .catch((err) => console.log(err));
     };
 
     if (propertyId) {
@@ -138,17 +130,17 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
         <View style={styles.card}>
           <Image source={{ uri: mainImage }} style={styles.image} />
 
-          <FlatList
-            data={property.additionalImages}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => setMainImage(item)}>
-                <Image source={{ uri: item }} style={styles.smallImage} />
-              </TouchableOpacity>
-            )}
-          />
+        <FlatList
+          data={property.image}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => setMainImage(item)}>
+              <Image source={{ uri: item }} style={styles.smallImage} />
+            </TouchableOpacity>
+          )}
+        />
 
           <TouchableOpacity style={styles.likeButton} onPress={handelWishList}>
             <AntDesign name={liked ? "heart" : "hearto"} size={24} color={liked ? "red" : "black"} />
@@ -165,14 +157,20 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
             </Text>
           </View>
 
-          <Text style={styles.description}>{property.description}</Text>
-
-          {isOwner && (
-            <View style={styles.buttonsContainer}>
-              <Button title="Update Product" onPress={() => switchView("update", property)} />
-              <Button title="Delete Product" onPress={() => deleteProduct(property.id)} />
-            </View>
-          )}
+        <Text style={styles.description}>{property.description}</Text>
+        
+        {/* {isOwner && (
+          <View style={styles.buttonsContainer}>
+            <Button
+              title="Update Product"
+              onPress={() => switchView("update", property)}
+            />
+            <Button
+              title="Delete Product"
+              onPress={() => deleteProduct(property.id)}
+            />
+          </View>
+        )} */}
 
           <View style={styles.actionButtonsContainer}>
             <TouchableOpacity style={styles.bookButton} onPress={openPaymentSheet}>
