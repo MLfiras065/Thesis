@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { EvilIcons } from '@expo/vector-icons';
 // import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useRoute } from '@react-navigation/native';
 import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
 import axios  from 'axios';
 
 const Photo = () => {
+  const route=useRoute()
+  const  {propertyid}=route.params
   const navigation = useNavigation();
   const ownerid=SessionStorage.getItem('ownerId')
   const [Category, setcategory] = useState('');
@@ -20,14 +22,16 @@ const Photo = () => {
   const [Price, setPrice] = useState('');
   const [Property,setProperty]=useState([])
   const product=SessionStorage.getItem('productData')
-  const [images,setImages]=useState(["","","","",""])
+  const [images,setImages]=useState(["",""])
 
-
+  console.log("propertyid",
+    propertyid
+    );
 
   const updateProperty =async()=>{
-    const  res =await axios.put(`${APP_API_URL}/property/update/${1}`,{image:images})
+    const  res =await axios.put(`${APP_API_URL}/property/image/${propertyid}`,{image:images})
     try {
-  console.log("res images",res);
+  console.log("res images",res.data.images);
       setImages(res.data)
 console.log("added");
    setProperty(res.data) 
@@ -47,11 +51,12 @@ console.log("added");
       const updatedUrls = [...images];
       updatedUrls[index] = result.assets[0].uri;
       setImages(updatedUrls);
-      alert('Image added');
+      // alert('Image added');
     }
   };
 const handelAdd=()=>{
   updateProperty()
+  navigation.navigate ('productsDetails',{propertyid})
 }
   return (
     <SafeAreaView>

@@ -11,13 +11,6 @@ function getAllProperties(req, res) {
       res.status(500).json({ message: 'Internal server error' });
     });
 }
-
-
-
-
-
-
-
 function getProperty(req, res) {
   const { id } = req.params;
 
@@ -35,11 +28,11 @@ function getProperty(req, res) {
 }
 
 function createProperty(req, res) {
-  const { Name, Price, image, description, category, Booked, rating, ownershpImg, extra, location } = req.body;
+  const { Name, Price, image, description, category, Booked, Bedroom,Bathroom,person,Ac,Pool,rating, ownershpImg, extra, location } = req.body;
   const {ownerid}=req.params
   const extraString = Array.isArray(extra) ? extra.join(',') : extra;
 
-  Property.create({ Name, Price, image, description, category, Booked, rating, ownershpImg, extra: extraString, location,ownerid })
+  Property.create({ Name, Price, image, description, category, Booked,Bedroom,Bathroom,person,Ac,Pool, rating, ownershpImg, extra: extraString, location,ownerid })
     .then(newProperty => {res.status(201).json(newProperty),console.log(newProperty.dataValues.image);})
     .catch(error => {
       console.error('Error creating property:', error);
@@ -50,6 +43,15 @@ function addImages(req, res) {
   console.log(req.body)
  Property.update({...req.body},{where:{id:req.params.id}})
    .then(images => {res.status(201).json(images)})
+   .catch(error => {
+     console.error('Error creating property:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   });
+}
+function addExtra(req, res) {
+  console.log(req.body)
+ Property.update({...req.body},{where:{id:req.params.id}})
+   .then(extra => {res.status(201).json(extra)})
    .catch(error => {
      console.error('Error creating property:', error);
      res.status(500).json({ message: 'Internal server error' });
@@ -100,4 +102,4 @@ const getOwnerProperty=async(req,res)=>{
   }
 }
 
-module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, addImages,getProperty,getOwnerProperty };
+module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, addImages,addExtra,getProperty,getOwnerProperty };

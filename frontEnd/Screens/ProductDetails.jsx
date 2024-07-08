@@ -72,7 +72,7 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
       console.error("Error presenting payment sheet:", error);
     }
   };
-
+ 
   useEffect(() => {
     const getProperty = (id) => {
       axios
@@ -80,7 +80,8 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
         .then((res) => {
           setProperty(res.data);
           SessionStorage.setItem("id",res.data.id);
-          setMainImage(res.data.image);  
+          setMainImage(res.data.image[0]);  
+          console.log('data',res.data);
         })
         .catch((err) => console.log(err));
     };
@@ -135,7 +136,7 @@ fetchPaymentSheetParams()
         <Image source={{ uri: mainImage }} style={styles.image} />
 
         <FlatList
-          data={property.additionalImages}
+          data={property.image}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}
