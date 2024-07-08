@@ -34,7 +34,8 @@ const [rated,setRated]=useState([])
       .then((data) => {
         setProperties(data);
         SessionStorage.setItem("ownerid",data[0].ownerid)
-        console.log("property",data[0].ownerid)
+        // console.log("property",data[0].ownerid)
+        console.log('prop',data);
         setLoading(false);
       })
       .catch((error) => {
@@ -174,7 +175,7 @@ setLoading(false);
             <View key={property.id} style={styles.tripItem}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("ProductDetails", {
+                  navigation.navigate("ProductsDetails", {
                     propertyid: property.id,
                     userid: userid,
                   })
@@ -183,7 +184,7 @@ setLoading(false);
                 <Text style={styles.tripTitle}>{property.Name}</Text>
                 <Image
                   style={styles.tripImage}
-                  source={{ uri: property.image }}
+                  source={{ uri: property.image[0] }}
                 />
                 <Text style={styles.tripLocation}>
                   <MaterialIcons name="location-pin" size={18} color="grey" />
@@ -228,7 +229,7 @@ setLoading(false);
 
           <Image
             style={styles.propertyImage}
-            source={{ uri: property.image }}
+            source={{ uri: property.image[0] }}
             />
           <View style={styles.propertyDetails}>
             <Text style={styles.propertyTitle}>{property.Name}</Text>

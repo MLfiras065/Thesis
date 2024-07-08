@@ -25,7 +25,7 @@ import Bottomsheet from "../../Component/Bottomsheet";
 
 const ProductsDetails = ({  deleteProduct, switchView, isOwner }) => {
   const route = useRoute();
- 
+ const {propertyid}=route.params
   const propertyId = route.params?.propertyid;
   const userid = route.params?.userid;
   console.log("useridproperty", userid);
@@ -38,7 +38,7 @@ const ProductsDetails = ({  deleteProduct, switchView, isOwner }) => {
   const [userId, setUserId] = useState(null);
 
   console.log("idpropertydetailes", propertyId);
-
+console.log("ownerprop",propid);
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
     const { paymentIntent } = response.data;
@@ -76,7 +76,7 @@ const ProductsDetails = ({  deleteProduct, switchView, isOwner }) => {
   useEffect(() => {
     const getProperty = (id) => {
       axios
-        .get(`${APP_API_URL}/property/getone/${id}`)
+        .get(`${APP_API_URL}/property/getone/${propertyid}`)
         .then((res) => {
           setProperty(res.data);
           SessionStorage.setItem("id",res.data.id);
@@ -135,7 +135,7 @@ fetchPaymentSheetParams()
         <Image source={{ uri: mainImage }} style={styles.image} />
 
         <FlatList
-          data={property.additionalImages}
+          data={property.image}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}

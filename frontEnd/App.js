@@ -28,7 +28,8 @@ import add from "./Screens/Owner/Add.jsx"
 import Photo from './Screens/Owner/ImgPicker.jsx';
 import EditProfilee from './Screens/Owner/EditProfilee';
 import Profilee from './Screens/Owner/Profilee';
-import ProductsDetails from './Screens/Owner/ProductsDetails.jsx';
+import ProductsDetails from './Screens/Owner/ProductsDetails.jsx'; 
+import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 
 
 
@@ -57,20 +58,20 @@ export default function App() {
           <Stack.Screen name="AllProperties" component={AllPropertiesPage} options={{ title: 'All Properties' }} />
           <Stack.Screen name="Search" component={Search} />  
           <Stack.Screen name="FiltredProperties" component={FilteredProperties} />  
-          <Stack.Screen name="ProductDetails" component={ProductDetails} /> 
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="EditProfile" component={EditProfile} /> 
           <Stack.Screen name="Chat" component={Chat} /> 
           <Stack.Screen name="AllChat" component={AllChats} />  
            <Stack.Screen name="Chats" component={Chats} /> 
-           <Stack.Screen name="bottom" component={Bottomsheet} />  */}
-
-        <Stack.Screen name="add" component={add} options={{ headerShown: false }}  />
-           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
-          {/* <Stack.Screen name="EditProfilee" component={EditProfilee} /> 
-          <Stack.Screen name="Profilee" component={Profilee} />  */}
-          {/* <Stack.Screen name="ProductsDetails" component={ProductsDetails} options={{ headerShown: false }}  /> */}
-           
+           <Stack.Screen name="bottom" component={Bottomsheet} />  
+           <Stack.Screen name="Profilee" component={Profilee} />  
+           <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }}  />
+           <Stack.Screen name="EditProfilee" component={EditProfilee}  /> */}
+          <Stack.Screen name="add" component={add} options={{ headerShown: false }}/>
+          <Stack.Screen name="Extra" component={ExtraFeatures} />
+          <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
+           <Stack.Screen name="ProductsDetails" component={ProductsDetails} options={{ headerShown: false }}  />
+          
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
@@ -86,4 +87,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
