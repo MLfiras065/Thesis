@@ -1,0 +1,26 @@
+.owner {
+    padding: 20px;
+  }
+  
+  .owner form {
+    margin-bottom: 20px;
+  }
+  
+  .owner input {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .owner button {
+    padding: 5px 10px;
+  }
+  
+  .owner ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .owner ul li {
+    padding: 10px 0;
+  }
+  
