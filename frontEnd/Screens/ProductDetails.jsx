@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  Button,
-  TouchableOpacity,
-  FlatList,
-  Modal,
-  ScrollView,
-} from "react-native";
+import { View, Text, Image, Button, TouchableOpacity, FlatList, Modal, ScrollView, Alert } from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { styles } from "./ProductDeatils.styles";
 import { AntDesign } from "@expo/vector-icons";
@@ -20,24 +11,20 @@ import SessionStorage from "react-native-session-storage";
 import AddComment from './AddComment';
 import CommentCard from './CommentCard';
 import Bottomsheet from "../Component/Bottomsheet";
-
-
+import { AirbnbRating } from "react-native-ratings";
 
 const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
   const route = useRoute();
- 
   const propertyId = route.params?.propertyid;
   const userid = route.params?.userid;
-  console.log("useridproperty", userid);
   const [property, setProperty] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [liked, setLiked] = useState(false);
+  const [userRating, setUserRating] = useState(0);
+  const [avgRating, setAvgRating] = useState(null);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const [userId, setUserId] = useState(null);
-
-  console.log("idpropertydetailes", propertyId);
 
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
@@ -48,25 +35,21 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
     });
     return initResponse;
   };
+
   const openPaymentSheet = async () => {
     try {
       const { error } = await presentPaymentSheet();
-
       if (error) {
-      alert(`Error code: ${error.code}`, error.message);
-        console.error("Error presenting payment sheet:", error);
+        alert(`Error code: ${error.code}`, error.message);
       } else {
         axios
-          .get(`${APP_API_URL}/owner/booked/${userId}`)
-          .then(() => {
-          alert(
-              "Payment Successful",
-              "Your payment has been processed successfully!"
-            );
-          })
-          .catch((error) => {
-            console.error("Error processing payment:", error);
-          });
+        .get(`${APP_API_URL}/owner/booked/${userid}`)
+        .then(() => {
+          alert("Payment Successful", "Your payment has been processed successfully!");
+        })
+        .catch((error) => {
+          console.error("Error processing payment:", error);
+        });
       }
     } catch (error) {
       console.error("Error presenting payment sheet:", error);
@@ -88,8 +71,9 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
 
     if (propertyId) {
       getProperty(propertyId);
-    };
-fetchPaymentSheetParams()
+      getPropertyRating(propertyId);
+    }
+    fetchPaymentSheetParams();
   }, [propertyId]);
 
   const openImageModal = (img) => {
@@ -116,8 +100,6 @@ fetchPaymentSheetParams()
         }
       );
       alert("Wishlist added");
-
-      console.log("wishlist", res.data);
       setLiked(true);
     } catch (error) {
       console.log(error);
@@ -129,11 +111,24 @@ fetchPaymentSheetParams()
     addWishList(userid, propertyId);
   };
 
+  const handleRatingCompleted = async (rating) => {
+    try {
+      const response = await axios.post(`${APP_API_URL}/property/rate/${userid}/${propertyId}`, {
+        rating,
+      });
+      setUserRating(rating);
+      alert("Rating submitted successfully");
+    } catch (error) {
+      console.error("Error submitting rating:", error);
+      alert("Failed to submit rating");
+    }
+  };
+
   return (
     <View style={styles.container}>
-    <ScrollView style={styles.container}>
-      <View style={styles.card}>
-        <Image source={{ uri: mainImage }} style={styles.image} />
+      <ScrollView style={styles.container}>
+        <View style={styles.card}>
+          <Image source={{ uri: mainImage }} style={styles.image} />
 
         <FlatList
           data={property.image}
@@ -147,24 +142,20 @@ fetchPaymentSheetParams()
           )}
         />
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <Text style={styles.title}>{property.Name}</Text>
-          <Text style={styles.ratingText}>⭐ {property.rating}</Text>
-        </View>
+          <TouchableOpacity style={styles.likeButton} onPress={handelWishList}>
+            <AntDesign name={liked ? "heart" : "hearto"} size={24} color={liked ? "red" : "black"} />
+          </TouchableOpacity>
 
-        <View style={styles.locationContainer}>
-          <Text style={styles.locationText}>
-            <EvilIcons name="location" size={26} color="black" />{" "}
-            {property.location}
-          </Text>
-        </View>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+            <Text style={styles.title}>{property.Name}</Text>
+            <Text style={styles.ratingText}>⭐ {avgRating ? avgRating.toFixed(2) : "No ratings yet"}</Text>
+          </View>
+
+          <View style={styles.locationContainer}>
+            <Text style={styles.locationText}>
+              <EvilIcons name="location" size={26} color="black" /> {property.location}
+            </Text>
+          </View>
 
         <Text style={styles.description}>{property.description}</Text>
         
@@ -181,56 +172,47 @@ fetchPaymentSheetParams()
           </View>
         )} */}
 
-        <View style={styles.actionButtonsContainer}>
-          <TouchableOpacity
-            style={styles.bookButton}
-            onPress={() => {
-              openPaymentSheet();
-            }}
-          >
-            <Text style={styles.bookButtonText}>
-              Book Now | ${property.Price}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.likeButton}
-            onPress={() => handelWishList(property.id)}
-          >
-            <AntDesign
-              name={liked ? "heart" : "hearto"}
-              size={24}
-              color={liked ? "red" : "black"}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <Modal
-          visible={modalVisible}
-          transparent={true}
-          animationType="slide"
-          onRequestClose={closeImageModal}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Button title="Close" onPress={closeImageModal} />
-              {selectedImage && (
-                <Image
-                  source={{ uri: selectedImage }}
-                  style={styles.fullScreenImage}
-                />
-              )}
-            </View>
+          <View style={styles.actionButtonsContainer}>
+            <TouchableOpacity style={styles.bookButton} onPress={openPaymentSheet}>
+              <Text style={styles.bookButtonText}>Book Now | ${property.Price}</Text>
+            </TouchableOpacity>
           </View>
-        </Modal>
-     <Bottomsheet/>
-      </View>
-    </ScrollView>
-     {/* <View>
-            <CommentCard />
 
+          <View style={styles.ratingContainer}>
+            <Text style={styles.ratingText}>Rate this product:</Text>
+            <AirbnbRating
+              count={5}
+              defaultRating={userRating}
+              size={20}
+              showRating={false}
+              onFinishRating={handleRatingCompleted}
+            />
+          </View>
+
+          <Modal visible={modalVisible} transparent={true} animationType="slide" onRequestClose={closeImageModal}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Button title="Close" onPress={closeImageModal} />
+                {selectedImage && (
+                  <Image source={{ uri: selectedImage }} style={styles.fullScreenImage} />
+                )}
               </View>
-            <AddComment propertyId={propertyId} userId={userId} /> */}
+            </View>
+          </Modal>
+
+          <View style={styles.commentsContainer}>
+            <Text style={styles.commentsTitle}>Comments:</Text>
+            <AddComment propertyId={propertyId} />
+            <FlatList
+              data={property.comments}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => <CommentCard comment={item} />}
+            />
+          </View>
+
+          <Bottomsheet />
+        </View>
+      </ScrollView>
     </View>
   );
 };

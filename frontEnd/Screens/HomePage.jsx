@@ -22,15 +22,12 @@ const HomePage = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
-const [rated,setRated]=useState([])
+  const [rated, setRated] = useState([]);
   const userid = SessionStorage.getItem("userid");
 
   const fetchProperties = () => {
     fetch(`${APP_API_URL}/property/getAll`)
-      .then((response) => response.json()
-    
-    )
-    
+      .then((response) => response.json())
       .then((data) => {
         setProperties(data);
         SessionStorage.setItem("ownerid",data[0].ownerid)
@@ -43,30 +40,23 @@ const [rated,setRated]=useState([])
         setLoading(false);
       });
   };
-const getProperty=async()=>{
-  fetch(`${APP_API_URL}/property/getAll`)
-  .then((response) => response.json())
-  .
- 
-then((data) => {
-const filteredData = data.filter(property => property.rating > 3);
-    
-    
 
-   
-
- 
-setRated(filteredData);
-  }).
-catch((error) => {
-console.error("Error fetching properties:", error);
-setLoading(false);
-  });
-}
+  const getProperty = async () => {
+    fetch(`${APP_API_URL}/property/getAll`)
+      .then((response) => response.json())
+      .then((data) => {
+        const filteredData = data.filter((property) => property.rating > 3);
+        setRated(filteredData);
+      })
+      .catch((error) => {
+        console.error("Error fetching properties:", error);
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     fetchProperties();
-    getProperty()
+    getProperty();
   }, []);
 
   const navigateToCategory = (category) => {
@@ -81,80 +71,40 @@ setLoading(false);
     );
   }
 
-  // const displayedProperties = userRole === 'owner' ? ownerProperties : properties;
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Ionicons name="location-outline" size={20} color="#000" />
         <Text style={styles.locationText}>Tunisie</Text>
         <Ionicons name="chevron-down-outline" size={20} color="#000" />
-        <Ionicons
-          name="heart-outline"
-          size={20}
-          color="#000"
-          style={styles.headerIcon}
-        />
-        <Ionicons
-          name="notifications-outline"
-          size={20}
-          color="#000"
-          style={styles.headerIcon}
-        />
+        <Ionicons name="heart-outline" size={20} color="#000" style={styles.headerIcon} />
+        <Ionicons name="notifications-outline" size={20} color="#000" style={styles.headerIcon} />
       </View>
       <View style={styles.searchContainer}>
         <TextInput style={styles.searchInput} placeholder="Search" />
-        <Ionicons
-          name="search-outline"
-          size={20}
-          color="#000"
-          style={styles.searchIcon}
-        />
+        <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
       </View>
       <View style={styles.categories}>
         <Text style={styles.sectionTitle}>Categories</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <TouchableOpacity
-            style={styles.categoryItem}
-            onPress={() => navigateToCategory("House")}
-          >
+          <TouchableOpacity style={styles.categoryItem} onPress={() => navigateToCategory("House")}>
             <Text style={styles.categoryText}>
               <FontAwesome6 name="house" size={18} color="black" /> House
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.categoryItem}
-            onPress={() => navigateToCategory("Apartment")}
-          >
+          <TouchableOpacity style={styles.categoryItem} onPress={() => navigateToCategory("Apartment")}>
             <Text style={styles.categoryText}>
-              <MaterialIcons name="apartment" size={20} color="black" />{" "}
-              Apartment
+              <MaterialIcons name="apartment" size={20} color="black" /> Apartment
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.categoryItem}
-            onPress={() => navigateToCategory("Traditionnel House")}
-          >
+          <TouchableOpacity style={styles.categoryItem} onPress={() => navigateToCategory("Traditionnel House")}>
             <Text style={styles.categoryText}>
-              <MaterialCommunityIcons
-                name="hoop-house"
-                size={24}
-                color="black"
-              />{" "}
-              Traditionnel House
+              <MaterialCommunityIcons name="hoop-house" size={24} color="black" /> Traditionnel House
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.categoryItem}
-            onPress={() => navigateToCategory("Guest House")}
-          >
+          <TouchableOpacity style={styles.categoryItem} onPress={() => navigateToCategory("Guest House")}>
             <Text style={styles.categoryText}>
-              <MaterialCommunityIcons
-                name="greenhouse"
-                size={24}
-                color="black"
-              />{" "}
-              Guest House
+              <MaterialCommunityIcons name="greenhouse" size={24} color="black" /> Guest House
             </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -164,9 +114,7 @@ setLoading(false);
           <Text style={styles.sectionTitle}>
             {userRole === "owner" ? "Your Properties" : "Top Guest Houses"}
           </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("AllProperties")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("AllProperties")}>
             <Text style={styles.seeAllText}>See All</Text>
           </TouchableOpacity>
         </View>
@@ -192,12 +140,7 @@ setLoading(false);
                 </Text>
                 <Text style={styles.tripPrice}>
                   dt {property.Price} / Visit{" "}
-                  <Ionicons
-                    name="heart-outline"
-                    size={20}
-                    color="#000"
-                    style={styles.headerIcon}
-                  />
+                  <Ionicons name="heart-outline" size={20} color="#000" style={styles.headerIcon} />
                 </Text>
               </TouchableOpacity>
             </View>
@@ -207,40 +150,33 @@ setLoading(false);
       {userRole !== "owner" && (
         <View style={styles.houseSection}>
           <View style={styles.tripsHeader}>
+            
             <Text style={styles.sectionTitle}>Top Houses</Text>
-            <TouchableOpacity
-             
-              onPress={() => navigation.navigate("AllProperties")}
-            >
+            <TouchableOpacity onPress={() => navigation.navigate("AllProperties")}>
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
           <ScrollView>
-          {properties.map((property) => (
-        <View key={property.id} style={styles.propertyItem}>
-          <TouchableOpacity
-               onPress={() =>
-                navigation.navigate("ProductDetails", {
-                  propertyid: property.id,
-                  userid: userid,
-                })
-              }
-          >
-
-          <Image
-            style={styles.propertyImage}
-            source={{ uri: property.image[0] }}
-            />
-          <View style={styles.propertyDetails}>
-            <Text style={styles.propertyTitle}>{property.Name}</Text>
-            {/* <Text style={styles.ratingText}>⭐ {property.rating}</Text> */}
-            <Text style={styles.propertyPrice}>
-              dt {property.Price} / Visit
-            </Text>
-          </View>
-            </TouchableOpacity>
-        </View>
-      ))}
+            {properties.map((property) => (
+              <TouchableOpacity
+                key={property.id}
+                onPress={() =>
+                  navigation.navigate("ProductDetails", {
+                    propertyid: property.id,
+                    userid: userid,
+                  })
+                }
+              >
+                <View style={styles.propertyItem}>
+                  <Image style={styles.propertyImage} source={{ uri: property.image }} />
+                  <View style={styles.propertyDetails}>
+                    <Text style={styles.propertyTitle}>{property.Name}</Text>
+                    <Text style={styles.tripLocation}> <MaterialIcons name="location-pin" size={18} color="grey" /> {property.location}</Text>
+                    <Text style={styles.propertyPrice}>dt {property.Price} / Visit</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
           </ScrollView>
         </View>
       )}
@@ -258,10 +194,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
-  },
-  ratingText: {
-    fontSize: 16,
-    color: "#555",
   },
   locationText: {
     flex: 1,
@@ -290,7 +222,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
-    marginBottom: 20,
+    marginLeft: 5,
+    marginBottom: 10,
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -350,43 +283,6 @@ const styles = StyleSheet.create({
   houseSection: {
     marginBottom: 20,
   },
-  houseItem: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  houseImage: {
-    width: 150,
-    height: 100,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  houseInfo: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  houseTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  houseLocation: {
-    color: "#757575",
-    marginTop: 5,
-  },
-  TopTitle: {
-    marginTop: 30,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
   propertyItem: {
     backgroundColor: "#fff",
     borderRadius: 10,
@@ -416,11 +312,6 @@ const styles = StyleSheet.create({
   },
   propertyPrice: {
     color: "#00796b",
-  },
-  loader: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
 

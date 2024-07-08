@@ -54,7 +54,6 @@ const AllPropertiesPage = () => {
             userid: userid,
           })}
         >
-
         <View key={property.id} style={styles.propertyItem}>
           <Image
             style={styles.propertyImage}

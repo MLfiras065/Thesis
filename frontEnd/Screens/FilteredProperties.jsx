@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   propertyItem: {
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderRadius: 50,
     padding: 10,
     marginBottom: 10,
     flexDirection: "row",

@@ -19,13 +19,15 @@ export default function OnboardingScreen() {
           title: "Welcome to TuniGo",
           subtitle: "you have the best places to book here ",
           imageUri:
-            "https://media.istockphoto.com/id/1281244663/vector/happy-tourists-choosing-hotel-and-booking-room-online.jpg?s=612x612&w=0&k=20&c=zoapw5nusmW8lcnoyKjvlhtfvReSBQE6m8bVWlHRdEE=",
+            "https://static.wixstatic.com/media/b4e344_65c21534e6d24c13ba53663395a53d4a~mv2_d_2816_3004_s_4_2.png/v1/fill/w_750,h_800,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/communication-png-passport-travel-visa-c.png",
         },
         {
           title: "You have a place  ",
           subtitle: "you can add it here that our customer can enjoy it ",
           imageUri:
-            "https://media.istockphoto.com/id/1317765391/vector/online-booking-services-abstract-concept-vector-illustration.jpg?s=612x612&w=0&k=20&c=_50Ongy54IDZqlSLFV8jLLb5Jk_em1FTzU5C3PqAYH0=",
+            "https://www.thecurvehotel.com.qa/storage/booking.png",
+            
+            
         },
       ]}
       onDone={handleDone}
