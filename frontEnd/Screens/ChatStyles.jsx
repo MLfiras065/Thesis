@@ -56,12 +56,12 @@ messaginginput: {
     borderRadius: 20,
 },
 messagingbuttonContainer: {
-    width: "30%",
+    width: "20%",
     backgroundColor: "green",
     borderRadius: 3,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 50,
+    borderRadius: 20
 },
 modalbutton: {
     width: "40%",

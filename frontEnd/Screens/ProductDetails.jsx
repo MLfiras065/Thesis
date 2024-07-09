@@ -8,12 +8,15 @@ import { useStripe } from "@stripe/stripe-react-native";
 import { APP_API_URL } from "../env";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
-import AddComment from './AddComment';
-import CommentCard from './CommentCard';
 import Bottomsheet from "../Component/Bottomsheet";
 import { AirbnbRating } from "react-native-ratings";
+import CommentCard from "./CommentCard";
+import AddComment from "./AddComment";
+import { io } from 'socket.io-client';
 
-const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
+const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
+  const navigation = useNavigation();
+  const socket=io('http://192.168.11.174:3000')
   const route = useRoute();
   const propertyId = route.params?.propertyid;
   const userid = route.params?.userid;
@@ -35,27 +38,40 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
     });
     return initResponse;
   };
-
+const handleCreateRoom=()=>{
+  socket.emit('createRoom','roomsList')
+}
   const openPaymentSheet = async () => {
     try {
       const { error } = await presentPaymentSheet();
       if (error) {
         alert(`Error code: ${error.code}`, error.message);
+        console.error("Error presenting payment sheet:", error);
       } else {
         axios
-        .get(`${APP_API_URL}/owner/booked/${userid}`)
-        .then(() => {
-          alert("Payment Successful", "Your payment has been processed successfully!");
-        })
-        .catch((error) => {
-          console.error("Error processing payment:", error);
-        });
+          .get(`${APP_API_URL}/owner/booked/${userid}`)
+          .then(() => {
+            alert(
+              "Payment Successful",
+              "Your payment has been processed successfully!"
+            );
+          })
+          .catch((error) => {
+            console.error("Error processing payment:", error);
+          });
       }
     } catch (error) {
       console.error("Error presenting payment sheet:", error);
     }
   };
- 
+  const getPropertyRating = async (id) => {
+    try {
+      const res = await axios.get(`${APP_API_URL}/property/rate/${id}`);
+      setAvgRating(res.data.avgRating);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     const getProperty = (id) => {
       axios
@@ -116,7 +132,7 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
       const response = await axios.post(`${APP_API_URL}/property/rate/${userid}/${propertyId}`, {
         rating,
       });
-      setUserRating(rating);
+      setUserRating(response.data);
       alert("Rating submitted successfully");
     } catch (error) {
       console.error("Error submitting rating:", error);
@@ -126,6 +142,14 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => {
+          handleCreateRoom();
+          navigation.navigate("Chats");
+        }}
+      >
+        <Text>chat</Text>
+      </TouchableOpacity>
       <ScrollView style={styles.container}>
         <View style={styles.card}>
           <Image source={{ uri: mainImage }} style={styles.image} />

@@ -21,10 +21,10 @@ const OwnerHomePage = () => {
   const navigation = useNavigation();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const userid = SessionStorage.getItem("userid");
+  const ownerid = SessionStorage.getItem("ownerid");
 
   const fetchOwnerProperties = () => {
-    fetch(`${APP_API_URL}/property/getByOwnerId/${userid}`)
+    fetch(`${APP_API_URL}/property/getAll/${ownerid}`)
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
@@ -83,15 +83,15 @@ const OwnerHomePage = () => {
             <View key={property.id} style={styles.propertyItem}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("ProductDetails", {
+                  navigation.navigate("ProductsDetails", {
                     propertyid: property.id,
-                    userid: userid,
+                    userid: ownerid,
                   })
                 }
               >
                 <Image
                   style={styles.propertyImage}
-                  source={{ uri: property.image }}
+                  source={{ uri: property.image[0] }}
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyTitle}>{property.Name}</Text>

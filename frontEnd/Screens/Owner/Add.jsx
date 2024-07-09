@@ -12,17 +12,17 @@ const Add = () => {
   const [location, setLocation] = useState('');
   const [Price, setPrice] = useState('');
 const [property,setProperty]=useState([])
+const ownerid=SessionStorage.getItem("ownerid")
     
     const addProperty =async()=>{
         if (!Name || !description || !location || !Price) {
             Alert.alert('Error', 'Please fill all the fields');
             return
           }
-        const  res =await axios.post(`${APP_API_URL}/property/post/${1}`,
+        const  res =await axios.post(`${APP_API_URL}/property/post/${ownerid}`,
             {Name:Name,Price:Price,description:description,location:location})
         try {
-         console.log("respone post prop",res);
-            //   console.log('Parsed Product Data:', parsedData); 
+         console.log(" post prop",res);
       
          setProperty(res.data) 
          console.log("data",res.data);
@@ -31,24 +31,7 @@ const [property,setProperty]=useState([])
                 } catch (error) {
           console.error(error)
         }}
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //       try {
-        
-    //         const productData = { Name, description, location, Price };
-
-    //         if (productData) {
-             
-    //         } else {
-    //           console.log('No product data found in SessionStorage');
-    //         }
-    //       } catch (error) {
-    //         console.error('Error retrieving product data:', error);
-    //       }
-    //     };
-      
-    //     fetchData();
-    //   }, []);
+   
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.formContainer}>

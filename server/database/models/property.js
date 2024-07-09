@@ -12,15 +12,18 @@ const Property = sequelize.define("Property", {
   },
   image: {
     type: DataTypes.JSON,
-    allowNull: true
+    allowNull: true,
+  
   },
   description: {
     type: DataTypes.TEXT,
-    allowNull: false
+    allowNull: false,
+    
   },
   category: {
     type: DataTypes.STRING,
-    allowNull: true
+    allowNull: true,
+    defaultValue:""
   },
   Booked: {
     type: DataTypes.TINYINT,
@@ -33,7 +36,8 @@ const Property = sequelize.define("Property", {
   },
   ownershpImg: {
     type: DataTypes.STRING,
-    allowNull: true
+    allowNull: true,
+    defaultValue:""
   },
 Bathroom:{
   type:DataTypes.INTEGER,
@@ -60,8 +64,5 @@ allowNull:true
     allowNull: false
   }
 });
-
-// Owner.hasMany(Property,{foreignKey:"ownerid",as:"Property"})
-// Property.belongsTo(Owner,{foreignKey:"ownerid",as:"Owner"})
 
 module.exports = Property;
