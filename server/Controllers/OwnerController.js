@@ -154,4 +154,17 @@ const markeAsPayed= async (req, res) => {
     res.status(500).json({ message: 'An error occurred' });
   }
 }
-module.exports = { getOwner, register, login, updateOwner, getOwnerEmail,acceptBooking,markeAsPayed};
+ const deleteOwner= (req, res) => {
+  Owner.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((data) => {
+ res.json(data);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+}
+module.exports = { getOwner, register, login, updateOwner, getOwnerEmail,acceptBooking,markeAsPayed,deleteOwner};
