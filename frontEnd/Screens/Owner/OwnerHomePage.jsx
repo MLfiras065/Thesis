@@ -21,10 +21,10 @@ const OwnerHomePage = () => {
   const navigation = useNavigation();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const userid = SessionStorage.getItem("userid");
+  const ownerid = SessionStorage.getItem("ownerid");
 
   const fetchOwnerProperties = () => {
-    fetch(`${APP_API_URL}/property/getByOwnerId/${userid}`)
+    fetch(`${APP_API_URL}/property/getAll/${ownerid}`)
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
