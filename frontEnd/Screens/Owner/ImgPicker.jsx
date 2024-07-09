@@ -44,14 +44,14 @@ console.log("added");
     });
 
     if (!result.canceled) {
-      var updatedUrls = [...image];
+      var updatedUrls = [...images];
       updatedUrls[index] = result.assets[0].uri;
       setImages(updatedUrls);
     }
   };
 const handelAdd=()=>{
   updateProperty()
-  navigation.navigate ('productsDetails',{propertyid})
+  navigation.navigate ('HomePage',{propertyid})
 }
   return (
     <SafeAreaView>
@@ -59,7 +59,7 @@ const handelAdd=()=>{
         <Text style={{ fontSize: 35, fontWeight: 'bold' }}>Pick your photos and videos</Text>
         <View style={{ marginTop: 20, marginRight: 12 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20, marginRight: 10 }}>
-            {image.slice(0, 3).map((url, index) => (
+            {images.slice(0, 3).map((url, index) => (
               <TouchableOpacity
                 style={{
                   borderColor: '#581845',
@@ -85,7 +85,7 @@ const handelAdd=()=>{
         </View>
         <View style={{ marginTop: 20, marginRight: 12 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20, marginRight: 10 }}>
-            {image.slice(3).map((url, index) => (
+            {images.slice(3).map((url, index) => (
               <TouchableOpacity
                 style={{
                   borderColor: '#581845',

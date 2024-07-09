@@ -3,7 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./ChatStyles";
 import { useNavigation } from "@react-navigation/native";
-import { io } from "socket.io-client";
+
 
 const AllChats = ({ item }) => {
   const navigation = useNavigation();

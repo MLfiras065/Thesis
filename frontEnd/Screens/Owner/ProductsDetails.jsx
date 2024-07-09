@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  Button,
-  TouchableOpacity,
-  FlatList,
-  Modal,
-  ScrollView,
-} from "react-native";
+import { View, Text, Image, Button, TouchableOpacity, FlatList, Modal, ScrollView, Alert } from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { styles } from "./ProductsDetails.styles";
 import { AntDesign } from "@expo/vector-icons";
@@ -18,25 +9,28 @@ import { APP_API_URL } from "../../env";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
 import Bottomsheet from "../../Component/Bottomsheet";
+import { AirbnbRating } from "react-native-ratings";
+import CommentCard from "../CommentCard";
+import AddComment from "../AddComment";
+import { Entypo } from '@expo/vector-icons';
+import { io } from 'socket.io-client';
 
 
-
-const ProductsDetails = ({  deleteProduct, switchView, isOwner }) => {
+const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
+  const navigation = useNavigation();
+ const socket=io('http://192.168.11.174:3000')
   const route = useRoute();
- const {propertyid}=route.params
   const propertyId = route.params?.propertyid;
   const userid = route.params?.userid;
-  console.log("useridproperty", userid);
   const [property, setProperty] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [liked, setLiked] = useState(false);
+  const [userRating, setUserRating] = useState(0);
+  const [avgRating, setAvgRating] = useState(null);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const [userId, setUserId] = useState(null);
 
-  console.log("idpropertydetailes", propertyId);
-console.log("ownerprop",propid);
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
     const { paymentIntent } = response.data;
@@ -46,18 +40,20 @@ console.log("ownerprop",propid);
     });
     return initResponse;
   };
+// const handleCreateRoom=()=>{
+//   socket.emit('createRoom','roomsList')
+// }
   const openPaymentSheet = async () => {
     try {
       const { error } = await presentPaymentSheet();
-
       if (error) {
-      alert(`Error code: ${error.code}`, error.message);
+        alert(`Error code: ${error.code}`, error.message);
         console.error("Error presenting payment sheet:", error);
       } else {
         axios
-          .get(`${APP_API_URL}/owner/booked/${userId}`)
+          .get(`${APP_API_URL}/owner/booked/${userid}`)
           .then(() => {
-          alert(
+            alert(
               "Payment Successful",
               "Your payment has been processed successfully!"
             );
@@ -70,26 +66,32 @@ console.log("ownerprop",propid);
       console.error("Error presenting payment sheet:", error);
     }
   };
-
+  const getPropertyRating = async (id) => {
+    try {
+      const res = await axios.get(`${APP_API_URL}/property/rate/${id}`);
+      setAvgRating(res.data.avgRating);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     const getProperty = (id) => {
       axios
-        .get(`${APP_API_URL}/property/getone/${propertyid}`)
+        .get(`${APP_API_URL}/property/getone/${id}`)
         .then((res) => {
           setProperty(res.data);
           SessionStorage.setItem("id",res.data.id);
-          setMainImage(res.data.image);  
-          console.log('image',res.data.image);
-          // setImages(res.data)
-console.log("data",res.data);
+          setMainImage(res.data.image[0]);  
+          console.log('data',res.data);
         })
         .catch((err) => console.log(err));
     };
 
     if (propertyId) {
       getProperty(propertyId);
-    };
-fetchPaymentSheetParams()
+      getPropertyRating(propertyId);
+    }
+    fetchPaymentSheetParams();
   }, [propertyId]);
 
   const openImageModal = (img) => {
@@ -116,8 +118,6 @@ fetchPaymentSheetParams()
         }
       );
       alert("Wishlist added");
-
-      console.log("wishlist", res.data);
       setLiked(true);
     } catch (error) {
       console.log(error);
@@ -129,110 +129,118 @@ fetchPaymentSheetParams()
     addWishList(userid, propertyId);
   };
 
+  const handleRatingCompleted = async (rating) => {
+    try {
+      const response = await axios.post(`${APP_API_URL}/property/rate/${userid}/${propertyId}`, {
+        rating,
+      });
+      setUserRating(response.data);
+      alert("Rating submitted successfully");
+    } catch (error) {
+      console.error("Error submitting rating:", error);
+      alert("Failed to submit rating");
+    }
+  };
+
   return (
     <View style={styles.container}>
+    <TouchableOpacity
+      onPress={() => {
+        // handleCreateRoom();
+        navigation.navigate("Chats");
+      }}
+    >
+     <Entypo name="chat" size={24} color="black" />
+    </TouchableOpacity>
     <ScrollView style={styles.container}>
       <View style={styles.card}>
         <Image source={{ uri: mainImage }} style={styles.image} />
 
-        <FlatList
-          data={property.image}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => setMainImage(item)}>
-              <Image source={{ uri: item }} style={styles.smallImage} />
-            </TouchableOpacity>
-          )}
-        />
+      <FlatList
+        data={property.image}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => setMainImage(item)}>
+            <Image source={{ uri: item }} style={styles.smallImage} />
+          </TouchableOpacity>
+        )}
+      />
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
+        <TouchableOpacity style={styles.likeButton} onPress={handelWishList}>
+          <AntDesign name={liked ? "heart" : "hearto"} size={24} color={liked ? "red" : "black"} />
+        </TouchableOpacity>
+
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
           <Text style={styles.title}>{property.Name}</Text>
-          <Text style={styles.ratingText}>⭐ {property.rating}</Text>
+          <Text style={styles.ratingText}>⭐ {avgRating ? avgRating.toFixed(2) : "No ratings yet"}</Text>
         </View>
 
         <View style={styles.locationContainer}>
           <Text style={styles.locationText}>
-            <EvilIcons name="location" size={26} color="black" />{" "}
-            {property.location}
+            <EvilIcons name="location" size={26} color="black" /> {property.location}
           </Text>
         </View>
 
-        <Text style={styles.description}>{property.description}</Text>
-        
-        {isOwner && (
-          <View style={styles.buttonsContainer}>
-            <Button
-              title="Update Product"
-              onPress={() => switchView("update", property)}
-            />
-            <Button
-              title="Delete Product"
-              onPress={() => deleteProduct(property.id)}
-            />
-          </View>
-        )}
+      <Text style={styles.description}>{property.description}</Text>
+      
+      {/* {isOwner && (
+        <View style={styles.buttonsContainer}>
+          <Button
+            title="Update Product"
+            onPress={() => switchView("update", property)}
+          />
+          <Button
+            title="Delete Product"
+            onPress={() => deleteProduct(property.id)}
+          />
+        </View>
+      )} */}
 
         <View style={styles.actionButtonsContainer}>
-          <TouchableOpacity
-            style={styles.bookButton}
-            onPress={() => {
-              openPaymentSheet();
-            }}
-          >
-            <Text style={styles.bookButtonText}>
-              Book Now | ${property.Price}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.likeButton}
-            onPress={() => handelWishList(property.id)}
-          >
-            <AntDesign
-              name={liked ? "heart" : "hearto"}
-              size={24}
-              color={liked ? "red" : "black"}
-            />
+          <TouchableOpacity style={styles.bookButton} onPress={openPaymentSheet}>
+            <Text style={styles.bookButtonText}>Book Now | ${property.Price}</Text>
           </TouchableOpacity>
         </View>
 
-        <Modal
-          visible={modalVisible}
-          transparent={true}
-          animationType="slide"
-          onRequestClose={closeImageModal}
-        >
+        <View style={styles.ratingContainer}>
+          <Text style={styles.ratingText}>Rate this product:</Text>
+          <AirbnbRating
+            count={5}
+            defaultRating={userRating}
+            size={20}
+            showRating={false}
+            onFinishRating={handleRatingCompleted}
+          />
+        </View>
+
+        <Modal visible={modalVisible} transparent={true} animationType="slide" onRequestClose={closeImageModal}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Button title="Close" onPress={closeImageModal} />
               {selectedImage && (
-                <Image
-                  source={{ uri: selectedImage }}
-                  style={styles.fullScreenImage}
-                />
+                <Image source={{ uri: selectedImage }} style={styles.fullScreenImage} />
               )}
             </View>
           </View>
         </Modal>
-     <Bottomsheet/>
+
+        <View style={styles.commentsContainer}>
+          <Text style={styles.commentsTitle}>Comments:</Text>
+          <AddComment propertyId={propertyId} />
+          <FlatList
+            data={property.comments}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <CommentCard comment={item} />}
+          />
+        </View>
+
+        <Bottomsheet />
       </View>
     </ScrollView>
-     {/* <View>
-            <CommentCard />
-
-              </View>
-            <AddComment propertyId={propertyId} userId={userId} /> */}
-    </View>
+  </View>
   );
 };
 
-export default ProductsDetails;
+export default ProductDetails;

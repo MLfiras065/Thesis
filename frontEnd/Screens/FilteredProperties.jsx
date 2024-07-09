@@ -59,7 +59,7 @@ const FilteredProperties = () => {
         <View key={property.id} style={styles.propertyItem}>
           <Image
             style={styles.propertyImage}
-            source={{ uri: property.image }}
+            source={{ uri: property.image[0] }}
             />
           <View style={styles.propertyInfo}>
             <Text style={styles.propertyTitle}>{property.Name}</Text>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   propertyItem: {
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderRadius: 50,
     padding: 10,
     marginBottom: 10,
     flexDirection: "row",

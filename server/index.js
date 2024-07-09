@@ -29,15 +29,18 @@ app.use('/api/property', property);
 app.use('/api/', payment);
 app.use('/api/comment', comment);
 
+
+
+
 app.listen(PORT, () => {
-    console.log(`Server is up and running at: http://localhost:${PORT}`);
+  console.log(`Server is up and running at: http://localhost:${PORT}`);
 });
 // const initApp = async () => {
 //   console.log("Testing the database connection..");
+ //     try {
+ //         await sequelize.sync({alter :true});
+ //         console.log("Connection has been established successfully.");
 
-//     try {
-//         await sequelize.sync();
-//         console.log("Connection has been established successfully.");
 
 //   } catch (error) {
 //       console.log( error);

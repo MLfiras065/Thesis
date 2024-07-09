@@ -9,14 +9,14 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import axios from "axios";
 import { APP_API_URL } from "../env";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
+import Feather from '@expo/vector-icons/Feather';
 
 const SignUp = () => {
   const route = useRoute();
@@ -55,11 +55,6 @@ const SignUp = () => {
       return;
     }
 
-    // if (!CINImage) {
-    //   alert('Please provide your CIN Image');
-    //   return;
-    // }
-
     const data = {
       image,
       FirstName,
@@ -71,19 +66,16 @@ const SignUp = () => {
       CINImage,
     };
 
-    // if (isOwner) {
-    //   data.CINImage = CINImage;
-    // }
-
     try {
       const res = await axios.post(`${APP_API_URL}/owner/reg`, data);
       alert("Signup successful");
       navigation.goBack("TopTabNav");
-      console.log("Signup:", res.data);
+      
     } catch (error) {
       console.error(error);
     }
   };
+
   const SignUpUser = async (
     image,
     FirstName,
@@ -120,12 +112,12 @@ const SignUp = () => {
     try {
       const res = await axios.post(`${APP_API_URL}/user/reg`, data);
       alert("Signup successful");
-      navigation.goBack("TopTabNav");
-      console.log("Signup:", res.data);
+      navigation.goBack("TopNav");
     } catch (error) {
       console.error(error);
     }
   };
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -134,13 +126,11 @@ const SignUp = () => {
       quality: 1,
     });
 
-    console.log(result);
-    setImage(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
+
   const handleCameraLaunch = async () => {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -148,8 +138,6 @@ const SignUp = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -168,6 +156,7 @@ const SignUp = () => {
       CINImage
     );
   };
+
   const handleSignupUser = () => {
     SignUpUser(
       image,
@@ -187,174 +176,105 @@ const SignUp = () => {
       handleSignupUser();
     }
   };
+
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <Formik onSubmit={handleSignup}>
-          {({ touched, handL }) => (
+          {({ touched }) => (
             <View style={styles.wrapper}>
-              <View>
+              <View style={styles.imageContainer}>
                 <TouchableOpacity onPress={pickImage}>
                   <Image
                     source={{
-                      uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s",
+                      uri: image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAd5avdba8EiOZH8lmV3XshrXx7dKRZvhx-A&s",
                     }}
                     style={styles.profimges}
                   />
-                  <Button
-                    title="Camera"
-                    style={{backgroundColor:"#008080"}}
-                    onPress={async () => {
-                      handleCameraLaunch(true);
-                    }}
-                  />
                 </TouchableOpacity>
-                <View></View>
+                <TouchableOpacity style={styles.openCamera} onPress={handleCameraLaunch}>
+                  <Feather name="camera" size={24} color="black" />
+                </TouchableOpacity>
               </View>
-              <View>
-                <Text style={styles.label}>FirstName</Text>
-                <View
-                  style={styles.inputWrapper(
-                    touched.FirstName ? "blue" : "gray"
-                  )}
-                >
-                  <AntDesign name="user" size={20} color="gray" />
-                  <View style={{ marginLeft: 5 }}>
-                    <TextInput
-                      onChangeText={(e) => setFirstName(e)}
-                      //  value={values.FirstName}
-                      placeholder="FirstName"
-                    />
-                  </View>
-                </View>
-              </View>
-              <View>
-                <View>
-                  <Text style={styles.label}>LastName</Text>
-                  <View
-                    style={styles.inputWrapper(
-                      touched.LastName ? "blue" : "gray"
-                    )}
-                  >
-                    <AntDesign name="user" size={20} color="gray" />
-                    <View style={{ marginLeft: 5 }}>
-                      <TextInput
-                        onChangeText={(e) => setLastName(e)}
-                        // //  value={values.LastName}
-                        placeholder="lastname"
-                      />
-                    </View>
-                  </View>
-                </View>
 
-                <Text style={styles.label}>Email</Text>
-                <View
-                  style={styles.inputWrapper(touched.email ? "blue" : "gray")}
-                >
-                  <MaterialCommunityIcons
-                    name="email-outline"
-                    size={20}
-                    color={"gray"}
-                  />
-                  <View style={{ marginLeft: 5 }}>
-                    <TextInput
-                      onChangeText={(e) => setEmail(e)}
-                      // //  value={values.email}
-                      placeholder="Email"
-                    />
-                  </View>
-                </View>
-              </View>
-              <Text style={styles.label}>Password</Text>
-              <View>
-                <View
-                  style={styles.inputWrapper(
-                    touched.password ? "blue" : "gray"
-                  )}
-                >
-                  <MaterialCommunityIcons
-                    name="lock-outline"
-                    size={20}
-                    color={"gray"}
-                  />
-                  <View style={{ marginLeft: 5 }}>
-                    <TextInput
-                      onChangeText={(e) => setPassword(e)}
-                      placeholder="Password"
-                      secureTextEntry
-                    />
-                  </View>
-                </View>
-              </View>
-              <Text style={styles.label}>DateOfBirth</Text>
-              <View>
-                <View
-                  style={styles.inputWrapper(
-                    touched.DateOfBirth ? "blue" : "gray"
-                  )}
-                >
-                  <MaterialCommunityIcons
-                    name="lock-outline"
-                    size={20}
-                    color={"gray"}
-                  />
-                  <View style={{ marginLeft: 5 }}>
-                    <TextInput
-                      onChangeText={(e) => setDateOfBirth(e)}
-                      // //  value={values.DateOfBirth}
-                      placeholder="dateofbirth"
-                    />
-                  </View>
-                </View>
-              </View>
-              <Text style={styles.label}>Gender</Text>
-              <View>
-                <View
-                  style={styles.inputWrapper(touched.gender ? "blue" : "gray")}
-                >
-                  <MaterialCommunityIcons
-                    name="lock-outline"
-                    size={20}
-                    color={"gray"}
-                  />
-                  <View style={{ marginLeft: 5 }}>
-                    <TextInput
-                      onChangeText={(e) => setGender(e)}
-                      // //  value={values.gender}
-                      placeholder="gender"
-                    />
-                  </View>
-                </View>
-              </View>
-              {showCINImage && (
-                <View>
-                  <Text style={styles.label}>CIN Image</Text>
-                  <View
-                    style={styles.inputWrapper(
-                      touched.CINImage ? "blue" : "gray"
-                    )}
-                  >
-                    <MaterialCommunityIcons
-                      name="lock-outline"
-                      size={20}
-                      color={"gray"}
-                    />
-                    <View style={{ marginLeft: 5 }}>
-                      <TextInput
-                        onChangeText={(e) => setCINImage(e)}
-                        placeholder="CINImage"
-                      />
-                    </View>
-                  </View>
-                </View>
-              )}
-              <View style={{ marginTop: 20 }}>
-                <Button
-                  title="SignUp"
-                  onPress={handleSignupButtonClick}
-                  style={{ marginTop: 20, borderRadius: 12, borderWidth: 1,backgroundColor:"#008080" }}
+              <View style={styles.inputWrapper}>
+                <MaterialCommunityIcons name="account-outline" size={20} color={"gray"} />
+                <TextInput
+                  onChangeText={(text) => setFirstName(text)}
+                  value={FirstName}
+                  placeholder="First name"
+                  style={styles.input}
                 />
               </View>
+
+              <View style={styles.inputWrapper}>
+                <MaterialCommunityIcons name="account-outline" size={20} color={"gray"} />
+                <TextInput
+                  onChangeText={(text) => setLastName(text)}
+                  value={LastName}
+                  placeholder="Last name"
+                  style={styles.input}
+                />
+              </View>
+
+              <View style={styles.inputWrapper}>
+                <MaterialCommunityIcons name="email-outline" size={20} color={"gray"} />
+                <TextInput
+                  onChangeText={(text) => setEmail(text)}
+                  value={email}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  style={styles.input}
+                />
+              </View>
+
+              <View style={styles.inputWrapper}>
+                <MaterialCommunityIcons name="lock-outline" size={20} color={"gray"} />
+                <TextInput
+                  onChangeText={(text) => setPassword(text)}
+                  value={Password}
+                  placeholder="Password"
+                  secureTextEntry
+                  style={styles.input}
+                />
+              </View>
+
+              <View style={styles.inputWrapper}>
+                <MaterialCommunityIcons name="calendar-outline" size={20} color={"gray"} />
+                <TextInput
+                  onChangeText={(text) => setDateOfBirth(text)}
+                  value={DateOfBirth}
+                  placeholder="Date of Birth"
+                  style={styles.input}
+                />
+              </View>
+
+              <View style={styles.inputWrapper}>
+                <MaterialCommunityIcons name="gender-male-female" size={20} color={"gray"} />
+                <TextInput
+                  onChangeText={(text) => setGender(text)}
+                  value={gender}
+                  placeholder="Gender"
+                  style={styles.input}
+                />
+              </View>
+
+              {showCINImage && (
+                <View style={styles.inputWrapper}>
+                  <MaterialCommunityIcons name="id-card" size={20} color={"gray"} />
+                  <TextInput
+                    onChangeText={(text) => setCINImage(text)}
+                    value={CINImage}
+                    placeholder="CIN Image"
+                    style={styles.input}
+                  />
+                </View>
+              )}
+
+              <TouchableOpacity style={styles.button} onPress={handleSignupButtonClick}>
+                <Text style={styles.buttonText}>Sign up</Text>
+              </TouchableOpacity>
             </View>
           )}
         </Formik>
@@ -368,63 +288,78 @@ export default SignUp;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 20,
   },
   scrollView: {
-    paddingHorizontal: 40,
+    width: "100%",
   },
   wrapper: {
-    marginBottom: 20,
-  },
-  inputWrapper: (borderColor) => ({
-    borderColor: borderColor,
-    backgroundColor: "white",
-    borderWidth: 1,
-    height: 50,
+    width: "97%",
+    marginLeft:5,
+    backgroundColor: "#fff",
     borderRadius: 12,
-    flexDirection: "row",
-    paddingHorizontal: 15,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8.84,
+    elevation: 5,
     alignItems: "center",
+    justifyContent: "center",
+  },
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 12,
     marginBottom: 15,
-  }),
-  label: {
-    fontSize: 14,
-    marginBottom: 8,
-    color: "#333",
-    textAlign: "left",
+    paddingHorizontal: 15,
+    height: 50,
+    width: "100%",
   },
   input: {
     flex: 1,
-    fontSize: 16,
-    color: "#333",
+    marginLeft: 10,
+  },
+  imageContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
   },
   profimges: {
-    resizeMode: "cover",
     width: 100,
     height: 100,
-    borderColor: "white",
-    borderWidth: 2,
     borderRadius: 50,
-    alignSelf: "center",
+  },
+  openCamera: {
+    marginTop: 10,
+  },
+  options: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
-  camera: {
-    height: 800,
-    justifyContent: "flex-end",
-  },
-  buttonContainer: {
-    flex: 1,
-    backgroundColor: "transparent",
-    flexDirection: "row",
-    margin: 20,
+  optionText: {
+    color: "#4d8790",
   },
   button: {
-    flex: 0.1,
-    alignSelf: "flex-end",
+    backgroundColor: "#4d8790",
+    padding: 15,
+    borderRadius: 100,
     alignItems: "center",
+    width: "100%",
   },
-  text: {
-    fontSize: 18,
-    color: "white",
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

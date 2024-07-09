@@ -5,14 +5,16 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import CommentCard from "../Screens/CommentCard"
-import AddComment from "../Screens/AddComment"
-import { useRoute } from '@react-navigation/native';
+import CommentCard from '../Screens/CommentCard';
+import AddComment from '../Screens/AddComment';
+import { useRoute, useNavigation } from "@react-navigation/native";
+
 const Bottomsheet= () => {
   const route = useRoute();
  
   const propertyId = route.params?.propertyid;
-  const userId = route.params?.userid;
+  const userid = route.params?.userid;
+
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['25%', '50%',"100%"], []);
 
@@ -44,7 +46,7 @@ const Bottomsheet= () => {
             <Text>Comments </Text>
             
             <CommentCard  />              
-            <AddComment propertyId={propertyId} userId={userId} />
+            <AddComment propertyId={propertyId} userId={userid} />
              
           </BottomSheetView>
           </ScrollView>

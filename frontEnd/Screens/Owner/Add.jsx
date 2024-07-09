@@ -12,13 +12,14 @@ const Add = () => {
   const [location, setLocation] = useState('');
   const [Price, setPrice] = useState('');
 const [property,setProperty]=useState([])
+const ownerid=SessionStorage.getItem("ownerid")
     
     const addProperty =async()=>{
         if (!Name || !description || !location || !Price) {
             Alert.alert('Error', 'Please fill all the fields');
             return
           }
-        const  res =await axios.post(`${APP_API_URL}/property/post/${10}`,
+        const  res =await axios.post(`${APP_API_URL}/property/post/${ownerid}`,
             {Name:Name,Price:Price,description:description,location:location})
         try {
          console.log(" post prop",res);

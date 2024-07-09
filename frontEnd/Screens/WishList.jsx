@@ -92,7 +92,7 @@ const Wishlist = () => {
           <View key={item.id} style={styles.propertyItem}>
           <Image
             style={styles.propertyImage}
-            source={{ uri: item.image }}
+            source={{ uri: item.image[0] }}
             />
           <View style={styles.propertyDetails}>
             <Text style={styles.propertyTitle}>{item.Name}</Text>
