@@ -74,15 +74,16 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
       console.error("Error presenting payment sheet:", error);
     }
   };
-
+ 
   useEffect(() => {
     const getProperty = (id) => {
       axios
         .get(`${APP_API_URL}/property/getone/${id}`)
         .then((res) => {
           setProperty(res.data);
-          SessionStorage.setItem("id", res.data.id);
-          setMainImage(res.data.image);
+          SessionStorage.setItem("id",res.data.id);
+          setMainImage(res.data.image[0]);  
+          console.log('data',res.data);
         })
         .catch((err) => console.log(err));
     };
@@ -144,17 +145,17 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
         <View style={styles.card}>
           <Image source={{ uri: mainImage }} style={styles.image} />
 
-          <FlatList
-            data={property.additionalImages}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => setMainImage(item)}>
-                <Image source={{ uri: item }} style={styles.smallImage} />
-              </TouchableOpacity>
-            )}
-          />
+        <FlatList
+          data={property.image}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => setMainImage(item)}>
+              <Image source={{ uri: item }} style={styles.smallImage} />
+            </TouchableOpacity>
+          )}
+        />
 
           <View
             style={{

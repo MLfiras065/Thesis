@@ -44,7 +44,7 @@ const HomePage = () => {
         setProperties(data);
         console.log("data",data);
         SessionStorage.setItem("ownerid",data[0].ownerid)
-        console.log("property",data[0].ownerid)
+        console.log('prop',data);
         setLoading(false);
       })
       .catch((error) => {
@@ -194,7 +194,7 @@ filterProperties()
             <View key={property.id} style={styles.tripItem}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("ProductDetails", {
+                  navigation.navigate("ProductsDetails", {
                     propertyid: property.id,
                     userid: userid,
                   })
@@ -203,7 +203,7 @@ filterProperties()
                 <Text style={styles.tripTitle}>{property.Name}</Text>
                 <Image
                   style={styles.tripImage}
-                  source={{ uri: property.image }}
+                  source={{ uri: property.image[0] }}
                 />
                 <Text style={styles.tripLocation}>
                   <MaterialIcons name="location-pin" size={18} color="grey" />
@@ -303,7 +303,33 @@ filterProperties()
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
-        
+          <ScrollView>
+          {properties.map((property) => (
+        <View key={property.id} style={styles.propertyItem}>
+          <TouchableOpacity
+               onPress={() =>
+                navigation.navigate("ProductDetails", {
+                  propertyid: property.id,
+                  userid: userid,
+                })
+              }
+          >
+
+          <Image
+            style={styles.propertyImage}
+            source={{ uri: property.image[0] }}
+            />
+          <View style={styles.propertyDetails}>
+            <Text style={styles.propertyTitle}>{property.Name}</Text>
+            {/* <Text style={styles.ratingText}>⭐ {property.rating}</Text> */}
+            <Text style={styles.propertyPrice}>
+              dt {property.Price} / Visit
+            </Text>
+          </View>
+            </TouchableOpacity>
+        </View>
+      ))}
+          </ScrollView>
         </View>
       )}
     </ScrollView>

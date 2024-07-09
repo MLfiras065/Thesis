@@ -29,7 +29,9 @@ import add from "./Screens/Owner/Add.jsx"
 import Photo from './Screens/Owner/ImgPicker.jsx';
 import EditProfilee from './Screens/Owner/EditProfilee';
 import Profilee from './Screens/Owner/Profilee';
-import ProductsDetails from './Screens/Owner/ProductsDetails.jsx';
+import ProductsDetails from './Screens/Owner/ProductsDetails.jsx'; 
+import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
+
 
 
 
@@ -49,6 +51,7 @@ export default function App() {
           <Stack.Screen name="Login" component={Login} />  
           <Stack.Screen name="SignUp" component={SignUp} /> 
           <Stack.Screen name="LogIn" component={LogInUser} />  
+          <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }}  />
           <Stack.Screen name="Navigation" component={BottomNavigation} options={{ headerShown: false }}/>
           <Stack.Screen name="Subscribe" component={Subscribe} />  
           <Stack.Screen name="Home" component={HomePage} />
@@ -56,7 +59,6 @@ export default function App() {
           <Stack.Screen name="AllProperties" component={AllPropertiesPage} options={{ title: 'All Properties' }} />
           <Stack.Screen name="Search" component={Search} />  
           <Stack.Screen name="FiltredProperties" component={FilteredProperties} />  
-          <Stack.Screen name="ProductDetails" component={ProductDetails} /> 
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="EditProfile" component={EditProfile} /> 
           <Stack.Screen name="Chat" component={Chat} /> 
@@ -65,7 +67,6 @@ export default function App() {
            <Stack.Screen name="bottom" component={Bottomsheet} /> 
            <Stack.Screen name="calender" component={Calender} /> 
            {/* <Stack.Screen name="Map" component={Map} />  */}
-
         {/* <Stack.Screen name="add" component={add} options={{ headerShown: false }}  />
            <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
           <Stack.Screen name="ProductsDetails" component={ProductsDetails} options={{ headerShown: false }}  /> */}
@@ -87,4 +88,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-

@@ -3,33 +3,32 @@ import React, { useState } from 'react';
 import { EvilIcons } from '@expo/vector-icons';
 // import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation,useRoute } from '@react-navigation/native';
 import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
 import axios  from 'axios';
 
 const Photo = () => {
-  const navigation = useNavigation();
   const route=useRoute()
-  const { propertyid } = route.params;
+  const  {propertyid}=route.params
+  const navigation = useNavigation();
   const ownerid=SessionStorage.getItem('ownerId')
   const [Category, setcategory] = useState('');
   const [OwnershpImg,setOwnershpImg]=useState("")
   const [Extra,setExtra]=useState("")
   const [Property,setProperty]=useState([])
-  const [image,setImage]=useState(["","","","",""])
-  // const [Location,setLocation]=useState("")
-  // const [Name, setName] = useState('');
-  // const [description, setDescription] = useState('');
-  // const [Price, setPrice] = useState('');
+  const product=SessionStorage.getItem('productData')
+  const [images,setImages]=useState(["",""])
 
-
+  console.log("propertyid",
+    propertyid
+    );
 
   const updateProperty =async()=>{
-    const  res =await axios.put(`${APP_API_URL}/property/update/${propertyid}`,{image})
+    const  res =await axios.put(`${APP_API_URL}/property/image/${propertyid}`,{image:images})
     try {
-  console.log("res images data",res);
-      setImage(res.data)
+  console.log("res images",res.data.images);
+      setImages(res.data)
 console.log("added");
    setProperty(res.data) 
   } catch (error) {
@@ -47,13 +46,12 @@ console.log("added");
     if (!result.canceled) {
       var updatedUrls = [...image];
       updatedUrls[index] = result.assets[0].uri;
-      setImage(updatedUrls);
-      console.log("updatedimgs",updatedUrls);
+      setImages(updatedUrls);
     }
   };
 const handelAdd=()=>{
   updateProperty()
-  navigation.navigate('ProductsDetails',{propertyid})
+  navigation.navigate ('productsDetails',{propertyid})
 }
   return (
     <SafeAreaView>

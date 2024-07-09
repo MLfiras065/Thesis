@@ -3,9 +3,9 @@ import React, { useState,useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
 import SessionStorage from 'react-native-session-storage';
 import axios from 'axios';
-
 import { APP_API_URL } from '../../env';
-const AddProductScreen = () => {
+
+const Add = () => {
     const navigation=useNavigation()
   const [Name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -21,33 +21,16 @@ const [property,setProperty]=useState([])
         const  res =await axios.post(`${APP_API_URL}/property/post/${10}`,
             {Name:Name,Price:Price,description:description,location:location})
         try {
-         console.log("respone post prop",res);
-        
+         console.log(" post prop",res);
       
          setProperty(res.data) 
          console.log("data",res.data);
-         navigation.navigate('img',{propertyid:res.data.id})
-        } catch (error) {
+         console.log('id',res.data.id);
+         navigation.navigate('Extra',{propertyid:res.data.id});
+                } catch (error) {
           console.error(error)
         }}
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-        
-            const productData = { Name, description, location, Price };
-
-            if (productData) {
-             
-            } else {
-              console.log('No product data found in SessionStorage');
-            }
-          } catch (error) {
-            console.error('Error retrieving product data:', error);
-          }
-        };
-      
-        fetchData();
-      }, []);
+   
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.formContainer}>
@@ -92,8 +75,8 @@ const [property,setProperty]=useState([])
         </View>
 
         <TouchableOpacity style={styles.button} onPress={()=>{addProperty()}}>
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
+                <Text style={styles.buttonText}>Next</Text>
+            </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -173,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddProductScreen;
+export default Add;
