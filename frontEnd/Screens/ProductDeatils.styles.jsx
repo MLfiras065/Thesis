@@ -81,8 +81,9 @@ export const styles = StyleSheet.create({
   likeButton: {
     padding: 15,
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    marginLeft:70
   },
   modalContainer: {
     flex: 1,

@@ -40,9 +40,9 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
     });
     return initResponse;
   };
-// const handleCreateRoom=()=>{
-//   socket.emit('createRoom','roomsList')
-// }
+const handleCreateRoom=()=>{
+  socket.emit('createRoom',room)
+}
   const openPaymentSheet = async () => {
     try {
       const { error } = await presentPaymentSheet();
@@ -108,45 +108,12 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
     return <Text>Loading...</Text>;
   }
 
-  // const addWishList = async (userid, propertyId) => {
-  //   try {
-  //     const res = await axios.post(
-  //       `${APP_API_URL}/wishlist/add/${propertyId}/${userid}`,
-  //       {
-  //         UserId: userid,
-  //         PropertyId: propertyId,
-  //       }
-  //     );
-  //     alert("Wishlist added");
-  //     setLiked(true);
-  //   } catch (error) {
-  //     console.log(error);
-  //     alert("Failed to add to wishlist");
-  //   }
-  // };
-
-  // const handelWishList = () => {
-  //   addWishList(userid, propertyId);
-  // };
-
-  // const handleRatingCompleted = async (rating) => {
-  //   try {
-  //     const response = await axios.post(`${APP_API_URL}/property/rate/${userid}/${propertyId}`, {
-  //       rating,
-  //     });
-  //     setUserRating(response.data);
-  //     alert("Rating submitted successfully");
-  //   } catch (error) {
-  //     console.error("Error submitting rating:", error);
-  //     alert("Failed to submit rating");
-  //   }
-  // };
 
   return (
     <View style={styles.container}>
     <TouchableOpacity
       onPress={() => {
-        // handleCreateRoom();
+        handleCreateRoom();
         navigation.navigate("Chats");
       }}
     >
@@ -167,11 +134,6 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
           </TouchableOpacity>
         )}
       />
-
-        {/* <TouchableOpacity style={styles.likeButton} onPress={handelWishList}>
-          <AntDesign name={liked ? "heart" : "hearto"} size={24} color={liked ? "red" : "black"} />
-        </TouchableOpacity> */}
-
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
           <Text style={styles.title}>{property.Name}</Text>
           <Text style={styles.ratingText}>⭐ {avgRating ? avgRating.toFixed(2) : "No ratings yet"}</Text>
@@ -184,37 +146,12 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
         </View>
 
       <Text style={styles.description}>{property.description}</Text>
-      
-      {/* {isOwner && (
-        <View style={styles.buttonsContainer}>
-          <Button
-            title="Update Product"
-            onPress={() => switchView("update", property)}
-          />
-          <Button
-            title="Delete Product"
-            onPress={() => deleteProduct(property.id)}
-          />
-        </View>
-      )} */}
-
+    
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity style={styles.bookButton} onPress={openPaymentSheet}>
             <Text style={styles.bookButtonText}>Book Now | ${property.Price}</Text>
           </TouchableOpacity>
         </View>
-{/* 
-        <View style={styles.ratingContainer}>
-          <Text style={styles.ratingText}>Rate this product:</Text>
-          <AirbnbRating
-            count={5}
-            defaultRating={userRating}
-            size={20}
-            showRating={false}
-            onFinishRating={handleRatingCompleted}
-          />
-        </View> */}
-
         <Modal visible={modalVisible} transparent={true} animationType="slide" onRequestClose={closeImageModal}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
@@ -228,12 +165,6 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
 
         <View style={styles.commentsContainer}>
           <Text style={styles.commentsTitle}>Comments:</Text>
-          {/* <AddComment propertyId={propertyId} />
-          <FlatList
-            data={property.comments}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <CommentCard comment={item} />}
-          /> */}
         </View>
 
         <Bottomsheet />

@@ -18,12 +18,12 @@ const Chats = () => {
             try {
                 const res = await axios.get(`${APP_API_URL}/chat/getmsg/${userId}/${ownerId}`);
                 const formattedMessages = res.data.map(msg => ({
-                    _id: msg.id,
-                    text: msg.message,
+                    _id: messages.id,
+                    text: messages.message,
                     createdAt: new Date(msg.createdAt),
                     user: {
-                        _id: msg.senderId,
-                        name: msg.FirstName,
+                        _id: messages.senderId,
+                        name: messages.FirstName,
                         avatar: 'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg'
                     }
                 }));

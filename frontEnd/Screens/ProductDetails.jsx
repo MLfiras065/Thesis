@@ -161,12 +161,13 @@ const handleCreateRoom=()=>{
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => setMainImage(item)}>
+
               <Image source={{ uri: item }} style={styles.smallImage} />
             </TouchableOpacity>
           )}
         />
 
-          <TouchableOpacity style={styles.likeButton} onPress={handelWishList}>
+          <TouchableOpacity style={styles.likeButton} onPress={handelWishList}  >
             <AntDesign name={liked ? "heart" : "hearto"} size={24} color={liked ? "red" : "black"} />
           </TouchableOpacity>
 
