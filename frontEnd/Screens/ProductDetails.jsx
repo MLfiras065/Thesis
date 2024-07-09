@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Button, TouchableOpacity, FlatList, Modal, ScrollView, Alert } from "react-native";
+import { View, Text, Image, Button, TouchableOpacity, FlatList, Modal, ScrollView, StyleSheet } from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { styles } from "./ProductDeatils.styles";
 import { AntDesign } from "@expo/vector-icons";
@@ -180,21 +180,7 @@ const handleCreateRoom=()=>{
               <EvilIcons name="location" size={26} color="black" /> {property.location}
             </Text>
           </View>
-
         <Text style={styles.description}>{property.description}</Text>
-        
-        {/* {isOwner && (
-          <View style={styles.buttonsContainer}>
-            <Button
-              title="Update Product"
-              onPress={() => switchView("update", property)}
-            />
-            <Button
-              title="Delete Product"
-              onPress={() => deleteProduct(property.id)}
-            />
-          </View>
-        )} */}
 
           <View style={styles.actionButtonsContainer}>
             <TouchableOpacity style={styles.bookButton} onPress={openPaymentSheet}>

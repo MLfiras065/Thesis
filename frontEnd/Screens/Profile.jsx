@@ -36,12 +36,7 @@ function ProfileScreen() {
       const emailUser = SessionStorage.getItem("emailUser");
       const emailOwner = SessionStorage.getItem("emailOwner");
       console.log("email",emailUser);
-      if (emailOwner) {
-        const res = await axios.get(`${APP_API_URL}/owner/${emailOwner}`);
-        setItem(res.data);
-        setToken(res.data.ownerToken)
-        console.log(res.data);
-      } else if (emailUser) {
+     if (emailUser) {
         const res = await axios.get(`${APP_API_URL}/user/${emailUser}`);
         SessionStorage.getItem('emailUser')
         setItem(res.data);
@@ -78,10 +73,10 @@ function ProfileScreen() {
           }
       >
       <View style={styles.profileHeader}>
-        <Image  source={{ uri: item?item.image :"" }} style={styles.avatar} />
-        <Text style={styles.name}>{item?item.FirstName :"" } </Text>
-        <Text style={styles.lastname}>{item?item.LastName :"" }</Text>
-        <Text style={styles.email}>{item?item.email:''}</Text>
+      <Image  source={{ uri: item?item.image :"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" }} style={styles.avatar} />
+        <Text style={styles.name}>{item?item.FirstName :"first Name" } </Text>
+        <Text style={styles.lastname}>{item?item.LastName :"LastName" }</Text>
+        <Text style={styles.email}>{item?item.email:'email'}</Text>
         
       </View>
       <TouchableOpacity
