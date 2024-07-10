@@ -12,7 +12,7 @@ import axios from "axios";
 import { AntDesign } from '@expo/vector-icons';
 
 import styles from "./styles.jsx";
-import { APP_API_URL } from "../env.js";
+import { APP_API_URL } from "../../env.js";
 import SessionStorage from "react-native-session-storage";
 import { useNavigation, useRoute } from "@react-navigation/native";
 

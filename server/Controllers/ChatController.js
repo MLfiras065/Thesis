@@ -35,7 +35,7 @@ const getRooms=async(req,res)=>{
 try {
     const {userId,ownerId,message}=req.params
 let room=[]
-room.map((chat)=>{Chat.findAll({where:req.params.userId})})
+
 
 } catch (error) {
     console.log(error);

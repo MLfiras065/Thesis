@@ -1,24 +1,24 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Profile from "./Profile";
-import Chat from "./Chat";
-import WishList from "./WishList";
+import Profile from "../Profile/Profile";
+import Chat from "../Chat/Chat";
+import WishList from "../WishList/WishList";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import HomePage from "./HomePage";
+import HomePage from "../HomePage/HomePage";
 import SessionStorage from "react-native-session-storage";
-import Map from "./Map";
-
+import Map from "../Map/Map";
+import { Feather } from '@expo/vector-icons';
 const Tab = createBottomTabNavigator();
 const BottomNavigation = () => {
   const email = SessionStorage.getItem("email");
   const ownerid = SessionStorage.getItem("ownerid");
   const navigation = useNavigation();
   const onPressHome = () =>
-    navigation.navigate("HomePage", { screen: "HomePage" });
+    navigation.navigate("Home", { screen: "Home" });
   return (
     <Tab.Navigator style={styles.mainContainer}>
       <Tab.Screen
@@ -56,7 +56,7 @@ const BottomNavigation = () => {
         component={Map}
         options={{
           tabBarIcon: () => (
-            <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
+            <Feather name="map-pin" size={24} color="black" />
           ),
         }}
       />

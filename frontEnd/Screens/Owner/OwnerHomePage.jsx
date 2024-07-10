@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
+import {RefreshControl,
   View,
   Text,
   StyleSheet,
@@ -7,13 +7,11 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  ActivityIndicator,
+  ActivityIndicator,Dimensions
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
@@ -22,7 +20,14 @@ const OwnerHomePage = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const ownerid = SessionStorage.getItem("ownerid");
+  const [refreshing, setRefreshing] = React.useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   const fetchOwnerProperties = () => {
     fetch(`${APP_API_URL}/property/getAll/${ownerid}`)
       .then((response) => response.json())
@@ -38,7 +43,7 @@ const OwnerHomePage = () => {
 
   useEffect(() => {
     fetchOwnerProperties();
-  }, []);
+  }, [refreshing]);
 
   if (loading) {
     return (
@@ -49,7 +54,10 @@ const OwnerHomePage = () => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container}
+    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
+
       <View style={styles.header}>
         <Ionicons name="location-outline" size={20} color="#000" />
         <Text style={styles.locationText}>Tunisie</Text>
@@ -116,7 +124,7 @@ const OwnerHomePage = () => {
     </ScrollView>
   );
 };
-
+const width = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -134,22 +142,39 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   headerIcon: {
-    marginLeft: 15,
+    marginLeft: 10,
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f1f1f1",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
     marginBottom: 20,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    paddingHorizontal: 10,
   },
   searchInput: {
     flex: 1,
+    height: 40,
   },
   searchIcon: {
     marginLeft: 10,
+  },
+  categories: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  categoryItem: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    padding: 10,
+    marginRight: 10,
+  },
+  categoryText: {
+    fontSize: 16,
   },
   tripsSection: {
     marginBottom: 20,
@@ -158,57 +183,71 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    marginLeft: 5,
     marginBottom: 10,
-    fontSize: 18,
-    fontWeight: "bold",
   },
   seeAllText: {
-    color: "#A9A9A9",
+    fontSize: 16,
+    color: "#C0C0C0",
   },
-  propertyItem: {
-    backgroundColor: "#fff",
+  tripItem: {
+    marginRight: 10,
+  },
+  tripImage: {
+    width: width * 0.7,
+    height: 200,
     borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
+  },
+  tripTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 10,
+  },
+  tripLocation: {
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-    elevation: 1,
+    color: "grey",
+  },
+  tripPrice: {
+    color:"#4d8790",
+    marginTop: 5,
+    fontSize: 14,
+  },
+  propertyItem: {
+    flexDirection: "row",
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+    padding: 10,
   },
   propertyImage: {
-    width: 150,
-    height: 100,
-    borderRadius: 5,
+    width: 140,
+    height: 140,
+    borderRadius: 10,
     marginRight: 10,
   },
   propertyDetails: {
     flex: 1,
+    justifyContent: "space-between",
   },
   propertyTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 5,
   },
   propertyLocation: {
-    color: "#757575",
-    marginBottom: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    color: "grey",
   },
   propertyPrice: {
-    color: "#00796b",
+    fontSize: 14,
+    color:"#4d8790"
   },
   loader: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
- 
 });
 
 export default OwnerHomePage;

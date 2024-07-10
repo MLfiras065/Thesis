@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert,
   Image,
   Button,
 } from "react-native";
@@ -14,7 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 
 const EditProfile = () => {
   const route = useRoute();

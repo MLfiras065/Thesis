@@ -10,8 +10,8 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
 import Bottomsheet from "../../Component/Bottomsheet";
 import { AirbnbRating } from "react-native-ratings";
-import CommentCard from "../CommentCard";
-import AddComment from "../AddComment";
+// import CommentCard from "../CommentCard";
+// import AddComment from "../AddComment";
 import { Entypo } from '@expo/vector-icons';
 import { io } from 'socket.io-client';
 
@@ -41,7 +41,7 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
     return initResponse;
   };
 const handleCreateRoom=()=>{
-  socket.emit('createRoom',room)
+  socket.emit('createRoom',"roomsList")
 }
   const openPaymentSheet = async () => {
     try {

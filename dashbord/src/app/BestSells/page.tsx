@@ -39,10 +39,10 @@ const doughnutData = {
 };
 
 const lineData = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+  labels: ['January', 'February', 'July', 'June', 'May', 'April'],
   datasets: [
     {
-      label: 'Sales Trend',
+      label: 'Most Hectic Time  ',
       data: [65, 59, 80, 81, 56, 55],
       fill: false,
       borderColor: 'rgba(75, 192, 192, 1)',
@@ -75,7 +75,7 @@ const barData = {
 };
 
 const polarAreaData = {
-  labels: ['Category X', 'Category Y', 'Category Z'],
+  labels: [ 'Male', 'Female'],
   datasets: [
     {
       label: 'Average Score',
@@ -110,7 +110,7 @@ const BestSellingCharts = () => {
             </div>
           </div>
           <div className="p-4">
-            <h2 className="text-xl font-bold mb-4">Key Insights</h2>
+            <h2 className="text-xl font-bold mb-4">Most  porperty  Exists</h2>
             <ul className="list-disc list-inside">
               <li>Apartments are the most popular accommodation type.</li>
               <li>Houses follow closely behind in popularity.</li>
@@ -122,7 +122,7 @@ const BestSellingCharts = () => {
         {/* Line Chart */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="p-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-center font-bold text-lg">
-            Sales Trend
+             Booking
           </div>
           <div className="p-4">
             <div className="h-80">
@@ -130,9 +130,9 @@ const BestSellingCharts = () => {
             </div>
           </div>
           <div className="p-4">
-            <h2 className="text-xl font-bold mb-4">Monthly Sales Overview</h2>
+            <h2 className="text-xl font-bold mb-4">Monthly Booking Overview</h2>
             <p className="text-gray-700">
-              Analyze the sales trend month-over-month to identify growth patterns.
+              Analyze the Booking trend month-over-month to identify growth patterns.
             </p>
             <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
               View Detailed Report
@@ -141,8 +141,8 @@ const BestSellingCharts = () => {
         </div>
 
         {/* Bar Chart */}
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <div className="p-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-center font-bold text-lg">
+        {/* <div className="bg-white shadow-lg rounded-lg overflow-hidden"> */}
+          {/* <div className="p-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-center font-bold text-lg">
             Sales Comparison by Category
           </div>
           <div className="p-4">
@@ -159,12 +159,12 @@ const BestSellingCharts = () => {
               View Detailed Report
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Polar Area Chart */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="p-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-center font-bold text-lg">
-            Average Score by Category
+            Average Score by Gender
           </div>
           <div className="p-4">
             <div className="h-80">
@@ -172,9 +172,9 @@ const BestSellingCharts = () => {
             </div>
           </div>
           <div className="p-4">
-            <h2 className="text-xl font-bold mb-4">Category Average Scores</h2>
+            <h2 className="text-xl font-bold mb-4">Gender Average </h2>
             <p className="text-gray-700">
-              View average scores for different categories.
+              View average scores for different gender
             </p>
             <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
               View Detailed Report

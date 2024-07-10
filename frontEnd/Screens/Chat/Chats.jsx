@@ -5,7 +5,7 @@ import { io } from 'socket.io-client';
 import axios from 'axios';
 import { GiftedChat } from 'react-native-gifted-chat';
 import styles from './ChatStyles';
-import { APP_API_URL } from '../env';
+import { APP_API_URL } from '../../env';
 
 const Chats = () => {
     const userId = SessionStorage.getItem("userid");

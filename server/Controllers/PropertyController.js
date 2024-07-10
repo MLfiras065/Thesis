@@ -1,7 +1,7 @@
 
 const Owner = require("../database/models/Owner");
 const Property = require("../database/models/property");
-const UserRating = require("../database/models/UserRating"); // Import UserRating model
+const UserRating = require("../database/models/UserRating"); 
 
 function getAllProperties(req, res) {
   

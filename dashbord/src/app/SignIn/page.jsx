@@ -12,8 +12,9 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const response = await axios.post('http:localhost:4000/admin/LoginAdmin', { email, password });
+      // const response = await axios.post(`http:localhost:4000/admin/LogAdm/${email}`, { email, password });
       // console.log(response.data);
+
       router.push('/BestSells');
     } catch (error) {
       console.error('Error signing in', error);
@@ -23,7 +24,7 @@ export default function SignIn() {
   return (
     <div className="min-h-screen flex items-center justify-center relative  w-full max-w-[90rem] flex-col rounded-xl bg-gray-100">
     <form className="bg-white p-8 rounded shadow-md justify-center relative  w-full max-w-[40rem] h-full max-h-[30rem]  flex-col" onSubmit={handleSubmit}>
-      <h2 className="text-2xl font-bold mb-6 text-center">Admin Sign In</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center"> Sign In</h2>
       <div className="mb-4">
         <label className="block text-gray-700">Email</label>
         <input
