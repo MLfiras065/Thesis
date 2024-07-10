@@ -79,9 +79,9 @@ function ProfileScreen() {
       >
         <View style={styles.profileHeader}>
           <Image source={{ uri:  "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" }} style={styles.avatar} />
-          <Text style={styles.name}>uu</Text>
-          <Text style={styles.Lastname}>trt</Text>
-          <Text style={styles.email}>kkk</Text>
+          <Text style={styles.name}>{item.FirstName}</Text>
+          <Text style={styles.Lastname}>{item.LastName}</Text>
+          <Text style={styles.email}>{item.email}</Text>
           
           <TextInput
             style={styles.phone}

@@ -24,6 +24,7 @@ import ProductDetails from './Screens/ProductDetails';
 import AllPropertiesPage from './Screens/AllPropertiesPage';  
 import FilteredProperties from './Screens/FilteredProperties.jsx';
 import Bottomsheet from './Component/Bottomsheet.jsx';
+import Calender from './Screens/Calender.jsx'
 import add from "./Screens/Owner/Add.jsx"
 import Photo from './Screens/Owner/ImgPicker.jsx';
 import EditProfilee from './Screens/Owner/EditProfilee';
@@ -31,6 +32,7 @@ import Profilee from './Screens/Owner/Profilee';
 import ProductsDetails from './Screens/Owner/ProductsDetails.jsx'; 
 import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 import OwnerBottomNavigation from './Screens/Owner/OwnerBottomNavigation.jsx';
+import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
 
 // import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
 
@@ -50,6 +52,7 @@ export default function App() {
           <Stack.Screen name="Login" component={Login} />  
           <Stack.Screen name="SignUp" component={SignUp} /> 
           <Stack.Screen name="LogIn" component={LogInUser} />  
+          <Stack.Screen name="ProductDetails" component={ProductDetails}  />
           <Stack.Screen name="Navigation" component={BottomNavigation} options={{ headerShown: false }}/>
           <Stack.Screen name="OwnerNav" component={OwnerBottomNavigation} options={{ headerShown: false }}/>
           <Stack.Screen name="Subscribe" component={Subscribe} />  
@@ -65,12 +68,13 @@ export default function App() {
            <Stack.Screen name="Chats" component={Chats} /> 
            <Stack.Screen name="bottom" component={Bottomsheet} />  
            <Stack.Screen name="Profilee" component={Profilee} />  
-           <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }}  />
+           <Stack.Screen name="HomePage" component={OwnerHomePage} />  
+
            <Stack.Screen name="EditProfilee" component={EditProfilee}  /> 
           <Stack.Screen name="add" component={add} options={{ headerShown: false }}/>
           <Stack.Screen name="Extra" component={ExtraFeatures} />
           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
-           <Stack.Screen name="ProductsDetails" component={ProductsDetails} options={{ headerShown: false }}  />
+           <Stack.Screen name="ProductsDetails" component={ProductsDetails}   />
           
         </Stack.Navigator>
       </NavigationContainer>

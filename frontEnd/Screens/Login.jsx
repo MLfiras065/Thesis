@@ -32,7 +32,7 @@ const Login = () => {
       console.log("ownertoken", res.data.token);
       alert("Login successful");
 
-      navigation.navigate("OwnerNav", { screen: "BottomNavigation" });;
+      navigation.navigate("OwnerNav", { screen: "BottomNavigation" });
     } catch (err) {
       console.error(err);
       alert("Login failed. Please check your credentials and try again.");
@@ -46,6 +46,11 @@ const Login = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back!</Text>
+      
+      <Image
+        source={{ uri: "https://cdn.discordapp.com/attachments/1235498402746335293/1260214654999728158/TuniGo_1.png?ex=668e81db&is=668d305b&hm=056370c859c3b06819c004e4d36de9fb9c2aeb9ca6a9cf6665877e6895f2aa51&" }}
+        style={styles.image}
+      />
       
       <View style={styles.wrapper}>
         <Text style={styles.label}>Email address</Text>
@@ -105,9 +110,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#000000",
-    marginBottom: 50,
+    marginBottom: 20,
   },
-
+  image: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
   wrapper: {
     width: "100%",
     backgroundColor: "#fff",
@@ -148,8 +157,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-  
-  
   button: {
     backgroundColor: "#4d8790",
     padding: 15,
@@ -161,4 +168,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+ 
 });

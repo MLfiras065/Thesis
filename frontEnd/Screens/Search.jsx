@@ -22,7 +22,7 @@ const Search = (props) => {
         placeholder="Search"
         style={styles.search}
         placeholderTextColor="#888"
-        onSubmitEditing={() => filter(key)} // Filter on enter key press
+        onSubmitEditing={() => filter(key)} 
       />
     </View>
   );

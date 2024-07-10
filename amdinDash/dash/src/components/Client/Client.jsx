@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Client.css'; 
-//import data
+
 
 const Client = () => {
   const [clients, setClients] = useState([]);
@@ -34,7 +34,7 @@ const Client = () => {
 
   const handleDelete = async (clientId) => {
     try {
-      await axios.delete(`/api/clients/${clientId}`); 
+      await axios.delete(`http://localhost:3000/api/clients/${clientId}`); 
       setClients(clients.filter(client => client.id !== clientId));
     } catch (error) {
       setError(error.message);

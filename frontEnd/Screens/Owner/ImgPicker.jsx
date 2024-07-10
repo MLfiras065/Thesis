@@ -16,10 +16,6 @@ const Photo = () => {
   const [Category, setcategory] = useState('');
   const [OwnershpImg,setOwnershpImg]=useState("")
   const [Extra,setExtra]=useState("")
-  const [Location,setLocation]=useState("")
-  const [Name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [Price, setPrice] = useState('');
   const [Property,setProperty]=useState([])
   const product=SessionStorage.getItem('productData')
   const [images,setImages]=useState(["",""])
@@ -48,14 +44,14 @@ console.log("added");
     });
 
     if (!result.canceled) {
-      const updatedUrls = [...images];
+      var updatedUrls = [...images];
       updatedUrls[index] = result.assets[0].uri;
       setImages(updatedUrls);
     }
   };
 const handelAdd=()=>{
   updateProperty()
-  navigation.navigate ('ProductsDetails',{propertyid})
+  navigation.navigate ('HomePage',{propertyid})
 }
   return (
     <SafeAreaView>

@@ -57,7 +57,7 @@ const AllPropertiesPage = () => {
         <View key={property.id} style={styles.propertyItem}>
           <Image
             style={styles.propertyImage}
-            source={{ uri: property.image }}
+            source={{ uri: property.image[0] }}
             />
           <View style={styles.propertyDetails}>
             <Text style={styles.propertyTitle}>{property.Name}</Text>

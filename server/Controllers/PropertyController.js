@@ -96,7 +96,7 @@ function deleteProperty(req, res) {
 }
 
 const getOwnerProperty = async (req, res) => {
-  const userPost = await Property.findAll({ where: { ownerid: req.params.ownerid } });
+  const userPost = await Property.findAll({ where: { ownerid: req.params.id } });
   try {
     res.json(userPost);
   } catch (err) {

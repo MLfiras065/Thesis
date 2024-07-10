@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
+import {RefreshControl,
   View,
   Text,
   StyleSheet,
@@ -16,13 +16,26 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { APP_API_URL } from "../env";
 import SessionStorage from "react-native-session-storage";
+import Search from "./Search";
 
 const HomePage = () => {
+
   const navigation = useNavigation();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filteredProperties, setFilteredProperties] = useState([])
   const [userRole, setUserRole] = useState(null);
   const [rated, setRated] = useState([]);
+
+  const [searchKey, setSearchKey] = useState('');
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   const userid = SessionStorage.getItem("userid");
 
   const fetchProperties = () => {
@@ -30,8 +43,8 @@ const HomePage = () => {
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
+        console.log("data",data);
         SessionStorage.setItem("ownerid",data[0].ownerid)
-        // console.log("property",data[0].ownerid)
         console.log('prop',data);
         setLoading(false);
       })
@@ -57,7 +70,7 @@ const HomePage = () => {
   useEffect(() => {
     fetchProperties();
     getProperty();
-  }, []);
+  }, [searchKey,refreshing]);
 
   const navigateToCategory = (category) => {
     navigation.navigate("FilteredProperties", { category });
@@ -70,9 +83,12 @@ const HomePage = () => {
       </View>
     );
   }
-
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+    >
       <View style={styles.header}>
         <Ionicons name="location-outline" size={20} color="#000" />
         <Text style={styles.locationText}>Tunisie</Text>
@@ -123,7 +139,7 @@ const HomePage = () => {
             <View key={property.id} style={styles.tripItem}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("ProductsDetails", {
+                  navigation.navigate("ProductDetails", {
                     propertyid: property.id,
                     userid: userid,
                   })
@@ -147,6 +163,75 @@ const HomePage = () => {
           ))}
         </ScrollView>
       </View>
+      <View>
+      <ScrollView>
+          {searchKey ? (
+            filteredProperties.map((property) => (
+              <View key={property.id} style={styles.tripItem}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("ProductDetails", {
+                      propertyid: property.id,
+                      userid: userid,
+                    })
+                  }
+                >
+                  <Text style={styles.tripTitle}>{property.Name}</Text>
+                  <Image
+                    style={styles.tripImage}
+                    source={{ uri: property.image[0] }}
+                  />
+                  <Text style={styles.tripLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.tripPrice}>
+                    dt {property.Price} / Visit{" "}
+                    <Ionicons
+                      name="heart-outline"
+                      size={20}
+                      color="#000"
+                      style={styles.headerIcon}
+                    />
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          ) : (
+            properties.map((property) => (
+              <View key={property.id} style={styles.tripItem}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("ProductDetails", {
+                      propertyid: property.id,
+                      userid: userid,
+                    })
+                  }
+                >
+                  <Text style={styles.tripTitle}>{property.Name}</Text>
+                  <Image
+                    style={styles.tripImage}
+                    source={{ uri: property.image[0] }}
+                  />
+                  <Text style={styles.tripLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.tripPrice}>
+                    dt {property.Price} / Visit{" "}
+                    <Ionicons
+                      name="heart-outline"
+                      size={20}
+                      color="#000"
+                      style={styles.headerIcon}
+                    />
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
+        </ScrollView>
+</View>
       {userRole !== "owner" && (
         <View style={styles.houseSection}>
           <View style={styles.tripsHeader}>
@@ -168,7 +253,7 @@ const HomePage = () => {
                 }
               >
                 <View style={styles.propertyItem}>
-                  <Image style={styles.propertyImage} source={{ uri: property.image }} />
+                  <Image style={styles.propertyImage} source={{ uri: property.image[0] }} />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyTitle}>{property.Name}</Text>
                     <Text style={styles.tripLocation}> <MaterialIcons name="location-pin" size={18} color="grey" /> {property.location}</Text>

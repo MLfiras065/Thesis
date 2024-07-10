@@ -14,8 +14,8 @@ exports.addToWishlist = async (req, res) => {
 
 exports.getWishlist = async (req, res) => {
   try {
-    const wishlist = await Property.findAll({
-      include: [{ model: User }],
+    const wishlist = await User.findAll({
+      include: [{ model:Property }],where:{id:req.params.id}
     });
     res.status(200).json(wishlist);
   } catch (error) {

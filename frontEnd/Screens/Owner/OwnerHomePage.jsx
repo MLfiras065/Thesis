@@ -83,15 +83,15 @@ const OwnerHomePage = () => {
             <View key={property.id} style={styles.propertyItem}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("ProductDetails", {
+                  navigation.navigate("ProductsDetails", {
                     propertyid: property.id,
-                    userid: userid,
+                    userid: ownerid,
                   })
                 }
               >
                 <Image
                   style={styles.propertyImage}
-                  source={{ uri: property.image }}
+                  source={{ uri: property.image[0] }}
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyTitle}>{property.Name}</Text>
