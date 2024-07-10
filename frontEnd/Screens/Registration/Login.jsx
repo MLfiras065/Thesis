@@ -1,51 +1,60 @@
 import { StyleSheet, View, Text, TextInput, Button, Image, TouchableOpacity } from "react-native";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
-const LogInUser = () => {
-  const navigation = useNavigation();
+import axios from "axios";
 
-  const [emailUser, setEmailUser] = useState("");
-  const [Password, setPassword] = useState("");
-  const [token, setToken] = useState("");
+const Login = () => {
+  const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [token, setToken] = useState('');
+
   const logIn = async (navigation) => {
-    if (!emailUser || !Password) {
+    if (!email || !password) {
       alert("Please enter both email and password");
       return;
     }
 
     try {
-      const res = await axios.post(`${APP_API_URL}/user/log/${emailUser}`, {
-        Password: Password,
+      const res = await axios.post(`${APP_API_URL}/owner/log/${email}`, {
+        Password: password,
       });
 
-      console.log("loguser", res.data);
-      SessionStorage.setItem("emailUser", emailUser);
-      SessionStorage.setItem("userid", res.data.id);
-      SessionStorage.setItem("userToken", res.data.token);
-      console.log("userid", res.data.id);
-      console.log("usertoken", res.data.token);
-      alert("Login successful");
-      navigation.navigate("Navigation", { screen: "Navigation" })
+      console.log("data", res.data);
+      SessionStorage.setItem("emailOwner", email);
+      SessionStorage.setItem("ownerid", res.data.id);
+      SessionStorage.setItem("ownerToken", res.data.token);
       
+      console.log("ownerid", res.data.id);
+      console.log("ownertoken", res.data.token);
+      alert("Login successful");
+
+      navigation.navigate("OwnerNav", { screen: "BottomNavigation" });
     } catch (err) {
       console.error(err);
       alert("Login failed. Please check your credentials and try again.");
     }
   };
+
   const handleLogIn = () => {
     logIn(navigation);
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back!</Text>
       
+      <Image
+        source={{ uri: "https://cdn.discordapp.com/attachments/1235498402746335293/1260214654999728158/TuniGo_1.png?ex=668e81db&is=668d305b&hm=056370c859c3b06819c004e4d36de9fb9c2aeb9ca6a9cf6665877e6895f2aa51&" }}
+        style={styles.image}
+      />
+      
       <View style={styles.wrapper}>
         <Text style={styles.label}>Email address</Text>
-        <View style={styles.inputWrapper(emailUser ? "blue" : "gray")}>
+        <View style={styles.inputWrapper(email ? "blue" : "gray")}>
           <MaterialCommunityIcons
             name="email-outline"
             size={20}
@@ -53,15 +62,15 @@ const LogInUser = () => {
           />
           <TextInput
             style={styles.input}
-            onChangeText={(text) => setEmailUser(text)}
-            value={emailUser}
+            onChangeText={(text) => setEmail(text)}
+            value={email}
             placeholder="example@gmail.com"
             keyboardType="email-address"
             autoCapitalize="none"
           />
         </View>
         <Text style={styles.label}>Password</Text>
-        <View style={styles.inputWrapper(Password ? "blue" : "gray")}>
+        <View style={styles.inputWrapper(password ? "blue" : "gray")}>
           <MaterialCommunityIcons
             name="lock-outline"
             size={20}
@@ -70,7 +79,7 @@ const LogInUser = () => {
           <TextInput
             style={styles.input}
             onChangeText={(pass) => setPassword(pass)}
-            value={Password}
+            value={password}
             placeholder="Password"
             secureTextEntry
           />
@@ -87,7 +96,8 @@ const LogInUser = () => {
   );
 };
 
-export default LogInUser;
+export default Login;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -100,9 +110,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#000000",
-    marginBottom: 50,
+    marginBottom: 20,
   },
-
+  images: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
   wrapper: {
     width: "100%",
     backgroundColor: "#fff",
@@ -143,8 +157,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-  
-  
   button: {
     backgroundColor: "#4d8790",
     padding: 15,
@@ -156,4 +168,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  image:{width: 320,
+    height: 200,
+    marginBottom: 20,}
 });

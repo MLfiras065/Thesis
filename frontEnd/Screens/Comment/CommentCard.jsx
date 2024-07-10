@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { APP_API_URL } from '../env';
+import { APP_API_URL } from '../../env';
 import { RefreshControl,StyleSheet, Text, View, FlatList, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-
-
 
 const CommentCard = () => {
   const [refreshing, setRefreshing] = React.useState(false);

@@ -5,14 +5,14 @@ import { styles } from "./ProductDeatils.styles";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
-import Bottomsheet from "../Component/Bottomsheet";
+import Bottomsheet from "../../Component/Bottomsheet";
 import { AirbnbRating } from "react-native-ratings";
-import CommentCard from "./CommentCard";
-import AddComment from "./AddComment";
+import AddComment from "../Comment/AddComment";
 import { io } from 'socket.io-client';
+import { Ionicons } from '@expo/vector-icons';
 
 const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const navigation = useNavigation();
@@ -148,7 +148,7 @@ const handleCreateRoom=()=>{
           navigation.navigate("Chats");
         }}
       >
-        <Text>chat</Text>
+       <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
       </TouchableOpacity>
       <ScrollView style={styles.container}>
         <View style={styles.card}>
@@ -161,12 +161,13 @@ const handleCreateRoom=()=>{
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => setMainImage(item)}>
+
               <Image source={{ uri: item }} style={styles.smallImage} />
             </TouchableOpacity>
           )}
         />
 
-          <TouchableOpacity style={styles.likeButton} onPress={handelWishList}>
+          <TouchableOpacity style={styles.likeButton} onPress={handelWishList}  >
             <AntDesign name={liked ? "heart" : "hearto"} size={24} color={liked ? "red" : "black"} />
           </TouchableOpacity>
 
@@ -183,7 +184,7 @@ const handleCreateRoom=()=>{
         <Text style={styles.description}>{property.description}</Text>
 
           <View style={styles.actionButtonsContainer}>
-            <TouchableOpacity style={styles.bookButton} onPress={openPaymentSheet}>
+            <TouchableOpacity style={styles.bookButton} onPress={()=>{navigation.navigate('Calender')}}>
               <Text style={styles.bookButtonText}>Book Now | ${property.Price}</Text>
             </TouchableOpacity>
           </View>
@@ -218,9 +219,9 @@ const handleCreateRoom=()=>{
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => <CommentCard comment={item} />}
             />
+          <Bottomsheet />
           </View>
 
-          <Bottomsheet />
         </View>
       </ScrollView>
     </View>

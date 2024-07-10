@@ -3,9 +3,22 @@ import { SafeAreaView, View, Text, Pressable, FlatList } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import styles from "./ChatStyles";
 import AllChats from "./AllChats";
+import axios from "axios";
+import { APP_API_URL } from "../../env";
+import SessionStorage from "react-native-session-storage";
 
 const Chat = () => {
+  const id=SessionStorage.getItem('userid')
   const [rooms, setRooms] = useState([]);
+  const getRoom=async()=>{
+    try {
+   const res= await axios.get(`${APP_API_URL}/chat/getRoom/${id}`)
+  setRooms(res.data)  
+  console.log("rooms",res.data);
+  } catch (error) {
+      console.log("err",error);
+    }''
+  }
 
   return (
     <SafeAreaView style={styles.chatscreen}>

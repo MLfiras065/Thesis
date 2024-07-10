@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
 import { View, TextInput, Button, StyleSheet, Alert,Text } from 'react-native';
 import axios from 'axios';
-import { APP_API_URL } from '../env';
+import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
 
 const AddComment = ({ propertyId }) => {

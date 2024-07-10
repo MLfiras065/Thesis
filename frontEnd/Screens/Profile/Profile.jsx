@@ -12,7 +12,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { Feather } from '@expo/vector-icons';
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
 function ProfileScreen() {

@@ -11,7 +11,7 @@ const AllOwner = ({ data }) => {
       axios
         .delete(`http://localhost:4000/api/owner/del/${data.id}`)
         .then(() => {
-          router.push("/User");
+          router.push("/Owner");
         })
         .catch((err) => {
           console.log(err);
