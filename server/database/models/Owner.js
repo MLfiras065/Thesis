@@ -5,7 +5,7 @@ const Property =require("./property");
 const Owner = sequelize.define("Owner", {
   image: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   FirstName: {
     type: DataTypes.STRING,
@@ -34,7 +34,7 @@ const Owner = sequelize.define("Owner", {
   },
   CINImage:{
     type:DataTypes.STRING,
-    allowNull:false
+    allowNull:true
   },role:{
     type:DataTypes.STRING,
     defaultValue:"owner"

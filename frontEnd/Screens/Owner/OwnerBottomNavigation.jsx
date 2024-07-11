@@ -17,7 +17,7 @@ const OwnerBottomNavigation = () => {
   const ownerid = SessionStorage.getItem("ownerid");
   const navigation = useNavigation();
   const onPressHome = () =>
-    navigation.navigate("HomePage", { screen: "HomePage" });
+    navigation.navigate("OwnerHomePage", { screen: "OwnerHomePage" });
   return (
     <Tab.Navigator style={styles.mainContainer}>
       <Tab.Screen

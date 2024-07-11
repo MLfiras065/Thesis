@@ -26,12 +26,12 @@ const EditProfile = () => {
   const [image, setImage] = useState("");
   const [ownerid, setOwnerId] = useState(null);
   const [userid, setUserId] = useState(null);
-  const [PhoneNumber, setPhoneNumber] = useState("");
+  // const [PhoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
     const fetchOwnerId = async () => {
-      const id = await SessionStorage.getItem("ownerid");
-      setOwnerId(id);
+      const ownerid = await SessionStorage.getItem("ownerid");
+      setOwnerId(ownerid);
     };
     const fetchUserId = async () => {
       const userid = await SessionStorage.getItem("userid");
@@ -48,24 +48,23 @@ const EditProfile = () => {
     }
 
     try {
-      const response = await axios.put(`${APP_API_URL}/user/upd/${userid}`, {
+      const response = await axios.put(`${APP_API_URL}/owner/upd/${ownerid}`, {
         FirstName,
         LastName,
         email,
         image,
-        PhoneNumber,
+        // PhoneNumber,
       });
 
       if (response.status === 200) {
-        SessionStorage.setItem("emailUser", email);
+        SessionStorage.setItem("emailOwner", email);
         setEmail(response.data.email);
         setFirstName(response.data.FirstName);
         setLastName(response.data.LastName);
         setImage(response.data.image);
-        setPhoneNumber(response.data.PhoneNumber);
         console.log("Updated", response.data);
         alert("Success", "Profile updated successfully");
-        navigation.goBack("Profile", {});
+        navigation.goBack("Profilee", {});
       } else {
         alert("Error", "Failed to update profile");
       }
@@ -147,7 +146,7 @@ const EditProfile = () => {
             keyboardType="email-address"
           />
         </View>
-        <View style={styles.inputContainer}>
+        {/* <View style={styles.inputContainer}>
           <Text style={styles.label}>Phone Number</Text>
           <TextInput
             style={styles.input}
@@ -155,7 +154,7 @@ const EditProfile = () => {
             onChangeText={setPhoneNumber}
             keyboardType="phone-pad"
           />
-        </View>
+        </View> */}
         <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
           <Text style={styles.updateButtonText}>Update</Text>
         </TouchableOpacity>

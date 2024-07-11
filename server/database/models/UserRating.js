@@ -8,7 +8,7 @@ const UserRating = sequelize.define('UserRating', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: User, // Referencing the User model
+      model: User, 
       key: 'id'
     }
   },
@@ -16,7 +16,7 @@ const UserRating = sequelize.define('UserRating', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: Property, // Referencing the Property model
+      model: Property, 
       key: 'id' 
     }
   },

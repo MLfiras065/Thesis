@@ -31,4 +31,14 @@ const addMessage=async(req,res)=>{
         res.status(500).json({ error: error.message });
     }
 }
+const getRooms=async(req,res)=>{
+try {
+    const {userId,ownerId,message}=req.params
+let room=[]
+
+
+} catch (error) {
+    console.log(error);
+}
+}
 module.exports={getMessages,addMessage}

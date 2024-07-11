@@ -5,8 +5,8 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import CommentCard from '../Screens/CommentCard';
-import AddComment from '../Screens/AddComment';
+import CommentCard from '../Screens/Comment/CommentCard';
+// import AddComment from '../Screens/AddComment';
 import { useRoute, useNavigation } from "@react-navigation/native";
 
 const Bottomsheet= () => {
@@ -46,7 +46,7 @@ const Bottomsheet= () => {
             <Text>Comments </Text>
             
             <CommentCard  />              
-            <AddComment propertyId={propertyId} userId={userid} />
+            {/* <AddComment propertyId={propertyId} userId={userid} /> */}
              
           </BottomSheetView>
           </ScrollView>
