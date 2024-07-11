@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {RefreshControl,
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-} from "react-native";
+import { RefreshControl, View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -19,14 +10,12 @@ import SessionStorage from "react-native-session-storage";
 import Search from "./Search";
 
 const HomePage = () => {
-
   const navigation = useNavigation();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filteredProperties, setFilteredProperties] = useState([])
+  const [filteredProperties, setFilteredProperties] = useState([]);
   const [userRole, setUserRole] = useState(null);
   const [rated, setRated] = useState([]);
-
   const [searchKey, setSearchKey] = useState('');
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -43,9 +32,9 @@ const HomePage = () => {
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
-        console.log("data",data);
-        SessionStorage.setItem("ownerid",data[0].ownerid)
-        console.log('prop',data);
+        console.log("data", data);
+        SessionStorage.setItem("ownerid", data[0].ownerid);
+        console.log('prop', data);
         setLoading(false);
       })
       .catch((error) => {
@@ -70,7 +59,7 @@ const HomePage = () => {
   useEffect(() => {
     fetchProperties();
     getProperty();
-  }, [searchKey,refreshing]);
+  }, [searchKey, refreshing]);
 
   const navigateToCategory = (category) => {
     navigation.navigate("FilteredProperties", { category });
@@ -83,11 +72,11 @@ const HomePage = () => {
       </View>
     );
   }
+
   return (
-    <ScrollView style={styles.container}
-    refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }
+    <ScrollView
+      style={styles.container}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
       <View style={styles.header}>
         <Ionicons name="location-outline" size={20} color="#000" />
@@ -97,7 +86,7 @@ const HomePage = () => {
         <Ionicons name="notifications-outline" size={20} color="#000" style={styles.headerIcon} />
       </View>
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search" />
+        <TextInput style={styles.searchInput} placeholder="Search" value={searchKey} onChangeText={setSearchKey} />
         <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
       </View>
       <View style={styles.categories}>
@@ -128,14 +117,14 @@ const HomePage = () => {
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
           <Text style={styles.sectionTitle}>
-            {userRole === "owner" ? "Your Properties" : "Top Guest Houses"}
+            {userRole === "owner" ? "Your Properties" : "Popular"}
           </Text>
           <TouchableOpacity onPress={() => navigation.navigate("AllProperties")}>
             <Text style={styles.seeAllText}>See All</Text>
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {rated.slice(0, 3).map((property) => (
+          {rated.slice(0, 5).map((property) => (
             <View key={property.id} style={styles.tripItem}>
               <TouchableOpacity
                 onPress={() =>
@@ -145,11 +134,11 @@ const HomePage = () => {
                   })
                 }
               >
-                <Text style={styles.tripTitle}>{property.Name}</Text>
                 <Image
                   style={styles.tripImage}
                   source={{ uri: property.image[0] }}
                 />
+                <Text style={styles.tripTitle}>{property.Name}</Text>
                 <Text style={styles.tripLocation}>
                   <MaterialIcons name="location-pin" size={18} color="grey" />
                   {property.location}
@@ -163,88 +152,17 @@ const HomePage = () => {
           ))}
         </ScrollView>
       </View>
+      <View style={styles.tripsHeader}>
+        <Text style={styles.sectionTitle}>Top Houses</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("AllProperties")}>
+          <Text style={styles.seeAllText}>See All</Text>
+        </TouchableOpacity>
+      </View>
       <View>
-      <ScrollView>
-          {searchKey ? (
-            filteredProperties.map((property) => (
-              <View key={property.id} style={styles.tripItem}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("ProductDetails", {
-                      propertyid: property.id,
-                      userid: userid,
-                    })
-                  }
-                >
-                  <Text style={styles.tripTitle}>{property.Name}</Text>
-                  <Image
-                    style={styles.tripImage}
-                    source={{ uri: property.image[0] }}
-                  />
-                  <Text style={styles.tripLocation}>
-                    <MaterialIcons name="location-pin" size={18} color="grey" />
-                    {property.location}
-                  </Text>
-                  <Text style={styles.tripPrice}>
-                    dt {property.Price} / Visit{" "}
-                    <Ionicons
-                      name="heart-outline"
-                      size={20}
-                      color="#000"
-                      style={styles.headerIcon}
-                    />
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ))
-          ) : (
-            properties.map((property) => (
-              <View key={property.id} style={styles.tripItem}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("ProductDetails", {
-                      propertyid: property.id,
-                      userid: userid,
-                    })
-                  }
-                >
-                  <Text style={styles.tripTitle}>{property.Name}</Text>
-                  <Image
-                    style={styles.tripImage}
-                    source={{ uri: property.image[0] }}
-                  />
-                  <Text style={styles.tripLocation}>
-                    <MaterialIcons name="location-pin" size={18} color="grey" />
-                    {property.location}
-                  </Text>
-                  <Text style={styles.tripPrice}>
-                    dt {property.Price} / Visit{" "}
-                    <Ionicons
-                      name="heart-outline"
-                      size={20}
-                      color="#000"
-                      style={styles.headerIcon}
-                    />
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ))
-          )}
-        </ScrollView>
-</View>
-      {userRole !== "owner" && (
-        <View style={styles.houseSection}>
-          <View style={styles.tripsHeader}>
-            
-            <Text style={styles.sectionTitle}>Top Houses</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("AllProperties")}>
-              <Text style={styles.seeAllText}>See All</Text>
-            </TouchableOpacity>
-          </View>
-          <ScrollView>
-            {properties.map((property) => (
+        {searchKey ? (
+          filteredProperties.map((property) => (
+            <View key={property.id} style={styles.propertyItem}>
               <TouchableOpacity
-                key={property.id}
                 onPress={() =>
                   navigation.navigate("ProductDetails", {
                     propertyid: property.id,
@@ -252,23 +170,70 @@ const HomePage = () => {
                   })
                 }
               >
-                <View style={styles.propertyItem}>
-                  <Image style={styles.propertyImage} source={{ uri: property.image[0] }} />
-                  <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyTitle}>{property.Name}</Text>
-                    <Text style={styles.tripLocation}> <MaterialIcons name="location-pin" size={18} color="grey" /> {property.location}</Text>
-                    <Text style={styles.propertyPrice}>dt {property.Price} / Visit</Text>
-                  </View>
+                <Image
+                  style={styles.propertyImage}
+                  source={{ uri: property.image[0] }}
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyTitle}>{property.Name}</Text>
+                  <Text style={styles.propertyLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.propertyPrice}>
+                    dt {property.Price} / Visit{" "}
+                    <Ionicons
+                      name="heart-outline"
+                      size={20}
+                      color="#000"
+                      style={styles.headerIcon}
+                    />
+                  </Text>
                 </View>
               </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-      )}
+            </View>
+          ))
+        ) : (
+          properties.map((property) => (
+            <View key={property.id} style={styles.propertyItem}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProductDetails", {
+                    propertyid: property.id,
+                    userid: userid,
+                  })
+                }
+              >
+                <Image
+                  style={styles.propertyImage}
+                  source={{ uri: property.image[0] }}
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyTitle}>{property.Name}</Text>
+                  <Text style={styles.propertyLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.propertyPrice}>
+                    dt {property.Price} / Visit{" "}
+                    <Ionicons
+                      name="heart-outline"
+                      size={20}
+                      color="#000"
+                      style={styles.headerIcon}
+                    />
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))
+        )}
+      </View>
     </ScrollView>
   );
 };
 
+const width = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -286,19 +251,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   headerIcon: {
-    marginLeft: 15,
+    marginLeft: 10,
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f1f1f1",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
     marginBottom: 20,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    paddingHorizontal: 10,
   },
   searchInput: {
     flex: 1,
+    height: 40,
   },
   searchIcon: {
     marginLeft: 10,
@@ -307,102 +272,91 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
-    marginLeft: 5,
-    marginBottom: 10,
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
+    marginBottom: 10,
   },
   categoryItem: {
-    backgroundColor: "#e0f7fa",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 20,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    padding: 10,
     marginRight: 10,
   },
   categoryText: {
-    color: "#00796b",
+    fontSize: 16,
+  },
+  tripsSection: {
+    marginBottom: 20,
   },
   tripsHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   seeAllText: {
-    color: "#A9A9A9",
+    fontSize: 16,
+    color: "#C0C0C0",
   },
   tripItem: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 9,
     marginRight: 10,
-    width: 150,
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
-    elevation: 1,
   },
   tripImage: {
-    width: "100%",
-    height: 100,
+    width: width * 0.7,
+    height: 200,
     borderRadius: 10,
-    marginBottom: 10,
   },
   tripTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginTop: 10,
   },
   tripLocation: {
-    color: "#757575",
-    marginBottom: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    color: "grey",
   },
   tripPrice: {
-    color: "#00796b",
+    color:"#4d8790",
+    marginTop: 5,
+    fontSize: 14,
+  },
+  propertyItem: {
+    flexDirection: "row",
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+    padding: 10,
+  },
+  propertyImage: {
+    width: 140,
+    height: 140,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  propertyDetails: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  propertyTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  propertyLocation: {
+    flexDirection: "row",
+    alignItems: "center",
+    color: "grey",
+  },
+  propertyPrice: {
+    fontSize: 14,
+    color:"#4d8790"
   },
   loader: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  houseSection: {
-    marginBottom: 20,
-  },
-  propertyItem: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  propertyImage: {
-    width: 150,
-    height: 100,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  propertyDetails: {
-    flex: 1,
-  },
-  propertyTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 35,
-  },
-  propertyPrice: {
-    color: "#00796b",
-  },
 });
 
 export default HomePage;
-
-
-
-
-

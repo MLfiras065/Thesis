@@ -17,40 +17,34 @@ import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
 function ProfileScreen() {
+ 
+  const navigation = useNavigation();
+  const [item, setItem] = useState([]);
+  const [email, setEmail] = useState(SessionStorage.getItem("emailOwner"));
+  const [token, setToken] = useState();
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
   const [refreshing, setRefreshing] = React.useState(false);
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, []);
-  const navigation = useNavigation();
-  const [item, setItem] = useState([]);
-  const [email, setEmail] = useState(SessionStorage.getItem("emailUser"));
-  const [token, setToken] = useState();
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
-  
-//   const getEmail = async () => {
-//     try {
-//       const emailUser = SessionStorage.getItem("emailUser");
-//       const emailOwner = SessionStorage.getItem("emailOwner");
-//       if (emailOwner) {
-//         const res = await axios.get(`${APP_API_URL}/owner/${}`);
-//         setItem(res.data);
-//         setToken(res.data.ownerToken);
-//       } else if (emailUser) {
-//         const res = await axios.get(`${APP_API_URL}/user/${emailUser}`);
-//         SessionStorage.getItem('emailUser');
-//         setItem(res.data);
-//       } else {
-//         console.log("no email provided");
-//       }
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
+  const getEmail = async () => {
+    try {
+      const emailOwner = SessionStorage.getItem("emailOwner");
+      if (emailOwner) {
+        const res = await axios.get(`${APP_API_URL}/owner/${emailOwner}`);
+       SessionStorage.getItem('emailOwner')
+       setItem(res.data);
+      } else {
+        console.log("no email provided");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
@@ -61,14 +55,14 @@ function ProfileScreen() {
   };
   
   const logout = () => {
-    SessionStorage.clear('emailUser');
+    SessionStorage.clear('emailOwner');
     navigation.navigate("Role");
   };
 
   const styles = createStyles(isDarkTheme);
-//   useEffect(() => {
-//     getEmail();
-//   }, [refreshing]);
+  useEffect(() => {
+    getEmail();
+  }, [refreshing]);
 
   return (
     <View style={styles.container}>
@@ -78,18 +72,13 @@ function ProfileScreen() {
         }
       >
         <View style={styles.profileHeader}>
-          <Image source={{ uri:  "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" }} style={styles.avatar} />
-          <Text style={styles.name}>{item.FirstName}</Text>
-          <Text style={styles.Lastname}>{item.LastName}</Text>
-          <Text style={styles.email}>{item.email}</Text>
+         
+        <Image  source={{ uri: item?item.image :"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" }} style={styles.avatar} />
+        <Text style={styles.name}>{item?item.FirstName :"first Name" } </Text>
+        <Text style={styles.lastname}>{item?item.LastName :"Last Name" }</Text>
+        <Text style={styles.email}>{item?item.email:'email'}</Text>
           
-          <TextInput
-            style={styles.phone}
-            value={item ? item.phone : ""}
-            keyboardType="phone-pad"
-            editable={false}
-          />
-          
+       
         </View>
         <TouchableOpacity
           style={styles.option}
