@@ -1,2 +1,2 @@
-const APP_API_URL="http://192.168.11.243:4000/api"
+const APP_API_URL="https://carter-interesting-concluded-attitudes.trycloudflare.com/api"
 export {APP_API_URL}

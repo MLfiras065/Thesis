@@ -33,6 +33,9 @@ import ProductsDetails from './Screens/Owner/ProductsDetails.jsx';
 import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 import OwnerBottomNavigation from './Screens/Owner/OwnerBottomNavigation.jsx';
 import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
+import EditPropertyScreen from "../frontEnd/Screens/Owner/update/EditPropertyScreen.jsx"
+import EditPropertyExtrasScreen from './Screens/Owner/update/EditPropertyExtrasScreen.jsx';
+import EditPropertyImagePickerScreen from './Screens/Owner/update/EditPropertyImagePickerScreen.jsx';
 
 const Stack = createStackNavigator();
 
@@ -43,7 +46,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator >
       
-           <Stack.Screen name="OnBording" component={OnBording} options={{ headerShown: false }}/>
+           {/* <Stack.Screen name="OnBording" component={OnBording} options={{ headerShown: false }}/>
           <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
           <Stack.Screen name="TopTabNav" component={TopTabNav} options={{ headerShown: false }}/>
           <Stack.Screen name="TopNav" component={TopNav} options={{ headerShown: false }}/>
@@ -66,7 +69,7 @@ export default function App() {
           <Stack.Screen name="AllChat" component={AllChats} />  
            <Stack.Screen name="Chats" component={Chats} /> 
            <Stack.Screen name="bottom" component={Bottomsheet} />  
-           <Stack.Screen name="Profilee" component={Profilee} />  
+           <Stack.Screen name="Profilee" component={Profilee} />   */}
            <Stack.Screen name="OwnerHomePage" component={OwnerHomePage} />  
 
            <Stack.Screen name="EditProfilee" component={EditProfilee}  /> 
@@ -74,7 +77,9 @@ export default function App() {
           <Stack.Screen name="Extra" component={ExtraFeatures} />
           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
            <Stack.Screen name="ProductsDetails" component={ProductsDetails}   />
-          
+          <Stack.Screen name="EditProperty" component={EditPropertyScreen}/>
+          <Stack.Screen name="EditExtra" component={EditPropertyExtrasScreen}/>
+          <Stack.Screen name="EditImage" component={EditPropertyImagePickerScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
