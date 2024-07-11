@@ -10,6 +10,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
+
 const getOwner = async (req, res) => {
   try {
     const owner = await Owner.findAll({});
@@ -19,6 +21,7 @@ const getOwner = async (req, res) => {
     console.log(err);
   }
 };
+
 const register = (req, res) => {
   bcrypt.hash(req.body.Password, 10).then((hashedPass) => {
     const owner = new Owner({

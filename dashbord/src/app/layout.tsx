@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Home from "./page";
 
-// import { AuthProvider } from "../../../legacy/app/components/context/AuthContext";
-// // import SignIn from "../app/SignIn/SignIn"
 
 
 const inter = Inter({ subsets: ["latin"] });;
@@ -21,15 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <AuthProvider>
-      <body className="flex">
+      <body className="flex ">
      <Home/>
       <>
-      
         {children}
       </>
         </body>
-        </AuthProvider>
+        
     </html>
   );
 }

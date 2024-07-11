@@ -5,7 +5,7 @@ import User from './User';
 
 const page = () => {
    
-    const [user, setUser] = useState<Array>([{email :"test"}])
+    const [user, setUser] = useState<Array>([])
     const getUser=()=>{
         axios
         .get("http://localhost:4000/api/user/get")
