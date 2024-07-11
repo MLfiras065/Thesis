@@ -33,10 +33,9 @@ import ProductsDetails from './Screens/Owner/ProductsDetails.jsx';
 import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 import OwnerBottomNavigation from './Screens/Owner/OwnerBottomNavigation.jsx';
 import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
-import EditPropertyScreen from "../frontEnd/Screens/Owner/update/EditPropertyScreen.jsx"
-import EditPropertyExtrasScreen from './Screens/Owner/update/EditPropertyExtrasScreen.jsx';
-import EditPropertyImagePickerScreen from './Screens/Owner/update/EditPropertyImagePickerScreen.jsx';
-
+import Edit from './Screens/Owner/update/Edit.jsx';
+import Extra from "./Screens/Owner/update/Extra.jsx .jsx"
+import Photo from './Screens/Owner/update/Photo.jsx';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -77,9 +76,9 @@ export default function App() {
           <Stack.Screen name="Extra" component={ExtraFeatures} />
           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
            <Stack.Screen name="ProductsDetails" component={ProductsDetails}   />
-          <Stack.Screen name="EditProperty" component={EditPropertyScreen}/>
-          <Stack.Screen name="EditExtra" component={EditPropertyExtrasScreen}/>
-          <Stack.Screen name="EditImage" component={EditPropertyImagePickerScreen}/>
+          <Stack.Screen name="EditProperty" component={Edit}/>
+          <Stack.Screen name="EditExtra" component={Extra}/>
+          <Stack.Screen name="EditImage" component={Photo}/>
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
