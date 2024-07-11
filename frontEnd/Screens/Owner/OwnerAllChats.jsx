@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import styles from "./ChatStyles";
+import styles from "./OwnerChatStyle";
 import { useNavigation } from "@react-navigation/native";
 
 
-const AllChats = ({ idOwner }) => {
+const OwnerAllChats = ({ item }) => {
   const navigation = useNavigation();
-  console.log("testitem", idOwner);
+  console.log("testitem", item);
 
   const handleNavigation = () => {
-    navigation.navigate("Chat", {
-      idOwner: idOwner,
+    navigation.navigate("Chats", {
+      userid: item.ownerId,
     });
   };
   return (
@@ -43,4 +43,4 @@ const AllChats = ({ idOwner }) => {
     </Pressable>
   );
 };
-export default AllChats;
+export default OwnerAllChats;

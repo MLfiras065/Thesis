@@ -33,6 +33,9 @@ import ProductsDetails from './Screens/Owner/ProductsDetails.jsx';
 import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 import OwnerBottomNavigation from './Screens/Owner/OwnerBottomNavigation.jsx';
 import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
+import OwnerAllChats from './Screens/Owner/OwnerAllChats.jsx';
+import OwnerChat from './Screens/Owner/OwnerChat.jsx';
+
 
 const Stack = createStackNavigator();
 
@@ -68,12 +71,13 @@ export default function App() {
            <Stack.Screen name="bottom" component={Bottomsheet} />  
            <Stack.Screen name="Profilee" component={Profilee} />  
            <Stack.Screen name="OwnerHomePage" component={OwnerHomePage} />  
-
            <Stack.Screen name="EditProfilee" component={EditProfilee}  /> 
           <Stack.Screen name="add" component={add} options={{ headerShown: false }}/>
           <Stack.Screen name="Extra" component={ExtraFeatures} />
           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
            <Stack.Screen name="ProductsDetails" component={ProductsDetails}   />
+           <Stack.Screen name="OwnerAllChats" component={OwnerAllChats}   />
+           <Stack.Screen name="OwnerChat" component={OwnerChat}   />
           
         </Stack.Navigator>
       </NavigationContainer>

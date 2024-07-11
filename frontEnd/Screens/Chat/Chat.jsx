@@ -12,13 +12,14 @@ const Chat = () => {
   const [rooms, setRooms] = useState([]);
   const getRoom=async()=>{
     try {
-   const res= await axios.get(`${APP_API_URL}/chat/getRoom/${id}`)
+   const res= await axios.post(`${APP_API_URL}/chat/getRoom`,{userId:id})
   setRooms(res.data)  
   console.log("rooms",res.data);
   } catch (error) {
       console.log("err",error);
-    }''
+    }
   }
+  useEffect(()=>getRoom(),[])
 
   return (
     <SafeAreaView style={styles.chatscreen}>
@@ -36,7 +37,7 @@ const Chat = () => {
         {rooms.length > 0 ? (
           <FlatList
             data={rooms}
-            renderItem={({ item }) => <AllChats item={item} />}
+            renderItem={({ idOwner }) => <AllChats idOwner={idOwner} />}
             keyExtractor={(item) => item.id}
           />
         ) : (
