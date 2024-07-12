@@ -8,17 +8,17 @@ import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
 const Chat = () => {
-  // const id = SessionStorage.getItem('userid');
+  const id = SessionStorage.getItem('userid');
   const [rooms, setRooms] = useState([]);
-
+console.log("room",rooms);
   const getRoom = async () => {
     try {
-      const res = await axios.post(`${APP_API_URL}/chat/getRoom`, { userId:1 });
+      const res = await axios.post(`${APP_API_URL}/chat/getRoom`, { userId:id });
       setRooms(res.data);
     } catch (error) {
       console.log("err", error);
     }
-  };
+  }
 
   useEffect(() => {
     getRoom();
@@ -39,8 +39,8 @@ const Chat = () => {
         {rooms.length > 0 ? (
           <FlatList
             data={rooms}
-            renderItem={({ item }) => <AllChats idOwner={item.idOwner} />}
-            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <AllChats idOwner={item} />}
+            keyExtractor={(item) => item}
           />
         ) : (
           <View style={styles.chatemptyContainer}>

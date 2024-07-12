@@ -2,38 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
-import { APP_API_URL } from '../../env';
+import { APP_API_URL } from '../../../env';
 
 const Edit = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { propertyId } = route.params; 
+  // const { propertyId } = route.params; 
   const [Name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
   const [Price, setPrice] = useState('');
 
   useEffect(() => {
-    fetchData(propertyId);
-  }, [propertyId]);
+    // fetchData(5);
+  }, []);
 
-  const fetchData = async (id) => {
-    try {
-      const response = await axios.get(`${APP_API_URL}/property/${id}`);
-      const { Name, description, location, Price } = response.data;
-      setName(Name);
-      setDescription(description);
-      setLocation(location);
-      setPrice(Price.toString()); 
-    } catch (error) {
-      console.error('Error fetching property data:', error);
+  // const fetchData = async (id) => {
+  //   try {
+  //     const response = await axios.get(`${APP_API_URL}/property/${5}`);
+  //     const { Name, description, location, Price } = response.data;
+  //     setName(Name);
+  //     setDescription(description);
+  //     setLocation(location);
+  //     setPrice(Price.toString()); 
+  //   } catch (error) {
+  //     console.error('Error fetching property data:', error);
       
-    }
-  };
+  //   }
+  // };
 
   const updateProperty = async () => {
     try {
-      const res = await axios.put(`${APP_API_URL}/property/up/${propertyId}`, {
+      const res = await axios.put(`${APP_API_URL}/property/up/${5}`, {
         Name,
         Price: parseFloat(Price), 
         description,
@@ -41,7 +41,7 @@ const Edit = () => {
       });
       
       console.log('Property updated successfully:', res.data);
-      navigation.navigate('Extra', { propertyId });
+      navigation.navigate('EditExtra');
     } catch (error) {
       console.error('Error updating property:', error);
       

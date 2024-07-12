@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { EvilIcons } from '@expo/vector-icons';
-import { APP_API_URL } from '../../../env';
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation,useRoute } from '@react-navigation/native';
+import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
+import axios  from 'axios';
 
-const EditPhoto = () => {
+const Img = () => {
   const route=useRoute()
-  // const  {propertyid}=route.params
+  const  {propertyid}=route.params
   const navigation = useNavigation();
   const ownerid=SessionStorage.getItem('ownerId')
   const [Category, setcategory] = useState('');
@@ -17,14 +17,14 @@ const EditPhoto = () => {
   const [Extra,setExtra]=useState("")
   const [Property,setProperty]=useState([])
   const product=SessionStorage.getItem('productData')
-  const [images,setImages]=useState(["","","","",""])
+  const [images,setImages]=useState(["",""])
 
-  // console.log("propertyid",
-  //   propertyid
-  //   );
+  console.log("propertyid",
+    propertyid
+    );
 
   const updateProperty =async()=>{
-    const  res =await axios.put(`${APP_API_URL}/property/image/${5}`,{image:images})
+    const  res =await axios.put(`${APP_API_URL}/property/image/${propertyid}`,{image:images})
     try {
   console.log("res images",res.data.images);
       setImages(res.data)
@@ -50,12 +50,12 @@ console.log("added");
   };
 const handelAdd=()=>{
   updateProperty()
-  // navigation.navigate ('OwnerHomePage')
+  navigation.navigate ('HomePage',{propertyid})
 }
   return (
     <SafeAreaView>
       <View style={{ marginLeft: 24, marginTop: 80, fontSize: 45, fontWeight: 'bold' }}>
-        <Text style={{ fontSize: 35, fontWeight: 'bold' }}>Pick your photos and videos</Text>
+        <Text style={{ fontSize: 35, fontWeight: 'bold' }}>Pick your Img and videos</Text>
         <View style={{ marginTop: 20, marginRight: 12 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20, marginRight: 10 }}>
             {images.slice(0, 3).map((url, index) => (
@@ -118,48 +118,23 @@ const handelAdd=()=>{
   );
 };
 
+export default Img;
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f9f9f9',
+  addButton: {
+    alignSelf: 'center',
+    backgroundColor: "#800020",
+    paddingVertical: 14,
+    paddingHorizontal: 50,
+    borderRadius: 35,
+    marginTop: 150,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+   
+ 
   },
-  imageContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  image: {
-    width: 100,
-    height: 100,
-    margin: 10,
-    resizeMode: 'cover',
-    borderRadius: 10,
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    margin: 10,
-  },
-  buttonText: {
+  addButtonText: {
     color: '#fff',
-    fontSize: 16,
-  },
-  uploadButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  uploadButtonText: {
-    color: '#fff',
-    fontSize: 18,
+    fontSize: 15,
   },
 });
-
-export default EditPhoto;

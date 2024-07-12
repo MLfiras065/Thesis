@@ -6,8 +6,11 @@ import axios from 'axios';
 import { GiftedChat } from 'react-native-gifted-chat';
 import styles from './OwnerChatStyle';
 import { APP_API_URL } from '../../env';
-
-const Chats = () => {
+import { useRoute } from '@react-navigation/native';
+const OwnerChats = () => {
+    route=useRoute()
+    const   {iduser}=route.params
+    console.log("route",route.params)
     const userId = SessionStorage.getItem("userid");
     const ownerId = SessionStorage.getItem("ownerid");
     const [messages, setMessages] = useState([]);
@@ -16,19 +19,20 @@ const Chats = () => {
     useEffect(() => {
         const getMessage = async () => {
             try {
-                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${userId}/${ownerId}`);
+                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${2}/${1}`);
+                console.log("res",res.data);
                 const formattedMessages = res.data.map(msg => ({
                     _id: messages.id,
-                    text: messages.message,
+                    text: msg.message,
                     createdAt: new Date(msg.createdAt),
                     user: {
                         _id: messages.senderId,
-                        name: messages.FirstName,
+                        name: "owner",
                         avatar: 'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg'
                     }
                 }));
                 setMessages(formattedMessages);
-                console.log("msg",msg);
+                // console.log("msg",msg);
             } catch (err) {
                 console.log(err);
             }
@@ -38,7 +42,7 @@ const Chats = () => {
     }, [userId, ownerId]);
 
     useEffect(() => {
-        const socketConnection = io("http://192.168.11.174:3000");
+        const socketConnection = io("http://192.168.103.5:3000");
         setSocket(socketConnection);
 
         socketConnection.on("connect", () => {
@@ -71,11 +75,12 @@ const Chats = () => {
 
     const handleSend = useCallback(async (messages = []) => {
         const newMessage = messages[0];
+        console.log(newMessage);
         setMessages(previousMessages => GiftedChat.append(previousMessages, newMessage));
 
         try {
-            await axios.post(`${APP_API_URL}/chat/addmsg/${userId}/${ownerId}`, {
-                message: newMessage.text
+            await axios.post(`${APP_API_URL}/chat/addmsg/${2}/${1}`, {
+                message: newMessage[0].text
             });
 
             if (socket) {
@@ -103,4 +108,4 @@ const Chats = () => {
     );
 };
 
-export default Chats;
+export default OwnerChats;

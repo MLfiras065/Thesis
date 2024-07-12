@@ -8,7 +8,6 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
-
 const HomePage = () => {
   const navigation = useNavigation();
   const [properties, setProperties] = useState([]);
@@ -17,14 +16,16 @@ const HomePage = () => {
   const [userRole, setUserRole] = useState(null);
   const [rated, setRated] = useState([]);
   const [searchKey, setSearchKey] = useState('');
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
+      fetchProperties();
       setRefreshing(false);
     }, 2000);
-  }, []);
+  };
+
   const userid = SessionStorage.getItem("userid");
 
   const fetchProperties = () => {
@@ -32,6 +33,7 @@ const HomePage = () => {
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
+        setFilteredProperties(data); // Initialize filtered properties with all properties
         console.log("data", data);
         SessionStorage.setItem("ownerid", data[0].ownerid);
         console.log('prop', data);
@@ -55,20 +57,22 @@ const HomePage = () => {
         setLoading(false);
       });
   };
-const search=(searchkey)=>{
-try {
-// const res=axios.get(`${APP_API_URL}/property/getAll`)
-const filteredData = data.filter((property) => property.seacrhkey);
-setSearchKey(filteredData)
-} catch (error) {
-  
-}
 
-}
+  const search = () => {
+    try {
+      const filteredData = properties.filter((property) => 
+        property.Name.toLowerCase().includes(searchKey.toLowerCase())
+      );
+      setFilteredProperties(filteredData);
+    } catch (error) {
+      console.error('Error while searching:', error);
+    }
+  };
+
   useEffect(() => {
     fetchProperties();
     getProperty();
-  }, [searchKey, refreshing]);
+  }, []);
 
   const navigateToCategory = (category) => {
     navigation.navigate("FilteredProperties", { category });
@@ -95,8 +99,15 @@ setSearchKey(filteredData)
         <Ionicons name="notifications-outline" size={20} color="#000" style={styles.headerIcon} />
       </View>
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search" value={searchKey} onChangeText={setSearchKey} />
-        <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          value={searchKey}
+          onChangeText={setSearchKey}
+        />
+        <TouchableOpacity onPress={search}>
+          <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
+        </TouchableOpacity>
       </View>
       <View style={styles.categories}>
         <Text style={styles.sectionTitle}>Categories</Text>
@@ -168,75 +179,39 @@ setSearchKey(filteredData)
         </TouchableOpacity>
       </View>
       <View>
-        {searchKey ? (
-          filteredProperties.map((property) => (
-            <View key={property.id} style={styles.propertyItem}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
-                    userid: userid,
-                  })
-                }
-              >
-                <Image
-                  style={styles.propertyImage}
-                  source={{ uri: property.image[0] }}
-                />
-                <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyTitle}>{property.Name}</Text>
-                  <Text style={styles.propertyLocation}>
-                    <MaterialIcons name="location-pin" size={18} color="grey" />
-                    {property.location}
-                  </Text>
-                  <Text style={styles.propertyPrice}>
-                    dt {property.Price} / Visit{" "}
-                    <Ionicons
-                      name="heart-outline"
-                      size={20}
-                      color="#000"
-                      style={styles.headerIcon}
-                    />
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))
-        ) : (
-          properties.map((property) => (
-            <View key={property.id} style={styles.propertyItem}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
-                    userid: userid,
-                  })
-                }
-              >
-                <Image
-                  style={styles.propertyImage}
-                  source={{ uri: property.image[0] }}
-                />
-                <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyTitle}>{property.Name}</Text>
-                  <Text style={styles.propertyLocation}>
-                    <MaterialIcons name="location-pin" size={18} color="grey" />
-                    {property.location}
-                  </Text>
-                  <Text style={styles.propertyPrice}>
-                    dt {property.Price} / Visit{" "}
-                    <Ionicons
-                      name="heart-outline"
-                      size={20}
-                      color="#000"
-                      style={styles.headerIcon}
-                    />
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))
-        )}
+        {filteredProperties.map((property) => (
+          <View key={property.id} style={styles.propertyItem}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("ProductDetails", {
+                  propertyid: property.id,
+                  userid: userid,
+                })
+              }
+            >
+              <Image
+                style={styles.propertyImage}
+                source={{ uri: property.image[0] }}
+              />
+              <View style={styles.propertyDetails}>
+                <Text style={styles.propertyTitle}>{property.Name}</Text>
+                <Text style={styles.propertyLocation}>
+                  <MaterialIcons name="location-pin" size={18} color="grey" />
+                  {property.location}
+                </Text>
+                <Text style={styles.propertyPrice}>
+                  dt {property.Price} / Visit{" "}
+                  <Ionicons
+                    name="heart-outline"
+                    size={20}
+                    color="#000"
+                    style={styles.headerIcon}
+                  />
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ))}
       </View>
     </ScrollView>
   );

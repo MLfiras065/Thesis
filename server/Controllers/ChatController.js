@@ -38,10 +38,10 @@ const getRooms = async (req, res) => {
   
       if (userId) {
         const chats = await Chat.findAll({ where: { userId } });
-        chats.forEach(chat => room.add(chat));
+        chats.forEach(chat => room.add(chat.ownerId));
       } else if (ownerId) {
         const chats = await Chat.findAll({ where: { ownerId } });
-        chats.forEach(chat => room.add(chat));
+        chats.forEach(chat => room.add(chat.userId));
       }
   
       const result = Array.from(room); 

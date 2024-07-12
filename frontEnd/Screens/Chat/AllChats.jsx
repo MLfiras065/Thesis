@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./ChatStyles";
 import { useNavigation } from "@react-navigation/native";
@@ -10,10 +10,10 @@ const AllChats = ({ idOwner }) => {
   const navigation = useNavigation();
   const [owner,setOwner]=useState([])
   console.log("testitem", idOwner);
-  // const ownerId=SessionStorage.getItem('ownerid')
+  const userId=SessionStorage.getItem('userid')
   const getUser=async()=>{
     try {
-      const res= await axios.get(`${APP_API_URL}/user/user/${1}`)
+      const res= await axios.get(`${APP_API_URL}/owner/One/${idOwner}`)
 setOwner(res.data)
 console.log('owner',res.data);
       
@@ -23,7 +23,7 @@ console.log('owner',res.data);
 }
 useEffect(()=>getUser(),[])
   const handleNavigation = () => {
-    navigation.navigate("Chat", {
+    navigation.navigate("Chats", {
       idOwner: idOwner,
     });
   };
@@ -44,9 +44,8 @@ useEffect(()=>getUser(),[])
       <View style={styles.crightContainer}>
         <View>
           <Text style={styles.cusername}>{idOwner}</Text>
-
-          <Text style={styles.cmessage}>
-            {idOwner?.message ? idOwner.message : "Tap to start chatting"}
+<Text style={styles.cmessage}>
+            {idOwner?.messages ? idOwner.message : "Tap to start chatting"}
           </Text>
         </View>
         <View>

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
-import { APP_API_URL } from '../../env';
+import { APP_API_URL } from '../../../env';
 
 const ExtraFeatures = () => {
   const route = useRoute();
-  const { propertyId } = route.params;
+  // const { propertyId } = route.params;
   const navigation = useNavigation();
   const [Bedroom, setBedroom] = useState(0);
   const [Bathroom, setBathroom] = useState(0);
@@ -16,7 +16,7 @@ const ExtraFeatures = () => {
 
   const updateExtraFeatures = async () => {
     try {
-      const res = await axios.put(`${APP_API_URL}/property/extra/${propertyId}`, {
+      const res = await axios.put(`${APP_API_URL}/property/extra/${5}`, {
         Bedroom,
         Bathroom,
         Person,
@@ -25,7 +25,7 @@ const ExtraFeatures = () => {
       });
     
       console.log('Extra features updated successfully:', res.data);
-      navigation.navigate('Photo', { propertyId });
+      navigation.navigate('EditImage');
     } catch (error) {
       console.error('Error updating extra features:', error);
     

@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ProfileScreen from "./Profilee";
-// import Chat from "./Chat";
-// import WishList from "./WishList";
+import  OwnerChatRoom from "./OwnerChatRoom";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,22 +33,16 @@ const OwnerBottomNavigation = () => {
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="WishList"
-        component={WishList}
-        options={{
-          tabBarIcon: () => <EvilIcons name="heart" size={34} color="black" />,
-        }}
-      /> */}
-      {/* <Tab.Screen
-        name="Chat"
-        component={Chat}
+     
+       <Tab.Screen
+        name="chat"
+        component={OwnerChatRoom}
         options={{
           tabBarIcon: () => (
             <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
           ),
         }}
-      /> */}
+      />
 
       <Tab.Screen
         name="Profile"

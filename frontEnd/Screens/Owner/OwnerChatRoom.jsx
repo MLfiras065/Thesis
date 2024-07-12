@@ -8,12 +8,12 @@ import SessionStorage from "react-native-session-storage";
 import OwnerAllChats from "./OwnerAllChats";
 
 const Chat = () => {
-  // const id = SessionStorage.getItem('userid');
+  const id = SessionStorage.getItem('ownerid');
   const [rooms, setRooms] = useState([]);
 
   const getRoom = async () => {
     try {
-      const res = await axios.post(`${APP_API_URL}/chat/getRoom`, { ownerId:1 });
+      const res = await axios.post(`${APP_API_URL}/chat/getRoom`, { ownerId:id });
       setRooms(res.data);
     } catch (error) {
       console.log("err", error);
@@ -39,7 +39,7 @@ const Chat = () => {
         {rooms.length > 0 ? (
           <FlatList
             data={rooms}
-            renderItem={({ item }) => <OwnerAllChats idOwner={item} />}
+            renderItem={({ item }) => <OwnerAllChats iduser={item} />}
             keyExtractor={(item) => item.id}
           />
         ) : (

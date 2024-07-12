@@ -1,2 +1,2 @@
-const APP_API_URL="https://marcus-uruguay-sentence-ya.trycloudflare.com/api"
+const APP_API_URL="http:/192.168.103.5:4000/api"
 export {APP_API_URL}
