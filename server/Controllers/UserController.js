@@ -44,6 +44,18 @@ const getUserEmail=async(req,res)=>{
     res.send("error")
   }
 }
+const getUserId = async (req, res) => {
+  const {id}=req.params
+  try {
+    const userid = await User.findOne({
+      where: { id: id },
+    });
+    console.log("ownerid",req.params.id);
+    res.json(userid);
+  } catch (err) {
+    console.log(err);
+  }
+};
 const login=(req,res)=>{
   
   console.log(req.body,"req.body");
@@ -137,4 +149,4 @@ const loginAdmin=(req,res)=>{
           });
       }});
 }
-module.exports={getUser,register,login,updateUser,getUserEmail,markAsPayed,loginAdmin}
+module.exports={getUser,register,login,updateUser,getUserEmail,markAsPayed,loginAdmin,getUserId}

@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, Pressable, FlatList } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import styles from "./ChatStyles";
-import AllChats from "./AllChats";
+import styles from "./OwnerChatStyle";
 import axios from "axios";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
+import OwnerAllChats from "./OwnerAllChats";
 
 const Chat = () => {
-  const id = SessionStorage.getItem('userid');
+  const id = SessionStorage.getItem('ownerid');
   const [rooms, setRooms] = useState([]);
-console.log("room",rooms);
+
   const getRoom = async () => {
     try {
-      const res = await axios.post(`${APP_API_URL}/chat/getRoom`, { userId:id });
+      const res = await axios.post(`${APP_API_URL}/chat/getRoom`, { ownerId:id });
       setRooms(res.data);
     } catch (error) {
       console.log("err", error);
     }
-  }
+  };
 
   useEffect(() => {
     getRoom();
@@ -39,8 +39,8 @@ console.log("room",rooms);
         {rooms.length > 0 ? (
           <FlatList
             data={rooms}
-            renderItem={({ item }) => <AllChats idOwner={item} />}
-            keyExtractor={(item) => item}
+            renderItem={({ item }) => <OwnerAllChats iduser={item} />}
+            keyExtractor={(item) => item.id}
           />
         ) : (
           <View style={styles.chatemptyContainer}>
