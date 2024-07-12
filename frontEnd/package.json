@@ -24,7 +24,6 @@
     "@stripe/stripe-react-native": "^0.38.1",
     "add": "^2.0.6",
     "axios": "^1.7.2",
-    "expo": "^51.0.14",
     "expo-camera": "^15.0.11",
     "expo-image-picker": "^15.0.5",
     "expo-location": "^17.0.1",

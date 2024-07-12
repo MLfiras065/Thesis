@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, Pressable, FlatList } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import styles from "./ChatStyles";
-import AllChats from "./AllChats";
+import styles from "./OwnerChatStyle";
 import axios from "axios";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
+import OwnerAllChats from "./OwnerAllChats";
 
 const Chat = () => {
   // const id = SessionStorage.getItem('userid');
@@ -13,7 +13,7 @@ const Chat = () => {
 
   const getRoom = async () => {
     try {
-      const res = await axios.post(`${APP_API_URL}/chat/getRoom`, { userId:1 });
+      const res = await axios.post(`${APP_API_URL}/chat/getRoom`, { ownerId:1 });
       setRooms(res.data);
     } catch (error) {
       console.log("err", error);
@@ -39,7 +39,7 @@ const Chat = () => {
         {rooms.length > 0 ? (
           <FlatList
             data={rooms}
-            renderItem={({ item }) => <AllChats idOwner={item.idOwner} />}
+            renderItem={({ item }) => <OwnerAllChats idOwner={item} />}
             keyExtractor={(item) => item.id}
           />
         ) : (

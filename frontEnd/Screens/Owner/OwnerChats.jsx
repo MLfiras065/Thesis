@@ -4,19 +4,19 @@ import SessionStorage from 'react-native-session-storage';
 import { io } from 'socket.io-client';
 import axios from 'axios';
 import { GiftedChat } from 'react-native-gifted-chat';
-import styles from './ChatStyles';
+import styles from './OwnerChatStyle';
 import { APP_API_URL } from '../../env';
 
 const Chats = () => {
-    // const userId = SessionStorage.getItem("userid");
-    // const ownerId = SessionStorage.getItem("ownerid");
+    const userId = SessionStorage.getItem("userid");
+    const ownerId = SessionStorage.getItem("ownerid");
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
         const getMessage = async () => {
             try {
-                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${1}/${1}`);
+                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${userId}/${ownerId}`);
                 const formattedMessages = res.data.map(msg => ({
                     _id: messages.id,
                     text: messages.message,
@@ -74,7 +74,7 @@ const Chats = () => {
         setMessages(previousMessages => GiftedChat.append(previousMessages, newMessage));
 
         try {
-            await axios.post(`${APP_API_URL}/chat/addmsg/${1}/${1}`, {
+            await axios.post(`${APP_API_URL}/chat/addmsg/${userId}/${ownerId}`, {
                 message: newMessage.text
             });
 
@@ -92,8 +92,8 @@ const Chats = () => {
                 messages={messages}
                 onSend={handleSend}
                 user={{
-                    _id: userId,
-                    name: "user.FirstName",
+                    _id: ownerId,
+                    name: "owner.FirstName",
                     avatar: 'https://placeimg.com/140/140/any'
                 }}
                 inverted={false}

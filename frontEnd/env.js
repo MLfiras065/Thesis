@@ -1,2 +1,2 @@
-const APP_API_URL="https://carter-interesting-concluded-attitudes.trycloudflare.com/api"
+const APP_API_URL="https://marcus-uruguay-sentence-ya.trycloudflare.com/api"
 export {APP_API_URL}
