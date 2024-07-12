@@ -50,6 +50,15 @@ function addImages(req, res) {
      res.status(500).json({ message: 'Internal server error' });
    });
 }
+function up(req, res) {
+  console.log(req.body)
+ Property.update({...req.body},{where:{id:req.params.id}})
+   .then(up => {res.status(201).json(up)})
+   .catch(error => {
+     console.error('Error creating property:', error);
+     res.status(500).json({ message: 'Internal server error' });
+   });
+}
 function addExtra(req, res) {
   console.log(req.body)
  Property.update({...req.body},{where:{id:req.params.id}})
@@ -162,4 +171,4 @@ async function getPropertyRating(req, res) {
   }
 }
 
-module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, getProperty,addExtra,addImages ,getOwnerProperty, rateProperty, getPropertyRating };
+module.exports = { getAllProperties, createProperty, updateProperty, deleteProperty, getProperty,addExtra,addImages ,getOwnerProperty, rateProperty, getPropertyRating,up };

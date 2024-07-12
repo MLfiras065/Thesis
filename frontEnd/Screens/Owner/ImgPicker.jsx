@@ -8,6 +8,7 @@ import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
 import axios  from 'axios';
 
+
 const Photo = () => {
   const route=useRoute()
   const  {propertyid}=route.params

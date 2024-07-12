@@ -36,10 +36,9 @@ import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
 import OwnerAllChats from './Screens/Owner/OwnerAllChats.jsx';
 import OwnerChats from './Screens/Owner/OwnerChats.jsx';
 import OwnerChatRoom from './Screens/Owner/OwnerChatRoom.jsx';
-import EditPropertyScreen from "../frontEnd/Screens/Owner/update/EditPropertyScreen.jsx"
-import EditPropertyExtrasScreen from './Screens/Owner/update/EditPropertyExtrasScreen.jsx';
-import EditPropertyImagePickerScreen from './Screens/Owner/update/EditPropertyImagePickerScreen.jsx';
-
+import Edit from './Screens/Owner/update/Edit.jsx';
+import Extra from "./Screens/Owner/update/Extra.jsx .jsx"
+import Photo from './Screens/Owner/update/Photo.jsx';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -82,9 +81,9 @@ export default function App() {
            <Stack.Screen name="OwnerAllChats" component={OwnerAllChats}   />
            <Stack.Screen name="OwnerChat" component={OwnerChats}   />
            <Stack.Screen name="OwnerChatRoom" component={OwnerChatRoom}   />
-          <Stack.Screen name="EditProperty" component={EditPropertyScreen}/>
-          <Stack.Screen name="EditExtra" component={EditPropertyExtrasScreen}/>
-          <Stack.Screen name="EditImage" component={EditPropertyImagePickerScreen}/> */}
+          <Stack.Screen name="EditProperty" component={Edit}/>
+          <Stack.Screen name="EditExtra" component={Extra}/>
+          <Stack.Screen name="EditImage" component={Photo}/> */}
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
