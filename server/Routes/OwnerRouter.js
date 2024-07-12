@@ -1,9 +1,9 @@
 const route =require('express').Router()
-const {getOwner,register,login,updateOwner,getOwnerEmail, acceptBooking,markeAsPayed, deleteOwner}=require('../Controllers/OwnerController')
-
+const {getOwner,register,login,updateOwner,getOwnerEmail, acceptBooking,markeAsPayed, deleteOwner,getOwnerId}=require('../Controllers/OwnerController')
 // const autoriser = require('../Middelware/Owner')
 route.get('/getOwner',getOwner)
 route.get('/:email',getOwnerEmail)
+route.get('/One/:id',getOwnerId)
 route.post('/reg',register)
 route.post("/log/:email",login)
 route.put("/upd/:id",updateOwner)

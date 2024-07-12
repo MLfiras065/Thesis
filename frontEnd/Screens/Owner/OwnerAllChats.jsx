@@ -7,8 +7,20 @@ import { useNavigation } from "@react-navigation/native";
 
 const OwnerAllChats = ({ item }) => {
   const navigation = useNavigation();
+  const [owner,setOwner]=useState([])
   console.log("testitem", item);
+  const getOwner=async()=>{
+    try {
+      const res= await axios.get(`${APP_API_URL}/owner/One/${1}`)
+setOwner(res.data)
+console.log('owner',res.data);
 
+      
+    } catch (error) {
+        console.log("error",error);
+    }
+}
+useEffect(()=>getOwner(),[])
   const handleNavigation = () => {
     navigation.navigate("Chats", {
       userid: item.ownerId,

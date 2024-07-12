@@ -8,15 +8,15 @@ import styles from './ChatStyles';
 import { APP_API_URL } from '../../env';
 
 const Chats = () => {
-    const userId = SessionStorage.getItem("userid");
-    const ownerId = SessionStorage.getItem("ownerid");
+    // const userId = SessionStorage.getItem("userid");
+    // const ownerId = SessionStorage.getItem("ownerid");
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
         const getMessage = async () => {
             try {
-                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${userId}/${ownerId}`);
+                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${1}/${1}`);
                 const formattedMessages = res.data.map(msg => ({
                     _id: messages.id,
                     text: messages.message,
@@ -74,7 +74,7 @@ const Chats = () => {
         setMessages(previousMessages => GiftedChat.append(previousMessages, newMessage));
 
         try {
-            await axios.post(`${APP_API_URL}/chat/addmsg/${userId}/${ownerId}`, {
+            await axios.post(`${APP_API_URL}/chat/addmsg/${1}/${1}`, {
                 message: newMessage.text
             });
 

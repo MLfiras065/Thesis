@@ -54,6 +54,18 @@ const getOwnerEmail = async (req, res) => {
     console.log(err);
   }
 };
+const getOwnerId = async (req, res) => {
+  const {id}=req.params
+  try {
+    const ownerid = await Owner.findOne({
+      where: { id: id },
+    });
+    console.log("ownerid",req.params.id);
+    res.json(ownerid);
+  } catch (err) {
+    console.log(err);
+  }
+};
 const login = (req, res) => {
   console.log(req.body, "req.body");
   Owner.findOne({ where: { email: req.params.email } }).then((owner) => {
@@ -170,4 +182,4 @@ const markeAsPayed= async (req, res) => {
       res.json(err);
     });
 }
-module.exports = { getOwner, register, login, updateOwner, getOwnerEmail,acceptBooking,markeAsPayed,deleteOwner};
+module.exports = { getOwner, register, login, updateOwner, getOwnerEmail,acceptBooking,markeAsPayed,deleteOwner,getOwnerId};

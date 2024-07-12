@@ -34,8 +34,11 @@ import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 import OwnerBottomNavigation from './Screens/Owner/OwnerBottomNavigation.jsx';
 import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
 import OwnerAllChats from './Screens/Owner/OwnerAllChats.jsx';
-import OwnerChat from './Screens/Owner/OwnerChat.jsx';
-
+import OwnerChats from './Screens/Owner/OwnerChats.jsx';
+import OwnerChatRoom from './Screens/Owner/OwnerChatRoom.jsx';
+import EditPropertyScreen from "../frontEnd/Screens/Owner/update/EditPropertyScreen.jsx"
+import EditPropertyExtrasScreen from './Screens/Owner/update/EditPropertyExtrasScreen.jsx';
+import EditPropertyImagePickerScreen from './Screens/Owner/update/EditPropertyImagePickerScreen.jsx';
 
 const Stack = createStackNavigator();
 
@@ -45,7 +48,7 @@ export default function App() {
     <Provider>
       <NavigationContainer>
         <Stack.Navigator >
-      
+{/*       
            <Stack.Screen name="OnBording" component={OnBording} options={{ headerShown: false }}/>
           <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
           <Stack.Screen name="TopTabNav" component={TopTabNav} options={{ headerShown: false }}/>
@@ -64,11 +67,11 @@ export default function App() {
           <Stack.Screen name="Search" component={Search} />  
           <Stack.Screen name="FiltredProperties" component={FilteredProperties} />  
           <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen name="EditProfile" component={EditProfile} /> 
+          <Stack.Screen name="EditProfile" component={EditProfile} />  */}
           <Stack.Screen name="Chat" component={Chat} /> 
           <Stack.Screen name="AllChat" component={AllChats} />  
            <Stack.Screen name="Chats" component={Chats} /> 
-           <Stack.Screen name="bottom" component={Bottomsheet} />  
+           {/* <Stack.Screen name="bottom" component={Bottomsheet} />  
            <Stack.Screen name="Profilee" component={Profilee} />  
            <Stack.Screen name="OwnerHomePage" component={OwnerHomePage} />  
            <Stack.Screen name="EditProfilee" component={EditProfilee}  /> 
@@ -77,8 +80,11 @@ export default function App() {
           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  /> 
            <Stack.Screen name="ProductsDetails" component={ProductsDetails}   />
            <Stack.Screen name="OwnerAllChats" component={OwnerAllChats}   />
-           <Stack.Screen name="OwnerChat" component={OwnerChat}   />
-          
+           <Stack.Screen name="OwnerChat" component={OwnerChats}   />
+           <Stack.Screen name="OwnerChatRoom" component={OwnerChatRoom}   />
+          <Stack.Screen name="EditProperty" component={EditPropertyScreen}/>
+          <Stack.Screen name="EditExtra" component={EditPropertyExtrasScreen}/>
+          <Stack.Screen name="EditImage" component={EditPropertyImagePickerScreen}/> */}
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -92,8 +92,8 @@ const Chats = () => {
                 messages={messages}
                 onSend={handleSend}
                 user={{
-                    _id: userId,
-                    name: "user.FirstName",
+                    _id: ownerId,
+                    name: "owner.FirstName",
                     avatar: 'https://placeimg.com/140/140/any'
                 }}
                 inverted={false}

@@ -13,6 +13,7 @@ function getAllProperties(req, res) {
     });
 }
 function getProperty(req, res) {
+  
   const { id } = req.params;
 
   Property.findByPk(id)
