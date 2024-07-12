@@ -19,19 +19,33 @@ import SessionStorage from "react-native-session-storage";
 
 const OwnerHomePage = () => {
   const navigation = useNavigation();
+  const [filteredProperties, setFilteredProperties] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const ownerId = SessionStorage.getItem("ownerid");
   const [refreshing, setRefreshing] = useState(false);
   const [editingProperty, setEditingProperty] = useState(null);
   const [deletingProperty, setDeletingProperty] = useState(null);
-
+  const [searchKey, setSearchKey] = useState('');
+  const [showFilteredProperties, setShowFilteredProperties] = useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, []);
+  const search = () => {
+    try {
+      const filteredData = properties.filter((property) => 
+        property.location.toLowerCase().includes(searchKey.toLowerCase())||property.Name.toLowerCase().includes(searchKey.toLowerCase())
+      
+      );
+      setFilteredProperties(filteredData);
+      setShowFilteredProperties(!showFilteredProperties)
+    } catch (error) {
+      console.error('Error while searching:', error);
+    }
+  };
 
   const fetchOwnerProperties = () => {
     fetch(`${APP_API_URL}/property/getAll/${1}`)
@@ -122,8 +136,15 @@ const OwnerHomePage = () => {
         <Ionicons name="notifications-outline" size={20} color="#000" style={styles.headerIcon} />
       </View>
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search" />
-        <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
+      <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          value={searchKey}
+          onChangeText={setSearchKey}
+        />
+        <TouchableOpacity onPress={search}>
+          <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
+        </TouchableOpacity>
       </View>
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
@@ -133,7 +154,43 @@ const OwnerHomePage = () => {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {properties.map((property) => (
+          <View>
+          {showFilteredProperties ? (
+          filteredProperties.map((property) => (
+            <View key={property.id} style={styles.propertyItem}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProductDetails", {
+                    propertyid: property.id,
+                    userid: userid,
+                  })
+                }
+              >
+                <Image
+                  style={styles.propertyImage}
+                  source={{ uri: property.image[0] }}
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyTitle}>{property.Name}</Text>
+                  <Text style={styles.propertyLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.propertyPrice}>
+                    dt {property.Price} / Visit{" "}
+                    <Ionicons
+                      name="heart-outline"
+                      size={20}
+                      color="#000"
+                      style={styles.headerIcon}
+                    />
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
+          properties.map((property) => (
             <View key={property.id} style={styles.propertyItem}>
               <TouchableOpacity
                 onPress={() =>
@@ -156,7 +213,7 @@ const OwnerHomePage = () => {
               <View style={styles.actionButtons}>
                 <TouchableOpacity
                   style={styles.editButton}
-                  onPress={() => setEditingProperty(property)}
+                  onPress={() => navigation.navigate("EditProperty")}
                 >
                   <Text style={styles.buttonText}>Edit</Text>
                 </TouchableOpacity>
@@ -168,52 +225,14 @@ const OwnerHomePage = () => {
                 </TouchableOpacity>
               </View>
             </View>
-          ))}
-        </ScrollView>
+          ))
+        )}
       </View>
-      {editingProperty && (
-        <EditProperty
-          property={editingProperty}
-          onUpdate={handleUpdateProperty}
-          onCancel={() => setEditingProperty(null)}
-        />
-      )}
     </ScrollView>
-  );
-};
-
-const EditProperty = ({ property, onUpdate, onCancel }) => {
-  const [name, setName] = useState(property.Name);
-  const [location, setLocation] = useState(property.location);
-  const [price, setPrice] = useState(property.Price.toString());
-
-  return (
-    <View style={styles.editContainer}>
-      <Text style={styles.title}>Edit Property</Text>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput style={styles.input} value={name} onChangeText={setName} />
+   
       </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Location</Text>
-        <TextInput style={styles.input} value={location} onChangeText={setLocation} />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Price</Text>
-        <TextInput style={styles.input} value={price} onChangeText={setPrice} keyboardType="numeric" />
-      </View>
-      <View style={styles.actionButtons}>
-        <TouchableOpacity
-          style={styles.updateButton}
-          onPress={() => onUpdate({ ...property, Name: name, location, Price: parseFloat(price) })}
-        >
-          <Text style={styles.buttonText}>Update</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-          <Text style={styles.buttonText}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+   
+    </ScrollView>
   );
 };
 

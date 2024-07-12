@@ -1,17 +1,15 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import React, { useState } from 'react';
-import { EvilIcons } from '@expo/vector-icons';
-// import { AntDesign } from '@expo/vector-icons';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { useNavigation,useRoute } from '@react-navigation/native';
-import { APP_API_URL } from '../../env';
+import axios from 'axios';
+import { EvilIcons } from '@expo/vector-icons';
+import { APP_API_URL } from '../../../env';
 import SessionStorage from 'react-native-session-storage';
-import axios  from 'axios';
 
-
-const Photo = () => {
+const EditPhoto = () => {
   const route=useRoute()
-  const  {propertyid}=route.params
+  // const  {propertyid}=route.params
   const navigation = useNavigation();
   const ownerid=SessionStorage.getItem('ownerId')
   const [Category, setcategory] = useState('');
@@ -21,12 +19,12 @@ const Photo = () => {
   const product=SessionStorage.getItem('productData')
   const [images,setImages]=useState(["","","","",""])
 
-  console.log("propertyid",
-    propertyid
-    );
+  // console.log("propertyid",
+  //   propertyid
+  //   );
 
   const updateProperty =async()=>{
-    const  res =await axios.put(`${APP_API_URL}/property/image/${propertyid}`,{image:images})
+    const  res =await axios.put(`${APP_API_URL}/property/image/${5}`,{image:images})
     try {
   console.log("res images",res.data.images);
       setImages(res.data)
@@ -52,7 +50,7 @@ console.log("added");
   };
 const handelAdd=()=>{
   updateProperty()
-  navigation.navigate ('OwnerHomePage')
+  // navigation.navigate ('OwnerHomePage')
 }
   return (
     <SafeAreaView>
@@ -120,23 +118,48 @@ const handelAdd=()=>{
   );
 };
 
-export default Photo;
-
 const styles = StyleSheet.create({
-  addButton: {
-    alignSelf: 'center',
-    backgroundColor: "#800020",
-    paddingVertical: 14,
-    paddingHorizontal: 50,
-    borderRadius: 35,
-    marginTop: 150,
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-   
- 
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f9f9f9',
   },
-  addButtonText: {
+  imageContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    margin: 10,
+    resizeMode: 'cover',
+    borderRadius: 10,
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    margin: 10,
+  },
+  buttonText: {
     color: '#fff',
-    fontSize: 15,
+    fontSize: 16,
+  },
+  uploadButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  uploadButtonText: {
+    color: '#fff',
+    fontSize: 18,
   },
 });
+
+export default EditPhoto;

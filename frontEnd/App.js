@@ -32,12 +32,10 @@ import ProductsDetails from './Screens/Owner/ProductsDetails.jsx';
 import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 import OwnerBottomNavigation from './Screens/Owner/OwnerBottomNavigation.jsx';
 import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
-import EditPropertyScreen from "../frontEnd/Screens/Owner/update/EditPropertyScreen.jsx"
-import EditPropertyExtrasScreen from './Screens/Owner/update/EditPropertyExtrasScreen.jsx';
-import EditPropertyImagePickerScreen from './Screens/Owner/update/EditPropertyImagePickerScreen.jsx';
-import OwnerShipImg from './Screens/Owner/OwnerShipImg.jsx';
-
-
+import Edit from './Screens/Owner/update/Edit.jsx';
+import Extra from "./Screens/Owner/update/Extraupdate.jsx"
+import EditPhoto from './Screens/Owner/update/Photo.jsx';
+import Search from './Screens/Search/Search.jsx';
 const Stack = createStackNavigator();
 export default function App() {
   return (
@@ -46,7 +44,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator >
       
-          <Stack.Screen name="OnBording" component={OnBording} options={{ headerShown: false }}/>
+          {/* <Stack.Screen name="OnBording" component={OnBording} options={{ headerShown: false }}/>
           <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
           <Stack.Screen name="TopTabNav" component={TopTabNav} options={{ headerShown: false }}/>
           <Stack.Screen name="TopNav" component={TopNav} options={{ headerShown: false }}/>
@@ -68,17 +66,18 @@ export default function App() {
           <Stack.Screen name="AllChat" component={AllChats}/>  
            <Stack.Screen name="Chats" component={Chats}/> 
            <Stack.Screen name="bottom" component={Bottomsheet}/>  
-           <Stack.Screen name="Profilee" component={Profilee}/>    
-           {/* <Stack.Screen name="OwnerHomePage" component={OwnerHomePage} />   */}
-           <Stack.Screen name="EditProfilee" component={EditProfilee}/> 
-          {/* <Stack.Screen name="add" component={add} options={{ headerShown: false }}/>
+           <Stack.Screen name="Profilee" component={Profilee}/>     */}
+           <Stack.Screen name="OwnerHomePage" component={OwnerHomePage} />  
+           {/* <Stack.Screen name="EditProfilee" component={EditProfilee}/> 
+          <Stack.Screen name="add" component={add} options={{ headerShown: false }}/>
           <Stack.Screen name="Extra" component={ExtraFeatures}/>
           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}/> 
           <Stack.Screen name="OwnerShipImg" component={OwnerShipImg} options={{ headerShown: false }}/> 
-           <Stack.Screen name="ProductsDetails" component={ProductsDetails}/>
-          <Stack.Screen name="EditProperty" component={EditPropertyScreen}/>
-          <Stack.Screen name="EditExtra" component={EditPropertyExtrasScreen}/> */}
-          {/* <Stack.Screen name="EditImage" component={EditPropertyImagePickerScreen}/> */}
+           <Stack.Screen name="ProductsDetails" component={ProductsDetails}/> */}
+          <Stack.Screen name="EditProperty" component={Edit}/>
+          <Stack.Screen name="EditExtra" component={Extra}/>
+          <Stack.Screen name="EditImage" component={EditPhoto}/>
+          <Stack.Screen name="search" component={Search}/>
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
