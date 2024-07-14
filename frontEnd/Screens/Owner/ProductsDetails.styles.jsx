@@ -103,4 +103,10 @@ export const styles = StyleSheet.create({
     resizeMode: 'contain',
     borderRadius: 10,
   },
+  commentsTitle:{
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000000",
+    
+  }
 });

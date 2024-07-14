@@ -51,15 +51,15 @@ export default function App() {
           <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
           <Stack.Screen name="TopTabNav" component={TopTabNav} options={{ headerShown: false }}/>
           <Stack.Screen name="TopNav" component={TopNav} options={{ headerShown: false }}/>
-          <Stack.Screen name="Login" component={Login}/>  
-          <Stack.Screen name="SignUp" component={SignUp}/> 
-          <Stack.Screen name="LogIn" component={LogInUser}/>  
-          <Stack.Screen name="ProductDetails" component={ProductDetails}/>
+          <Stack.Screen name="Login" component={Login} />  
+          <Stack.Screen name="SignUp" component={SignUp} />  
+           <Stack.Screen name="LogIn" component={LogInUser} />   
+           <Stack.Screen name="ProductDetails" component={ProductDetails}  />
           <Stack.Screen name="Navigation" component={BottomNavigation} options={{ headerShown: false }}/>
           <Stack.Screen name="OwnerNav" component={OwnerBottomNavigation} options={{ headerShown: false }}/>
-          <Stack.Screen name="Subscribe" component={Subscribe}/>  
-          <Stack.Screen name="Home" component={HomePage}/>
-          <Stack.Screen name="FilteredProperties" component={FilteredProperties}/>
+          <Stack.Screen name="Subscribe" component={Subscribe} />    
+          <Stack.Screen name="Home" component={HomePage} />
+           <Stack.Screen name="FilteredProperties" component={FilteredProperties} />
           <Stack.Screen name="Calender" component={Calender} />
           <Stack.Screen name="AllProperties" component={AllPropertiesPage} options={{ title: 'All Properties' }} />
           <Stack.Screen name="Search" component={Search} />  
@@ -70,22 +70,14 @@ export default function App() {
           <Stack.Screen name="AllChat" component={AllChats} />  
            <Stack.Screen name="Chats" component={Chats} /> 
            <Stack.Screen name="bottom" component={Bottomsheet} />  
-           <Stack.Screen name="Profilee" component={Profilee} />  
-           <Stack.Screen name="OwnerHomePage" component={OwnerHomePage} />  
-           <Stack.Screen name="EditProfilee" component={EditProfilee}/> 
+           <Stack.Screen name="Profilee" component={Profilee} />    
+           <Stack.Screen name="HomePage" component={OwnerHomePage} />   
+            <Stack.Screen name="EditProfilee" component={EditProfilee}  /> 
           <Stack.Screen name="add" component={add} options={{ headerShown: false }}/>
-          <Stack.Screen name="Extra" component={ExtraFeatures}/>
-          <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}/> 
-          {/* <Stack.Screen name="OwnerShipImg" component={OwnerShipImg} options={{ headerShown: false }}/>  */}
-           <Stack.Screen name="ProductsDetails" component={ProductsDetails}/>
-          <Stack.Screen name="EditProperty" component={Edit}/>
-          <Stack.Screen name="EditExtra" component={Extra}/>
-          <Stack.Screen name="EditImage" component={EditPhoto}/>
-          <Stack.Screen name="search" component={Search}/>
-          <Stack.Screen name="ownerchatRoom" component={OwnerChatRoom}/>
-          <Stack.Screen name="ownerchats" component={OwnerChats}/>
-          <Stack.Screen name="ownerAllChat" component={OwnerAllChats}/>
-          
+          <Stack.Screen name="Extra" component={ExtraFeatures} />
+          <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  />  
+           <Stack.Screen name="ProductsDetails" component={ProductsDetails}   />    
+           
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -23,9 +23,9 @@ const getMessages=async(req,res) =>{
 const addMessage=async(req,res)=>{
     try {
         const { userId, ownerId } = req.params;
-        const { message } = req.body;
+        const { message ,sender} = req.body;
 
-        const newChat = await Chat.create({ message, userId, ownerId });
+        const newChat = await Chat.create({ message, userId, ownerId,sender });
         res.status(201).json(newChat);
     } catch (error) {
         res.status(500).json({ error: error.message });

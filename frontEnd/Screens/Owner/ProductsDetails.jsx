@@ -147,11 +147,7 @@ const handleCreateRoom=()=>{
 
       <Text style={styles.description}>{property.description}</Text>
     
-        <View style={styles.actionButtonsContainer}>
-          <TouchableOpacity style={styles.bookButton} onPress={openPaymentSheet}>
-            <Text style={styles.bookButtonText}>Book Now | ${property.Price}</Text>
-          </TouchableOpacity>
-        </View>
+        
         <Modal visible={modalVisible} transparent={true} animationType="slide" onRequestClose={closeImageModal}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>

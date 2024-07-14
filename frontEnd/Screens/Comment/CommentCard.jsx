@@ -66,7 +66,7 @@ const CommentCard = () => {
 };
 const styles = StyleSheet.create({
   root: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#ffffff',
     padding: 10,
   },
   container: {

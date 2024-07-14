@@ -80,7 +80,8 @@ const OwnerChats = () => {
 
         try {
             await axios.post(`${APP_API_URL}/chat/addmsg/${2}/${1}`, {
-                message: newMessage[0].text
+                message: newMessage[0].text,
+                sender:newMessage[0].ownerId
             });
 
             if (socket) {
