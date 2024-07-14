@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import {
+  RefreshControl,
   View,
   Text,
   StyleSheet,
@@ -7,7 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  ActivityIndicator,Dimensions
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,6 +21,14 @@ const OwnerHomePage = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const ownerid = SessionStorage.getItem("ownerid");
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const fetchOwnerProperties = () => {
     fetch(`${APP_API_URL}/property/getAll/${ownerid}`)
@@ -36,7 +45,7 @@ const OwnerHomePage = () => {
 
   useEffect(() => {
     fetchOwnerProperties();
-  }, []);
+  }, [refreshing]);
 
   if (loading) {
     return (
@@ -47,12 +56,17 @@ const OwnerHomePage = () => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.header}>
         <Ionicons name="location-outline" size={20} color="#000" />
         <Text style={styles.locationText}>Tunisie</Text>
         <Ionicons name="chevron-down-outline" size={20} color="#000" />
-        
+
         <Ionicons
           name="notifications-outline"
           size={20}
@@ -71,7 +85,7 @@ const OwnerHomePage = () => {
       </View>
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
-          <Text style={styles.sectionTitle}>Your Properties</Text>
+          <Text style={styles.sectionTitle}>Your Offers</Text>
           <TouchableOpacity onPress={() => navigation.navigate("add")}>
             <Text style={styles.seeAllText}>Add New Property</Text>
           </TouchableOpacity>
@@ -94,16 +108,11 @@ const OwnerHomePage = () => {
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyTitle}>{property.Name}</Text>
                   <Text style={styles.propertyLocation}>
-                    <MaterialIcons
-                      name="location-pin"
-                      size={18}
-                      color="grey"
-                    />
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
                     {property.location}
                   </Text>
                   <Text style={styles.propertyPrice}>
-                    dt {property.Price} / Visit{" "}
-                    
+                    dt {property.Price} / Visit
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -114,12 +123,12 @@ const OwnerHomePage = () => {
     </ScrollView>
   );
 };
-const width = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
+    padding: 16,
+    backgroundColor: "#f9f9f9",
   },
   header: {
     flexDirection: "row",
@@ -149,22 +158,10 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
-  categories: {
-    marginBottom: 20,
-  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-  },
-  categoryItem: {
-    backgroundColor: "#f0f0f0",
-    borderRadius: 10,
-    padding: 10,
-    marginRight: 10,
-  },
-  categoryText: {
-    fontSize: 16,
   },
   tripsSection: {
     marginBottom: 20,
@@ -179,50 +176,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#C0C0C0",
   },
-  tripItem: {
-    marginRight: 10,
-  },
-  tripImage: {
-    width: width * 0.7,
-    height: 200,
-    borderRadius: 10,
-  },
-  tripTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  tripLocation: {
-    flexDirection: "row",
-    alignItems: "center",
-    color: "grey",
-  },
-  tripPrice: {
-    color:"#4d8790",
-    marginTop: 5,
-    fontSize: 14,
-  },
   propertyItem: {
-    flexDirection: "row",
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 1,
   },
   propertyImage: {
-    width: 140,
-    height: 140,
-    borderRadius: 10,
+    width: 150,
+    height: 100,
+    borderRadius: 20,
     marginRight: 10,
   },
   propertyDetails: {
     flex: 1,
-    justifyContent: "space-between",
+    
+    position:'absolute',
+    left:165,
+    top:'10%'
   },
   propertyTitle: {
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 5,
   },
   propertyLocation: {
     flexDirection: "row",
@@ -230,8 +213,9 @@ const styles = StyleSheet.create({
     color: "grey",
   },
   propertyPrice: {
+    color: "#00796b",
+    marginTop: 5,
     fontSize: 14,
-    color:"#4d8790"
   },
   loader: {
     flex: 1,

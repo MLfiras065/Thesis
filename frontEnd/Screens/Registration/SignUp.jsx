@@ -4,22 +4,19 @@ import {
   View,
   Text,
   TextInput,
-  Button,
-  Image,
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import { Formik } from "formik";
 import axios from "axios";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import Feather from '@expo/vector-icons/Feather';
+
 
 const SignUp = () => {
   const route = useRoute();
@@ -35,7 +32,6 @@ const SignUp = () => {
   const [CINImage, setCINImage] = useState("");
 
   const SignUp = async (
-    image,
     FirstName,
     LastName,
     email,
@@ -45,7 +41,6 @@ const SignUp = () => {
     CINImage
   ) => {
     if (
-      !image ||
       !FirstName ||
       !LastName ||
       !email ||
@@ -54,12 +49,12 @@ const SignUp = () => {
       !gender ||
       !CINImage
     ) {
+      console.log("res",FirstName,LastName,email,Password,DateOfBirth,gender,CINImage);
       alert("Please enter your data");
       return;
     }
 
     const data = {
-      image,
       FirstName,
       LastName,
       email,
@@ -80,7 +75,7 @@ const SignUp = () => {
   };
 
   const SignUpUser = async (
-    image,
+   
     FirstName,
     LastName,
     email,
@@ -89,7 +84,7 @@ const SignUp = () => {
     gender
   ) => {
     if (
-      !image ||
+   
       !FirstName ||
       !LastName ||
       !email ||
@@ -97,12 +92,13 @@ const SignUp = () => {
       !DateOfBirth ||
       !gender
     ) {
+      console.log("resUser",FirstName,LastName,email,Password,DateOfBirth,gender);
       alert("Please enter your data");
       return;
     }
 
     const data = {
-      image,
+  
       FirstName,
       LastName,
       email,
@@ -116,6 +112,7 @@ const SignUp = () => {
       const res = await axios.post(`${APP_API_URL}/user/reg`, data);
       alert("Signup successful");
       navigation.goBack("TopNav");
+      
     } catch (error) {
       console.error(error);
     }
@@ -149,7 +146,7 @@ const SignUp = () => {
 
   const handleSignup = () => {
     SignUp(
-      image,
+      
       FirstName,
       LastName,
       email,
@@ -162,7 +159,7 @@ const SignUp = () => {
 
   const handleSignupUser = () => {
     SignUpUser(
-      image,
+      
       FirstName,
       LastName,
       email,
@@ -199,7 +196,7 @@ const SignUp = () => {
               
               <View style={styles.wrapper}>
                 
-                <View style={styles.imageContainer}>
+                {/* <View style={styles.imageContainer}>
                   <TouchableOpacity onPress={pickImage}>
                     <Image
                       source={{
@@ -209,7 +206,7 @@ const SignUp = () => {
                     />
                   </TouchableOpacity>
                  
-                </View>
+                </View> */}
 
                 <View style={styles.inputWrapper}>
                   <MaterialCommunityIcons name="account-outline" size={20} color={"gray"} />
@@ -324,7 +321,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 80, // Add space between wrapper and title
+    marginBottom: 80, 
   },
   inputWrapper: {
     flexDirection: "row",
@@ -359,7 +356,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#000000",
-    marginBottom: 50, // Add space between title and the top of the screen
+    marginBottom: 50, 
   }
 });
 

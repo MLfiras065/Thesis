@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
 const FilteredProperties = () => {

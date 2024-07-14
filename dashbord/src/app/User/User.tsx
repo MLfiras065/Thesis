@@ -7,7 +7,7 @@ const User = ({ data }) => {
   const delet = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
     if (confirmDelete) {
-      axios.delete(`http://localhost:4000/api/users/users/${data.id}`)
+      axios.delete(`http://localhost:4000/api/user//${data.id}`)
         .then(() => {
           console.log("deleted");
           router.push("/User");

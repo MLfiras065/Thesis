@@ -16,13 +16,6 @@ import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
 function ProfileScreen() {
- 
-  const navigation = useNavigation();
-  const [item, setItem] = useState([]);
-  const [email, setEmail] = useState(SessionStorage.getItem("emailOwner"));
-  const [token, setToken] = useState();
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
@@ -31,14 +24,19 @@ function ProfileScreen() {
       setRefreshing(false);
     }, 2000);
   }, []);
+  const navigation = useNavigation();
+  const [item, setItem] = useState([]);
+  const [email, setEmail] = useState(SessionStorage.getItem("emailUser"));
+  const [token, setToken] = useState();
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
 
   const getEmail = async () => {
     try {
-      const emailOwner = SessionStorage.getItem("emailOwner");
-      if (emailOwner) {
-        const res = await axios.get(`${APP_API_URL}/owner/${emailOwner}`);
-       SessionStorage.getItem('emailOwner')
-       setItem(res.data);
+      const emailUser = SessionStorage.getItem("emailUser");
+      if (emailUser) {
+        const res = await axios.get(`${APP_API_URL}/user/${emailUser}`);
+        setItem(res.data);
       } else {
         console.log("no email provided");
       }
@@ -46,7 +44,7 @@ function ProfileScreen() {
       console.log(error);
     }
   };
-  
+
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
   };
@@ -54,9 +52,9 @@ function ProfileScreen() {
   const toggleNotifications = () => {
     setIsNotificationsEnabled((previousState) => !previousState);
   };
-  
+
   const logout = () => {
-    SessionStorage.clear('emailOwner');
+    SessionStorage.clear('emailUser');
     navigation.navigate("Role");
   };
 
@@ -74,33 +72,27 @@ function ProfileScreen() {
         }
       >
         <View style={styles.profileHeader}>
-          <Image  source={{ uri: item ? item.image :"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" }} style={styles.avatar} />
+          <Image source={{ uri: item ? item.image : "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" }} style={styles.avatar} />
           <View style={styles.profileInfo}>
-            <Text style={styles.name}>{item ? item.FirstName : "First Name" }</Text>
-            <Text style={styles.lastname}>{item ? item.LastName : "Last Name" }</Text>
+            <Text style={styles.name}>{item ? item.FirstName : "First Name"}</Text>
+            <Text style={styles.lastname}>{item ? item.LastName : "Last Name"}</Text>
             <Text style={styles.email}>{item ? item.email : 'email'}</Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("EditProfilee", { item: item })} style={styles.editButton}>
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile", { item: item })} style={styles.editButton}>
             <Feather name="edit" size={24} color="white" />
           </TouchableOpacity>
         </View>
-        
+
         <View style={styles.section}>
           <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("MyAccount")}>
             <MaterialIcons name="account-circle" size={24} color={isDarkTheme ? "#fff" : "#000"} />
             <Text style={styles.optionText}>My Account</Text>
             <AntDesign name="right" size={24} color="gray" />
           </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("SavedBeneficiary")}>
-         <MaterialIcons name="attach-money" size={24} color="black" />
-            <Text style={styles.optionText}>Saved Beneficiary</Text>
-            <AntDesign name="right" size={24} color="gray" />
-          </TouchableOpacity>
 
           <View style={styles.option}>
-          <Ionicons name="notifications-outline" size={24} color="black" />
-            <Text style={styles.optionText}>Notifaction</Text>
+            <Ionicons name="notifications-outline" size={24} color="black" />
+            <Text style={styles.optionText}>Notification</Text>
             <Switch value={isNotificationsEnabled} onValueChange={toggleNotifications} />
           </View>
 
@@ -109,7 +101,7 @@ function ProfileScreen() {
             <Text style={styles.optionText}>Two-Factor Authentication</Text>
             <AntDesign name="right" size={24} color="gray" />
           </TouchableOpacity>
-          <View style={styles.section}>
+          
           <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("HelpSupport")}>
             <Feather name="help-circle" size={24} color={isDarkTheme ? "#fff" : "#000"} />
             <Text style={styles.optionText}>Help & Support</Text>
@@ -121,10 +113,7 @@ function ProfileScreen() {
             <Text style={styles.optionText}>About App</Text>
             <AntDesign name="right" size={24} color="gray" />
           </TouchableOpacity>
-          
-        </View>
 
-        
           <TouchableOpacity style={styles.option} onPress={logout}>
             <Feather name="log-out" size={24} color="red" />
             <Text style={styles.optionText}>Log out</Text>

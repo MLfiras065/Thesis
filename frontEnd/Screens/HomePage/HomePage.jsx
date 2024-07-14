@@ -1,23 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { RefreshControl, View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Dimensions } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useRoute,useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
-import Search from "./Search";
+import axios from "axios";
 
 const HomePage = () => {
+  
   const navigation = useNavigation();
+  const route = useRoute();
+  const propertyId = route.params?.propertyid;
+ 
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [userRole, setUserRole] = useState(null);
   const [rated, setRated] = useState([]);
   const [searchKey, setSearchKey] = useState('');
+  const [liked, setLiked] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const addWishList = async (userid, propertyId) => {
+    try {
+      const res = await axios.post(
+        `${APP_API_URL}/wishlist/add/${propertyId}/${userid}`,
+        {
+          UserId: userid,
+          PropertyId: propertyId,
+        }
+      );
+      alert("Wishlist added");
+      setLiked(true);
+    } catch (error) {
+      console.log(error);
+      alert("Failed to add to wishlist");
+    }
+  };
+
+  const handelWishList = () => {
+    addWishList(userid, propertyId);
+  };
+
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -55,7 +81,16 @@ const HomePage = () => {
         setLoading(false);
       });
   };
+const search=(searchkey)=>{
+try {
+// const res=axios.get(`${APP_API_URL}/property/getAll`)
+const filteredData = data.filter((property) => property.seacrhkey);
+setSearchKey(filteredData)
+} catch (error) {
+  
+}
 
+}
   useEffect(() => {
     fetchProperties();
     getProperty();
@@ -145,7 +180,9 @@ const HomePage = () => {
                 </Text>
                 <Text style={styles.tripPrice}>
                   dt {property.Price} / Visit{" "}
+                  <TouchableOpacity style={styles.likeButton} onPress={handelWishList}  >
                   <Ionicons name="heart-outline" size={20} color="#000" style={styles.headerIcon} />
+                  </TouchableOpacity>
                 </Text>
               </TouchableOpacity>
             </View>
@@ -182,12 +219,14 @@ const HomePage = () => {
                   </Text>
                   <Text style={styles.propertyPrice}>
                     dt {property.Price} / Visit{" "}
-                    <Ionicons
+                    <TouchableOpacity onPress={handelWishList}  >
+                    <Ionicons 
                       name="heart-outline"
-                      size={20}
+                      size={22}
                       color="#000"
                       style={styles.headerIcon}
                     />
+                    </TouchableOpacity>
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -216,9 +255,9 @@ const HomePage = () => {
                   </Text>
                   <Text style={styles.propertyPrice}>
                     dt {property.Price} / Visit{" "}
-                    <Ionicons
+                      <Ionicons
                       name="heart-outline"
-                      size={20}
+                      size={22}
                       color="#000"
                       style={styles.headerIcon}
                     />
@@ -252,6 +291,7 @@ const styles = StyleSheet.create({
   },
   headerIcon: {
     marginLeft: 10,
+    
   },
   searchContainer: {
     flexDirection: "row",
@@ -275,11 +315,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+    
   },
   categoryItem: {
-    backgroundColor: "#f0f0f0",
-    borderRadius: 10,
-    padding: 10,
+    backgroundColor: '#deeaed',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
     marginRight: 10,
   },
   categoryText: {
@@ -296,30 +338,33 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 16,
-    color: "#C0C0C0",
+    color: "#b3b3b3",
   },
   tripItem: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 10,
     marginRight: 10,
+    width: 150,
+    
   },
   tripImage: {
-    width: width * 0.7,
-    height: 200,
+    width: 150,
+    height: 120,
     borderRadius: 10,
+    marginBottom: 10,
   },
   tripTitle: {
     fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 10,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   tripLocation: {
-    flexDirection: "row",
-    alignItems: "center",
-    color: "grey",
+    color: '#757575',
+    marginBottom: 5,
   },
   tripPrice: {
-    color:"#4d8790",
-    marginTop: 5,
-    fontSize: 14,
+    color: '#00796b',
   },
   propertyItem: {
     flexDirection: "row",
@@ -328,16 +373,20 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 10,
     padding: 10,
+    
   },
   propertyImage: {
     width: 140,
-    height: 140,
-    borderRadius: 10,
+    height: 100,
+    borderRadius: 20,
     marginRight: 10,
   },
   propertyDetails: {
     flex: 1,
-    justifyContent: "space-between",
+    
+    position:'absolute',
+    left:165,
+    top:'10%'
   },
   propertyTitle: {
     fontSize: 16,

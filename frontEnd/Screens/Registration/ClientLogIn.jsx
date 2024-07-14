@@ -1,60 +1,55 @@
 import { StyleSheet, View, Text, TextInput, Button, Image, TouchableOpacity } from "react-native";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
-import axios from "axios";
 
-const Login = () => {
+const LogInUser = () => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [token, setToken] = useState('');
 
+  const [emailUser, setEmailUser] = useState("");
+  const [Password, setPassword] = useState("");
+  const [token, setToken] = useState("");
   const logIn = async (navigation) => {
-    if (!email || !password) {
+    if (!emailUser || !Password) {
       alert("Please enter both email and password");
       return;
     }
 
     try {
-      const res = await axios.post(`${APP_API_URL}/owner/log/${email}`, {
-        Password: password,
+      const res = await axios.post(`${APP_API_URL}/user/log/${emailUser}`, {
+        Password: Password,
       });
 
-      console.log("data", res.data);
-      SessionStorage.setItem("emailOwner", email);
-      SessionStorage.setItem("ownerid", res.data.id);
-      SessionStorage.setItem("ownerToken", res.data.token);
-      
-      console.log("ownerid", res.data.id);
-      console.log("ownertoken", res.data.token);
+      console.log("loguser", res.data);
+      SessionStorage.setItem("emailUser", emailUser);
+      SessionStorage.setItem("userid", res.data.id);
+      SessionStorage.setItem("userToken", res.data.token);
+      console.log("userid", res.data.id);
+      console.log("usertoken", res.data.token);
       alert("Login successful");
+      navigation.navigate("Navigation", { screen: "Navigation" })
 
-      navigation.navigate("OwnerNav", { screen: "BottomNavigation" });
     } catch (err) {
       console.error(err);
       alert("Login failed. Please check your credentials and try again.");
     }
   };
-
   const handleLogIn = () => {
     logIn(navigation);
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back!</Text>
-      
       <Image
-        source={{ uri: "https://cdn.discordapp.com/attachments/1235498402746335293/1260214654999728158/TuniGo_1.png?ex=668e81db&is=668d305b&hm=056370c859c3b06819c004e4d36de9fb9c2aeb9ca6a9cf6665877e6895f2aa51&" }}
+        source={{ uri: "https://cdn.discordapp.com/attachments/1235498402746335293/1260214654999728158/TuniGo_1.png?ex=6692765b&is=669124db&hm=6a93040a3395d292f11952cb536304c2ec0266850bee76c2d1b5ec5bd31bfe66&" }}
         style={styles.image}
       />
-      
       <View style={styles.wrapper}>
         <Text style={styles.label}>Email address</Text>
-        <View style={styles.inputWrapper(email ? "blue" : "gray")}>
+        <View style={styles.inputWrapper(emailUser ? "blue" : "gray")}>
           <MaterialCommunityIcons
             name="email-outline"
             size={20}
@@ -62,15 +57,15 @@ const Login = () => {
           />
           <TextInput
             style={styles.input}
-            onChangeText={(text) => setEmail(text)}
-            value={email}
+            onChangeText={(text) => setEmailUser(text)}
+            value={emailUser}
             placeholder="example@gmail.com"
             keyboardType="email-address"
             autoCapitalize="none"
           />
         </View>
         <Text style={styles.label}>Password</Text>
-        <View style={styles.inputWrapper(password ? "blue" : "gray")}>
+        <View style={styles.inputWrapper(Password ? "blue" : "gray")}>
           <MaterialCommunityIcons
             name="lock-outline"
             size={20}
@@ -79,15 +74,12 @@ const Login = () => {
           <TextInput
             style={styles.input}
             onChangeText={(pass) => setPassword(pass)}
-            value={password}
+            value={Password}
             placeholder="Password"
             secureTextEntry
           />
         </View>
-        <View style={styles.options}>
-          
-          
-        </View>
+        <View style={styles.options}></View>
         <TouchableOpacity style={styles.button} onPress={handleLogIn}>
           <Text style={styles.buttonText}>Sign in</Text>
         </TouchableOpacity>
@@ -96,7 +88,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LogInUser;
 
 const styles = StyleSheet.create({
   container: {
@@ -168,5 +160,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
- 
+  image: {
+    width: 320,
+    height: 200,
+    marginBottom: 20,
+  },
 });

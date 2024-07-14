@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
 import { View, TextInput, Button, StyleSheet, Alert,Text } from 'react-native';
 import axios from 'axios';
-import { APP_API_URL } from '../env';
+import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
 
 const AddComment = ({ propertyId }) => {
@@ -36,7 +36,7 @@ const AddComment = ({ propertyId }) => {
         value={content}
         onChangeText={setContent}
       />
-      <Button title="Add Comment" onPress={handleAddComment} />
+      <Button title="Add Comment" onPress={handleAddComment}  />
     </View>
   );
 };
@@ -70,5 +70,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+ 
+ 
 });
 export default AddComment;

@@ -5,13 +5,12 @@ import { styles } from "./ProductDeatils.styles";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
-import Bottomsheet from "../Component/Bottomsheet";
+import Bottomsheet from "../../Component/Bottomsheet";
 import { AirbnbRating } from "react-native-ratings";
-import CommentCard from "./CommentCard";
-import AddComment from "./AddComment";
+import AddComment from "../Comment/AddComment";
 import { io } from 'socket.io-client';
 import { Ionicons } from '@expo/vector-icons';
 

@@ -18,7 +18,7 @@ const Photo = () => {
   const [Extra,setExtra]=useState("")
   const [Property,setProperty]=useState([])
   const product=SessionStorage.getItem('productData')
-  const [images,setImages]=useState(["",""])
+  const [images,setImages]=useState(["","","","",""])
 
   console.log("propertyid",
     propertyid

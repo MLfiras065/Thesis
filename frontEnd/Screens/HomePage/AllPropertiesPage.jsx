@@ -8,9 +8,10 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
-import { APP_API_URL } from "../env";
+import { APP_API_URL } from "../../env";
 import { useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const AllPropertiesPage = () => {
   const navigation = useNavigation();
@@ -61,6 +62,8 @@ const AllPropertiesPage = () => {
             />
           <View style={styles.propertyDetails}>
             <Text style={styles.propertyTitle}>{property.Name}</Text>
+            <MaterialIcons name="location-pin" size={18} color="grey" />
+            <Text style={styles.propertyLocation}> {property.location}</Text>
             <Text style={styles.propertyPrice}>
               dt {property.Price} / Visit
             </Text>
@@ -112,5 +115,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  
 });
 export default AllPropertiesPage;

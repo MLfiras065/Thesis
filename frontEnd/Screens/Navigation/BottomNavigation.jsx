@@ -1,24 +1,29 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Profilee from "../Owner/Profilee";
-import Add from "./Add";
-import { Octicons } from '@expo/vector-icons';
+import Profile from "../Profile/Profile";
+import Chat from "../Chat/Chat";
+import WishList from "../WishList/WishList";
+import { AntDesign } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { Feather } from '@expo/vector-icons';
 import { StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import OwnerHomePage from "./OwnerHomePage";
+import { Octicons } from '@expo/vector-icons';
+import HomePage from "../HomePage/HomePage";
 import SessionStorage from "react-native-session-storage";
-import { MaterialIcons } from '@expo/vector-icons';
+import Map from "../Map/Map";
 
 const Tab = createBottomTabNavigator();
 
-const OwnerBottomNavigation = () => {
+const BottomNavigation = () => {
   const email = SessionStorage.getItem("email");
   const ownerid = SessionStorage.getItem("ownerid");
   const navigation = useNavigation();
   const onPressHome = () =>
-    navigation.navigate("OwnerHomePage", { screen: "OwnerHomePage" });
+    navigation.navigate("Home", { screen: "Home" });
 
-  const renderIconWithDot = (IconComponent, iconName, focused, iconSize = 24) => (
+  const renderIconWithDot = (IconComponent, iconName, focused, iconSize = 22) => (
     <View style={styles.iconContainer}>
       <IconComponent name={iconName} size={iconSize} color={focused ? "#4d8790" : "gray"} />
       {focused && <View style={styles.dot} />}
@@ -34,21 +39,35 @@ const OwnerBottomNavigation = () => {
     >
       <Tab.Screen
         name="HomePage"
-        component={OwnerHomePage}
+        component={HomePage}
         options={{
           tabBarIcon: ({ focused }) => renderIconWithDot(Octicons, "home", focused),
         }}
       />
       <Tab.Screen
-        name="Add"
-        component={Add}
+        name="Map"
+        component={Map}
         options={{
-          tabBarIcon: ({ focused }) => renderIconWithDot(MaterialIcons, "add", focused),
+          tabBarIcon: ({ focused }) => renderIconWithDot(Feather, "map-pin", focused),
         }}
       />
       <Tab.Screen
-        name="Profilee"
-        component={Profilee}
+        name="Chat"
+        component={Chat}
+        options={{
+          tabBarIcon: ({ focused }) => renderIconWithDot(Ionicons, "chatbox-ellipses-outline", focused),
+        }}
+      />
+      <Tab.Screen
+        name="WishList"
+        component={WishList}
+        options={{
+          tabBarIcon: ({ focused }) => renderIconWithDot(EvilIcons, "heart", focused, 34),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
         options={{
           tabBarIcon: ({ focused }) => renderIconWithDot(SimpleLineIcons, "user", focused),
         }}
@@ -57,7 +76,7 @@ const OwnerBottomNavigation = () => {
   );
 };
 
-export default OwnerBottomNavigation;
+export default BottomNavigation;
 
 const styles = StyleSheet.create({
   tabBar: {

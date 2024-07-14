@@ -7,15 +7,20 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   card: {
-    width: width,
-    padding: 20,
-    alignItems: 'center',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#f8f8f8',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   image: {
     width: '100%',
-    height: 300,
-    resizeMode: 'cover',
-    borderRadius: 10,
+    height: 250,
+    borderRadius: 13,
   },
   smallImage: {
     width: 100,
@@ -26,62 +31,65 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'left',
-    marginVertical: 10,
-    flex: 1,
+    marginTop: 10,
+  },
+  ratingText: {
+    fontSize: 18,
+    color: '#888',
   },
   locationContainer: {
-    alignItems: 'flex-start',
-    width: '100%',
-    marginVertical: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
   },
   locationText: {
     fontSize: 16,
-    color: '#555',
-  },
-  rating: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  ratingText: {
-    fontSize: 16,
-    color: '#555',
+    color: '#888',
   },
   description: {
+    marginTop: 10,
     fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
-    marginVertical: 20,
+    color: '#444',
   },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    marginVertical: 20,
+    marginTop: 10,
+
   },
   actionButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
     alignItems: 'center',
-    marginVertical: 10,
+    marginTop: 20,
   },
   bookButton: {
-    backgroundColor: '#007BFF',
-    padding: 15,
-    borderRadius: 10,
-    flex: 1,
-    alignItems: 'center',
-    marginRight: 10,
+    backgroundColor: '#4d8790',
+    paddingVertical: 15,
+    paddingHorizontal: 60,
+    borderRadius: 100,
+
+    marginLeft:66,
+
+    marginTop: 20,
   },
+
   bookButtonText: {
-    fontSize: 18,
+    fontSize:15,
     color: '#fff',
+    fontWeight: 'bold',
+
   },
   likeButton: {
-    padding: 15,
-    borderRadius: 10,
-    justifyContent: 'center',
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 50,
+    padding: 5,
+  },
+  ratingContainer: {
+    marginTop: 20,
     alignItems: 'center',
   },
   modalContainer: {
@@ -91,16 +99,26 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: '90%',
+    
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
   },
   fullScreenImage: {
-    width: '100%',
+    width: 300,
     height: 300,
-    resizeMode: 'contain',
     borderRadius: 10,
+  },
+  commentsContainer: {
+    marginTop: 20,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#f8f8f8',
+  },
+  commentsTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 });

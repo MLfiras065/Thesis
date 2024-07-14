@@ -1,9 +1,9 @@
 import { View, Text, ScrollView } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import React from "react";
-import Login from "./Login";
-import SignUp from "./SignUp";
-import ResImage from "../Component/ResImg";
+import Login from "../Registration/Login";
+import SignUp from "../Registration/SignUp";
+import ResImage from "../../Component/ResImg";
 const Tab = createMaterialTopTabNavigator();
 const TopTabNav = ({ route }) => {
   const { showCINImage } = route.params;
@@ -19,7 +19,7 @@ const TopTabNav = ({ route }) => {
             height={200}
             mode={"contain"}
           /> */}
-          <Tab.Navigator style={{ height: 800 }}>
+          <Tab.Navigator style={{ height: 850 }}>
             <Tab.Screen name="Login" component={Login} />
             <Tab.Screen
               name="SignUp"
