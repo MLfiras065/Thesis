@@ -37,7 +37,7 @@ const AddComment = ({ propertyId }) => {
         value={content}
         onChangeText={setContent}
       />
-      <Button title="Add Comment" onPress={handleAddComment} />
+      <Button title="Add Comment" onPress={handleAddComment}  />
     </View>
   );
 };
@@ -71,5 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+ 
+ 
 });
 export default AddComment;
