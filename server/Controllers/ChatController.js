@@ -31,25 +31,32 @@ const addMessage=async(req,res)=>{
         res.status(500).json({ error: error.message });
     }
 }
-const getRooms = async (req, res) => {
-    try {
-      const { userId, ownerId } = req.body;
-      let room = new Set(); 
-  
-      if (userId) {
-        const chats = await Chat.findAll({ where: { userId } });
-        chats.forEach(chat => room.add(chat.ownerId));
-      } else if (ownerId) {
-        const chats = await Chat.findAll({ where: { ownerId } });
-        chats.forEach(chat => room.add(chat.userId));
-      }
-  
-      const result = Array.from(room); 
-      res.json(result);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+const getRooms=async(req,res)=>{
+try {
+    let room=[]
+    const {userId,ownerId}=req.body
+    let result=null
+    if(userId){
+
+        const chats=await Chat.findAll({where:{userId:userId}})
+        room.push(chats[0].ownerId)
+    for(let i=1;i<chats.length;i++){
+        room.push(chats[i].ownerId)
     }
-  };
+     result=Array.from(new Set(room))
+     console.log(result);
+    }else{
+        const chats=await Chat.findAll({where:{ownerId:ownerId}})
+        room.push(chats[0])
+    for(let i=1;i<chats.length;i++){
+        room.push(chats[i])
+    }
+    result=Array.from(new Set(room))
+    }
+res.json(result)
+} catch (error) {
+    console.log(error);
+}
+}
   
 module.exports={getMessages,addMessage,getRooms}

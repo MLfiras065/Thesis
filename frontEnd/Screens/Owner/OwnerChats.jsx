@@ -19,7 +19,7 @@ const OwnerChats = () => {
     useEffect(() => {
         const getMessage = async () => {
             try {
-                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${2}/${1}`);
+                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${ownerId}/${iduser}`);
                 console.log("res",res.data);
                 const formattedMessages = res.data.map(msg => ({
                     _id: messages.id,
