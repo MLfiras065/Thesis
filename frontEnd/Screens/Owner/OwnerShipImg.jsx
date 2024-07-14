@@ -1,15 +1,13 @@
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import React, { useState } from 'react';
 import { EvilIcons } from '@expo/vector-icons';
-// import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation,useRoute } from '@react-navigation/native';
 import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
 import axios  from 'axios';
 
-
-const Photo = () => {
+const Img = () => {
   const route=useRoute()
   const  {propertyid}=route.params
   const navigation = useNavigation();
@@ -19,7 +17,7 @@ const Photo = () => {
   const [Extra,setExtra]=useState("")
   const [Property,setProperty]=useState([])
   const product=SessionStorage.getItem('productData')
-  const [images,setImages]=useState(["","","","",""])
+  const [images,setImages]=useState(["",""])
 
   console.log("propertyid",
     propertyid
@@ -52,12 +50,12 @@ console.log("added");
   };
 const handelAdd=()=>{
   updateProperty()
-  navigation.navigate ('OwnerHomePage')
+  navigation.navigate ('HomePage',{propertyid})
 }
   return (
     <SafeAreaView>
       <View style={{ marginLeft: 24, marginTop: 80, fontSize: 45, fontWeight: 'bold' }}>
-        <Text style={{ fontSize: 35, fontWeight: 'bold' }}>Pick your photos and videos</Text>
+        <Text style={{ fontSize: 35, fontWeight: 'bold' }}>Pick your Img and videos</Text>
         <View style={{ marginTop: 20, marginRight: 12 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20, marginRight: 10 }}>
             {images.slice(0, 3).map((url, index) => (
@@ -120,7 +118,7 @@ const handelAdd=()=>{
   );
 };
 
-export default Photo;
+export default Img;
 
 const styles = StyleSheet.create({
   addButton: {

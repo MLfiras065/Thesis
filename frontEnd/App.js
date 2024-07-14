@@ -12,7 +12,6 @@ import BottomNavigation from './Screens/Navigation/BottomNavigation.jsx';
 import LogInUser from './Screens/Registration/ClientLogIn.jsx';
 import TopNav from './Screens/Navigation/TopNav.jsx';
 import SignUp from './Screens/Registration/SignUp.jsx';
-import Search from './Screens/Search/Search.jsx';
 import Chat from './Screens/Chat/Chat.jsx';
 import Profile from './Screens/Profile/Profile.jsx';
 import Chats from './Screens/Chat/Chats.jsx';
@@ -33,9 +32,14 @@ import ProductsDetails from './Screens/Owner/ProductsDetails.jsx';
 import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 import OwnerBottomNavigation from './Screens/Owner/OwnerBottomNavigation.jsx';
 import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
-
+import OwnerAllChats from './Screens/Owner/OwnerAllChats.jsx';
+import OwnerChats from './Screens/Owner/OwnerChats.jsx';
+import OwnerChatRoom from './Screens/Owner/OwnerChatRoom.jsx';
+import Edit from './Screens/Owner/update/Edit.jsx';
+import Extra from "./Screens/Owner/update/Extraupdate.jsx"
+import EditPhoto from './Screens/Owner/update/Photo.jsx';
+import Search from './Screens/Search/Search.jsx';
 const Stack = createStackNavigator();
-
 export default function App() {
   return (
     <StripeProvider publishableKey="pk_test_51O7xr1FBTzNlZioJG5eArUt9FVglGo9PSPmDI5EU7STowGqZPxZbI8FOkfGhlqX6CGiYILjvtYntdB0CtMiD7k4g00pipm25C1">

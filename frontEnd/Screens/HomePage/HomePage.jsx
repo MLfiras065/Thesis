@@ -45,12 +45,14 @@ const HomePage = () => {
   };
 
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
+      fetchProperties();
       setRefreshing(false);
     }, 2000);
-  }, []);
+  };
+
   const userid = SessionStorage.getItem("userid");
 
   const fetchProperties = () => {
@@ -58,6 +60,7 @@ const HomePage = () => {
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
+        setFilteredProperties(data); // Initialize filtered properties with all properties
         console.log("data", data);
         SessionStorage.setItem("ownerid", data[0].ownerid);
         console.log('prop', data);
@@ -81,20 +84,22 @@ const HomePage = () => {
         setLoading(false);
       });
   };
-const search=(searchkey)=>{
-try {
-// const res=axios.get(`${APP_API_URL}/property/getAll`)
-const filteredData = data.filter((property) => property.seacrhkey);
-setSearchKey(filteredData)
-} catch (error) {
-  
-}
 
-}
+  const search = () => {
+    try {
+      const filteredData = properties.filter((property) => 
+        property.Name.toLowerCase().includes(searchKey.toLowerCase())
+      );
+      setFilteredProperties(filteredData);
+    } catch (error) {
+      console.error('Error while searching:', error);
+    }
+  };
+
   useEffect(() => {
     fetchProperties();
     getProperty();
-  }, [searchKey, refreshing]);
+  }, []);
 
   const navigateToCategory = (category) => {
     navigation.navigate("FilteredProperties", { category });
@@ -121,8 +126,15 @@ setSearchKey(filteredData)
         <Ionicons name="notifications-outline" size={20} color="#000" style={styles.headerIcon} />
       </View>
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search" value={searchKey} onChangeText={setSearchKey} />
-        <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          value={searchKey}
+          onChangeText={setSearchKey}
+        />
+        <TouchableOpacity onPress={search}>
+          <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
+        </TouchableOpacity>
       </View>
       <View style={styles.categories}>
         <Text style={styles.sectionTitle}>Categories</Text>

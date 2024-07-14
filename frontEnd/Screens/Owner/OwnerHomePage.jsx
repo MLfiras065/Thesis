@@ -11,13 +11,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
 const OwnerHomePage = () => {
   const navigation = useNavigation();
+  const [filteredProperties, setFilteredProperties] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const ownerid = SessionStorage.getItem("ownerid");
@@ -31,7 +31,7 @@ const OwnerHomePage = () => {
   }, []);
 
   const fetchOwnerProperties = () => {
-    fetch(`${APP_API_URL}/property/getAll/${ownerid}`)
+    fetch(`${APP_API_URL}/property/getAll/${1}`)
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
@@ -46,6 +46,58 @@ const OwnerHomePage = () => {
   useEffect(() => {
     fetchOwnerProperties();
   }, [refreshing]);
+
+  const handleUpdateProperty = (property) => {
+    setLoading(true);
+    fetch(`${APP_API_URL}/property/update/${2}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(property),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        setLoading(false);
+        setEditingProperty(null);
+        fetchOwnerProperties();
+      })
+      .catch((error) => {
+        console.error("Error updating property:", error);
+        setLoading(false);
+      });
+  };
+
+  const handleDeleteProperty = (propertyId) => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this property?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => {
+            setLoading(true);
+            fetch(`${APP_API_URL}/property/delet/${6}`, {
+              method: "DELETE",
+            })
+              .then(() => {
+                setLoading(false);
+                fetchOwnerProperties();
+              })
+              .catch((error) => {
+                console.error("Error deleting property:", error);
+                setLoading(false);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   if (loading) {
     return (
@@ -75,13 +127,15 @@ const OwnerHomePage = () => {
         />
       </View>
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search" />
-        <Ionicons
-          name="search-outline"
-          size={20}
-          color="#000"
-          style={styles.searchIcon}
+      <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          value={searchKey}
+          onChangeText={setSearchKey}
         />
+        <TouchableOpacity onPress={search}>
+          <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
+        </TouchableOpacity>
       </View>
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
@@ -91,13 +145,15 @@ const OwnerHomePage = () => {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {properties.map((property) => (
+          <View>
+          {showFilteredProperties ? (
+          filteredProperties.map((property) => (
             <View key={property.id} style={styles.propertyItem}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("ProductsDetails", {
+                  navigation.navigate("ProductDetails", {
                     propertyid: property.id,
-                    userid: ownerid,
+                    userid: userid,
                   })
                 }
               >
@@ -109,6 +165,7 @@ const OwnerHomePage = () => {
                   <Text style={styles.propertyTitle}>{property.Name}</Text>
                   <Text style={styles.propertyLocation}>
                     <MaterialIcons name="location-pin" size={18} color="grey" />
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
                     {property.location}
                   </Text>
                   <Text style={styles.propertyPrice}>
@@ -117,9 +174,50 @@ const OwnerHomePage = () => {
                 </View>
               </TouchableOpacity>
             </View>
-          ))}
-        </ScrollView>
+          ))
+        ) : (
+          properties.map((property) => (
+            <View key={property.id} style={styles.propertyItem}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProductsDetails", {
+                    propertyId: property.id,
+                    userId: ownerId,
+                  })
+                }
+              >
+                <Image style={styles.propertyImage} source={{ uri: property.image[0] }} />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyTitle}>{property.Name}</Text>
+                  <Text style={styles.propertyLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.propertyPrice}>dt {property.Price} / Visit</Text>
+                </View>
+              </TouchableOpacity>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => navigation.navigate("EditProperty")}
+                >
+                  <Text style={styles.buttonText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleDeleteProperty(property.id)}
+                >
+                  <Text style={styles.buttonText}>Delete</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
+        )}
       </View>
+    </ScrollView>
+   
+      </View>
+   
     </ScrollView>
   );
 };
@@ -172,6 +270,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
   seeAllText: {
     fontSize: 16,
     color: "#C0C0C0",
@@ -211,6 +314,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     color: "grey",
+    fontSize: 14,
   },
   propertyPrice: {
     color: "#00796b",
@@ -220,6 +324,47 @@ const styles = StyleSheet.create({
   loader: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  editContainer: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    marginVertical: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  input: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    backgroundColor: "#f9f9f9",
+  },
+  updateButton: {
+    backgroundColor: "#007bff",
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginRight: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#6c757d",
+    padding: 15,
+    borderRadius: 5,
     alignItems: "center",
   },
 });

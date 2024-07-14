@@ -8,6 +8,7 @@ const AddComment = ({ propertyId }) => {
   const [content, setContent] = useState("");
   const id =  SessionStorage.getItem('userid');
   console.log(' user ID:', id);
+  console.log("test");
 
   const handleAddComment = async () => {
     console.log("UserID:", id);
