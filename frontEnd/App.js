@@ -76,7 +76,7 @@ export default function App() {
           <Stack.Screen name="add" component={add} options={{ headerShown: false }}/>
           <Stack.Screen name="Extra" component={ExtraFeatures}/>
           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}/> 
-          {/* <Stack.Screen name="OwnerShipImg" component={OwnerShipImg} options={{ headerShown: false }}/>  */}
+          <Stack.Screen name="OwnerShipImg" component={OwnerShipImg} options={{ headerShown: false }}/> 
            <Stack.Screen name="ProductsDetails" component={ProductsDetails}/>
           <Stack.Screen name="EditProperty" component={Edit}/>
           <Stack.Screen name="EditExtra" component={Extra}/>
