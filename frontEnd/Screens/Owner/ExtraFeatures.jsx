@@ -6,7 +6,7 @@ import { APP_API_URL } from '../../env';
 
 const ExtraFeatures = () => {
     const route = useRoute();
-    // const { propertyid } = route.params;
+    const { propertyid } = route.params;
     const navigation = useNavigation();
     const [Bedroom, setBedroom] = useState(0);
     const [Bathroom, setBathroom] = useState(0);
@@ -18,7 +18,7 @@ const ExtraFeatures = () => {
 
     const addExtra = async () => {
         try {
-            const res = await axios.put(`${APP_API_URL}/property/extra/${1}`, { Bedroom, Bathroom, Person, Ac, Pool });
+            const res = await axios.put(`${APP_API_URL}/property/extra/${propertyid}`, { Bedroom, Bathroom, Person, Ac, Pool });
             setExtra(res.data);
             console.log("data", res.data);
         } catch (error) {
@@ -42,7 +42,7 @@ const ExtraFeatures = () => {
 
     const handleExtra = () => {
         addExtra();
-        // navigation.navigate('img', { propertyid });
+        navigation.navigate('img', { propertyid });
     };
 
     return (

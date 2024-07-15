@@ -6,7 +6,7 @@ import { APP_API_URL } from '../../../env';
 
 const ExtraFeatures = () => {
   const route = useRoute();
-  // const { propertyId } = route.params;
+  const { propertyId } = route.params;
   const navigation = useNavigation();
   const [Bedroom, setBedroom] = useState(0);
   const [Bathroom, setBathroom] = useState(0);
@@ -16,7 +16,7 @@ const ExtraFeatures = () => {
 
   const updateExtraFeatures = async () => {
     try {
-      const res = await axios.put(`${APP_API_URL}/property/extra/${5}`, {
+      const res = await axios.put(`${APP_API_URL}/property/extra/${propertyId}`, {
         Bedroom,
         Bathroom,
         Person,
@@ -25,7 +25,7 @@ const ExtraFeatures = () => {
       });
     
       console.log('Extra features updated successfully:', res.data);
-      navigation.navigate('EditImage');
+      navigation.navigate('EditImage',{propertyId});
     } catch (error) {
       console.error('Error updating extra features:', error);
     

@@ -7,7 +7,7 @@ import { APP_API_URL } from '../../../env';
 const Edit = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  // const { propertyId } = route.params; 
+  const { propertyId } = route.params; 
   const [Name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
@@ -33,7 +33,7 @@ const Edit = () => {
 
   const updateProperty = async () => {
     try {
-      const res = await axios.put(`${APP_API_URL}/property/up/${5}`, {
+      const res = await axios.put(`${APP_API_URL}/property/up/${propertyId}`, {
         Name,
         Price: parseFloat(Price), 
         description,
@@ -41,7 +41,7 @@ const Edit = () => {
       });
       
       console.log('Property updated successfully:', res.data);
-      navigation.navigate('EditExtra');
+      navigation.navigate('EditExtra',{propertyId:propertyId});
     } catch (error) {
       console.error('Error updating property:', error);
       

@@ -55,36 +55,33 @@ const HomePage = () => {
 
   const userid = SessionStorage.getItem("userid");
 
-  const fetchProperties = () => {
-    fetch(`${APP_API_URL}/property/getAll`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProperties(data);
-        setFilteredProperties(data); // Initialize filtered properties with all properties
-        console.log("data", data);
-        SessionStorage.setItem("ownerid", data[0].ownerid);
-        console.log('prop', data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching properties:", error);
-        setLoading(false);
-      });
-  };
+  const fetchProperties = async () => {
+    try {
+      const response = await fetch(`${APP_API_URL}/property/getAll`);
+      const data = await response.json();
+      setProperties(data);
+      setFilteredProperties(data);
+      console.log("data", data);
+      SessionStorage.setItem("ownerid", data[0]?.ownerid);
+      console.log('prop', data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+      setLoading(false);
+    }
+  }
 
   const getProperty = async () => {
-    fetch(`${APP_API_URL}/property/getAll`)
-      .then((response) => response.json())
-      .then((data) => {
-        const filteredData = data.filter((property) => property.rating > 3);
-        setRated(filteredData);
-      })
-      .catch((error) => {
-        console.error("Error fetching properties:", error);
-        setLoading(false);
-      });
+    try {
+      const response = await fetch(`${APP_API_URL}/property/getAll`);
+      const data = await response.json();
+      const filteredData = data.filter((property) => property.rating > 3);
+      setRated(filteredData);
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+      setLoading(false);
+    }
   };
-
   const search = () => {
     try {
       const filteredData = properties.filter((property) => 
@@ -99,7 +96,7 @@ const HomePage = () => {
   useEffect(() => {
     fetchProperties();
     getProperty();
-  }, []);
+  }, [refreshing]);
 
   const navigateToCategory = (category) => {
     navigation.navigate("FilteredProperties", { category });
@@ -176,7 +173,7 @@ const HomePage = () => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
+                    propertyId: property.id,
                     userid: userid,
                   })
                 }
@@ -214,7 +211,7 @@ const HomePage = () => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
+                    propertyId: property.id,
                     userid: userid,
                   })
                 }
@@ -250,7 +247,7 @@ const HomePage = () => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
+                    propertyId: property.id,
                     userid: userid,
                   })
                 }

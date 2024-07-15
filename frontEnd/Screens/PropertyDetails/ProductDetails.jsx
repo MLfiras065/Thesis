@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, Button, TouchableOpacity, FlatList, Modal, ScrollView, StyleSheet } from "react-native";
+import React, { useState, useEffect,useCallback } from "react";
+import { View, Text, Image, Button, TouchableOpacity, FlatList, Modal, ScrollView, StyleSheet , RefreshControl} from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { styles } from "./ProductDeatils.styles";
 import { AntDesign } from "@expo/vector-icons";
@@ -16,9 +16,9 @@ import { Ionicons } from '@expo/vector-icons';
 
 const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const navigation = useNavigation();
-  const socket=io('http://192.168.11.174:3000')
+  const socket=io('http://192.168.103.3:3000')
   const route = useRoute();
-  const propertyId = route.params?.propertyid;
+  const propertyId = route.params?.propertyId;
   const userid = route.params?.userid;
   const [property, setProperty] = useState(null);
   const [mainImage, setMainImage] = useState("");
@@ -28,6 +28,14 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const [userRating, setUserRating] = useState(0);
   const [avgRating, setAvgRating] = useState(null);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const ownerid=SessionStorage.getItem('ownerid')
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
@@ -38,6 +46,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
     });
     return initResponse;
   };
+
 const handleCreateRoom=()=>{
   socket.emit('createRoom','roomsList')
 }
@@ -109,13 +118,15 @@ const handleCreateRoom=()=>{
   const addWishList = async (userid, propertyId) => {
     try {
       const res = await axios.post(
-        `${APP_API_URL}/wishlist/add/${propertyId}/${userid}`,
+       ` ${APP_API_URL}/wishlist/add/${propertyId}/${userid}`,
         {
           UserId: userid,
           PropertyId: propertyId,
         }
       );
       alert("Wishlist added");
+
+      console.log("wishlist", res.data);
       setLiked(true);
     } catch (error) {
       console.log(error);
@@ -141,11 +152,15 @@ const handleCreateRoom=()=>{
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+    >
       <TouchableOpacity
         onPress={() => {
           handleCreateRoom();
-          navigation.navigate("Chats");
+          navigation.navigate("Chats",{ownerid});
         }}
       >
        <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />

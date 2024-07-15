@@ -9,7 +9,7 @@ import SessionStorage from 'react-native-session-storage';
 
 const EditPhoto = () => {
   const route=useRoute()
-  // const  {propertyid}=route.params
+  const  propertyId=route.params.propertyId
   const navigation = useNavigation();
   const ownerid=SessionStorage.getItem('ownerId')
   const [Category, setcategory] = useState('');
@@ -17,14 +17,17 @@ const EditPhoto = () => {
   const [Extra,setExtra]=useState("")
   const [Property,setProperty]=useState([])
   const product=SessionStorage.getItem('productData')
+  // const [images,setImages]=useState(["","","","",""])
+
+  
   const [images,setImages]=useState(["","","","",""])
 
-  // console.log("propertyid",
-  //   propertyid
-  //   );
+  console.log("propertyid",
+    propertyId
+    );
 
   const updateProperty =async()=>{
-    const  res =await axios.put(`${APP_API_URL}/property/image/${5}`,{image:images})
+    const  res =await axios.put(`${APP_API_URL}/property/image/${propertyId}`,{image:images})
     try {
   console.log("res images",res.data.images);
       setImages(res.data)
@@ -50,7 +53,7 @@ console.log("added");
   };
 const handelAdd=()=>{
   updateProperty()
-  // navigation.navigate ('OwnerHomePage')
+  navigation.navigate ('HomePage')
 }
   return (
     <SafeAreaView>

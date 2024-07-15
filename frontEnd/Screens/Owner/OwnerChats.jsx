@@ -19,7 +19,7 @@ const OwnerChats = () => {
     useEffect(() => {
         const getMessage = async () => {
             try {
-                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${2}/${1}`);
+                const res = await axios.get(`${APP_API_URL}/chat/getmsg/${ownerId}/${iduser}`);
                 console.log("res",res.data);
                 const formattedMessages = res.data.map(msg => ({
                     _id: messages.id,
@@ -80,7 +80,8 @@ const OwnerChats = () => {
 
         try {
             await axios.post(`${APP_API_URL}/chat/addmsg/${2}/${1}`, {
-                message: newMessage[0].text
+                message: newMessage[0].text,
+                sender:newMessage[0].ownerId
             });
 
             if (socket) {
