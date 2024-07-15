@@ -96,7 +96,7 @@ const HomePage = () => {
   useEffect(() => {
     fetchProperties();
     getProperty();
-  }, []);
+  }, [refreshing]);
 
   const navigateToCategory = (category) => {
     navigation.navigate("FilteredProperties", { category });
@@ -173,7 +173,7 @@ const HomePage = () => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
+                    propertyId: property.id,
                     userid: userid,
                   })
                 }
@@ -211,7 +211,7 @@ const HomePage = () => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
+                    propertyId: property.id,
                     userid: userid,
                   })
                 }
@@ -247,7 +247,7 @@ const HomePage = () => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
+                    propertyId: property.id,
                     userid: userid,
                   })
                 }

@@ -31,10 +31,11 @@ import Profilee from './Screens/Owner/Profilee';
 import ProductsDetails from './Screens/Owner/ProductsDetails.jsx'; 
 import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 import OwnerBottomNavigation from './Screens/Owner/OwnerBottomNavigation.jsx';
+
 import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
-import OwnerAllChats from './Screens/Owner/OwnerAllChats.jsx';
-import OwnerChats from './Screens/Owner/OwnerChats.jsx';
-import OwnerChatRoom from './Screens/Owner/OwnerChatRoom.jsx';
+// import OwnerAllChats from './Screens/Owner/OwnerAllChats.jsx';
+// import OwnerChats from './Screens/Owner/OwnerChats.jsx';
+// import OwnerChatRoom from './Screens/Owner/OwnerChatRoom.jsx';
 import Edit from './Screens/Owner/update/Edit.jsx';
 import Extra from "./Screens/Owner/update/Extraupdate.jsx"
 import EditPhoto from './Screens/Owner/update/Photo.jsx';
@@ -55,6 +56,7 @@ export default function App() {
           <Stack.Screen name="SignUp" component={SignUp} />  
            <Stack.Screen name="LogIn" component={LogInUser} />   
            <Stack.Screen name="ProductDetails" component={ProductDetails}  />
+           <Stack.Screen name="EditProperty" component={Edit}  />
           <Stack.Screen name="Navigation" component={BottomNavigation} options={{ headerShown: false }}/>
           <Stack.Screen name="OwnerNav" component={OwnerBottomNavigation} options={{ headerShown: false }}/>
           <Stack.Screen name="Subscribe" component={Subscribe} />    
@@ -77,6 +79,8 @@ export default function App() {
           <Stack.Screen name="Extra" component={ExtraFeatures} />
           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  />  
            <Stack.Screen name="ProductsDetails" component={ProductsDetails}   />    
+           <Stack.Screen name="EditExtra" component={Extra}   />    
+           <Stack.Screen name="EditImage" component={EditPhoto}   />    
            
         </Stack.Navigator>
       </NavigationContainer>
