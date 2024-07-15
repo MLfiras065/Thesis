@@ -116,6 +116,7 @@ const handleCreateRoom=()=>{
         }
       );
       alert("Wishlist added");
+      
       setLiked(true);
     } catch (error) {
       console.log(error);
