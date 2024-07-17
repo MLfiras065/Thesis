@@ -9,10 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@material/icon-button": "^14.0.0",
+    "@material/toolbar": "^2.3.0",
+    "@material/tooltip": "^14.0.0",
     "@mui/material": "^5.15.19",
+    "@mui/x-data-grid": "^7.10.0",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
+    "i": "^0.3.7",
     "next": "14.2.3",
+    "npm": "^10.8.2",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
