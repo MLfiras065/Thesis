@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, Button, TouchableOpacity, FlatList, Modal, ScrollView, Alert } from "react-native";
+import React, { useState, useEffect ,useCallback} from "react";
+import { View, Text, Image, Button, TouchableOpacity, FlatList, Modal, ScrollView, Alert,RefreshControl, LogBox } from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { styles } from "./ProductsDetails.styles";
 import { AntDesign } from "@expo/vector-icons";
@@ -10,19 +10,18 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
 import Bottomsheet from "../../Component/Bottomsheet";
 import { AirbnbRating } from "react-native-ratings";
-// import CommentCard from "../CommentCard";
-// import AddComment from "../AddComment";
-import { Entypo } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { io } from 'socket.io-client';
 
 
-const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
+const ProductsDetails = ({  deleteProduct, switchView, isOwner }) => {
+
   const navigation = useNavigation();
- const socket=io('http://192.168.11.174:3000')
+ const socket=io('http://192.168.139.186:3000')
   const route = useRoute();
-  const propertyId = route.params?.propertyid;
-  const userid = route.params?.userid;
-  const [property, setProperty] = useState(null);
+  const propertyid = route.params?.propertyid;
+  const userid = route.params?.userId;
+  const [property, setProperty] = useState([]);
   const [mainImage, setMainImage] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -30,7 +29,13 @@ const ProductDetails = ({  deleteProduct, switchView, isOwner }) => {
   const [userRating, setUserRating] = useState(0);
   const [avgRating, setAvgRating] = useState(null);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
     const { paymentIntent } = response.data;
@@ -86,13 +91,12 @@ const handleCreateRoom=()=>{
         })
         .catch((err) => console.log(err));
     };
-
-    if (propertyId) {
-      getProperty(propertyId);
-      getPropertyRating(propertyId);
+    if (propertyid) {
+      getProperty(propertyid);
+      getPropertyRating(propertyid);
     }
-    fetchPaymentSheetParams();
-  }, [propertyId]);
+    // fetchPaymentSheetParams();
+  }, []);
 
   const openImageModal = (img) => {
     setSelectedImage(img);
@@ -104,20 +108,21 @@ const handleCreateRoom=()=>{
     setModalVisible(false);
   };
 
-  if (!property) {
-    return <Text>Loading...</Text>;
-  }
 
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+    >
     <TouchableOpacity
       onPress={() => {
         handleCreateRoom();
-        navigation.navigate("Chats");
+        navigation.navigate("ownerchats",{userid});
       }}
     >
-     <Entypo name="chat" size={24} color="black" />
+    <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
     </TouchableOpacity>
     <ScrollView style={styles.container}>
       <View style={styles.card}>
@@ -170,4 +175,4 @@ const handleCreateRoom=()=>{
   );
 };
 
-export default ProductDetails;
+export default ProductsDetails;

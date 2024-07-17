@@ -144,6 +144,7 @@ crightContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
+    
 },
 ctime: {
     opacity: 0.5,

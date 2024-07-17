@@ -9,7 +9,8 @@ const getMessages=async(req,res) =>{
             where: {
                 userId,
                 ownerId
-            },
+            }
+            ,
             include: [
                 { model: Owner, as: 'Owner' },
                 { model: User, as: 'User' }
@@ -23,7 +24,7 @@ const getMessages=async(req,res) =>{
 const addMessage=async(req,res)=>{
     try {
         const { userId, ownerId } = req.params;
-        const { message ,sender} = req.body;
+        const { message,sender } = req.body;
 
         const newChat = await Chat.create({ message, userId, ownerId,sender });
         res.status(201).json(newChat);
@@ -47,9 +48,9 @@ try {
      console.log(result);
     }else{
         const chats=await Chat.findAll({where:{ownerId:ownerId}})
-        room.push(chats[0])
+        room.push(chats[0].userId)
     for(let i=1;i<chats.length;i++){
-        room.push(chats[i])
+        room.push(chats[i].userId)
     }
     result=Array.from(new Set(room))
     }

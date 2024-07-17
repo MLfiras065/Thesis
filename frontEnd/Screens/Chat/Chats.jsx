@@ -3,9 +3,9 @@ import { View } from 'react-native';
 import SessionStorage from 'react-native-session-storage';
 import { io } from 'socket.io-client';
 import axios from 'axios';
-import { GiftedChat } from 'react-native-gifted-chat';
-import styles from './ChatStyles';
+import { GiftedChat ,Bubble} from 'react-native-gifted-chat';
 import { APP_API_URL } from '../../env';
+import styles from './ChatStyles';
 import { useRoute } from '@react-navigation/native';
 
 const Chats = ({}) => {
@@ -44,9 +44,9 @@ const Chats = ({}) => {
         getMessage();
     }, [userId, ownerId]);
     
-    // console.log("msg",messages);
+    console.log("msg",messages);
     useEffect(() => {
-        const socketConnection = io("http://192.168.103.5:3000");
+        const socketConnection = io("http://192.168.139.186:3000");
         setSocket(socketConnection);
 
         socketConnection.on("connect", () => {
@@ -60,10 +60,10 @@ const Chats = ({}) => {
         socketConnection.on("receive-message", message => {
             setMessages(previousMessages => GiftedChat.append(previousMessages, {
                 _id: message.id,
-                text: message[2].message,
+                text: message[1].message,
                 createdAt: new Date(messages.createdAt),
                 user: {
-                    id: message[2].FirstName,
+                    id: message[1].FirstName,
                     name:"firas",
                     avatar: 'https://placeimg.com/140/140/any'
                 }
@@ -84,7 +84,8 @@ const Chats = ({}) => {
 
         try {
             await axios.post(`${APP_API_URL}/chat/addmsg/${userId}/${idOwner}`, {
-                message: newMessage[0].text
+                message: newMessage[0].text,
+                sender:newMessage[0].userId
             });
 
             if (socket) {
@@ -94,7 +95,31 @@ const Chats = ({}) => {
             console.log(err);
         }
     }, [userId, idOwner, socket]);
-
+    const renderBubble = (props) => {
+        return (
+            <Bubble
+                {...props}
+                wrapperStyle={{
+                    left: {
+                        backgroundColor: '#f0f0f0',
+                        alignSelf: 'flex-start',
+                    },
+                    right: {
+                        backgroundColor: '#0078fe',
+                        alignSelf: 'flex-end',
+                    }
+                }}
+                textStyle={{
+                    left: {
+                        color: '#000',
+                    },
+                    right: {
+                        color: '#fff',
+                    }
+                }}
+            />
+        );
+    };
     return (
         <View style={styles.messagingscreen}>
             <GiftedChat
@@ -106,6 +131,7 @@ const Chats = ({}) => {
                     // avatar: 'https://placeimg.com/140/140/any'
                 }}
                 inverted={false}
+                renderBubble={renderBubble}
                 
             />
         </View>

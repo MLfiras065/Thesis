@@ -33,7 +33,7 @@ const Wishlist = () => {
   const userid = SessionStorage.getItem("userid");
   const [wishlist, setWishlist] = useState([]);
   const [upd, setUpd] = useState(false);
-  // const userid = SessionStorage.getItem("userid");
+  
   const fetchWishlist = async () => {
     try {
       const response = await axios.get(`${APP_API_URL}/wishlist/get/${userid}`);

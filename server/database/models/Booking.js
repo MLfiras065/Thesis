@@ -30,5 +30,5 @@ const Booking = sequelize.define('Booking', {
 
 });
 // User.belongsToMany(Property, { through:Booking, foreignKey: 'UserId' });
-// Property.belongsToMany(User, { through:Booking, foreignKey: 'PropertyId' });
+// Property.belongsToMany(User, { through:Booking, foreignKey: 'PropertyId' })
 module.exports = Booking;

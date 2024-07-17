@@ -4,28 +4,31 @@ import { Ionicons } from "@expo/vector-icons";
 import styles from "./OwnerChatStyle";
 import { useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
+import axios from "axios";
 
 
-const OwnerAllChats = ({ iduser }) => {
+const OwnerAllChats = ({ data }) => {
   const navigation = useNavigation();
-  const [owner,setOwner]=useState([])
-  const ownerId=SessionStorage.getItem('ownerid')
-  console.log("testitem", iduser);
-  const getOwner=async()=>{
-    const res= await axios.get(`${APP_API_URL}/user/user/${ownerId}`)
+  const [user,setUser]=useState([])
+  console.log("iduser====",data);
+  // const ownerId=SessionStorage.getItem('ownerid')
+  console.log("testitem", data);
+  console.log("user",user);
+  const getUser=async()=>{
+    const res= await axios.get(`${APP_API_URL}/user/user/${1}`)
     try {
-setOwner(res.data)
-console.log('owner',res.data);
+      console.log('userchat',res.data);
+      setUser(res.data)
 
       
     } catch (error) {
         console.log("error",error);
     }
 }
-useEffect(()=>getOwner(),[])
+useEffect(()=>{getUser()},[user])
   const handleNavigation = () => {
     navigation.navigate("ownerchats", {
-      userid: iduser,
+      userid: data,
     });
   };
   return (
@@ -44,14 +47,14 @@ useEffect(()=>getOwner(),[])
 
       <View style={styles.crightContainer}>
         <View>
-          <Text style={styles.cusername}>{iduser}</Text>
+          <Text style={styles.cusername}>test{data.FirstName}</Text>
 
           <Text style={styles.cmessage}>
-            {iduser?.message ? iduser.message : "Tap to start chatting"}
+            {data?.message ? data.message : "Tap to start chatting"}
           </Text>
         </View>
         <View>
-          <Text style={styles.ctime}>{iduser?.time ? iduser.time : "now"}</Text>
+          <Text style={styles.ctime}>{data?.time ? data.time : "now"}</Text>
         </View>
       </View>
     </Pressable>

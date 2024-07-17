@@ -2,6 +2,7 @@ import React, { useEffect, useState,useCallback } from "react";
 import {
   RefreshControl,
   View,
+  Alert,
   Text,
   StyleSheet,
   ScrollView,
@@ -11,7 +12,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons,AntDesign } from "@expo/vector-icons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
@@ -20,18 +21,19 @@ const OwnerHomePage = () => {
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchKey,setSearchKey]=useState("")
   const ownerid = SessionStorage.getItem("ownerid");
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
+  const [showFilteredProperties,setShowFilteredProperties]=useState(false)
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = useCallback(() => {
+      setRefreshing(true);
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+    }, []);
 
   const fetchOwnerProperties = () => {
-    fetch(`${APP_API_URL}/property/getAll/${1}`)
+    fetch(`${APP_API_URL}/property/getAll/${ownerid}`)
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
@@ -42,10 +44,21 @@ const OwnerHomePage = () => {
         setLoading(false);
       });
   };
+  const search = () => {
+    try {
+      const filteredData = properties.filter((property) => 
+        property.Name.toLowerCase().includes(searchKey.toLowerCase())
+      );
+      setFilteredProperties(filteredData);
+    } catch (error) {
+      console.error('Error while searching:', error);
+    }
+  };
 
   useEffect(() => {
     fetchOwnerProperties();
   }, [refreshing]);
+
 
   const handleUpdateProperty = (property) => {
     setLoading(true);
@@ -67,7 +80,6 @@ const OwnerHomePage = () => {
         setLoading(false);
       });
   };
-
   const handleDeleteProperty = (propertyId) => {
     Alert.alert(
       "Confirm Delete",
@@ -81,7 +93,7 @@ const OwnerHomePage = () => {
           text: "Delete",
           onPress: () => {
             setLoading(true);
-            fetch(`${APP_API_URL}/property/delet/${6}`, {
+            fetch(`${APP_API_URL}/property/delet/${propertyId}`, {
               method: "DELETE",
             })
               .then(() => {
@@ -98,14 +110,7 @@ const OwnerHomePage = () => {
       { cancelable: false }
     );
   };
-
-  if (loading) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
+ 
 
   return (
     <ScrollView
@@ -140,7 +145,7 @@ const OwnerHomePage = () => {
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
           <Text style={styles.sectionTitle}>Your Offers</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("add")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Subscribe")}>
             <Text style={styles.seeAllText}>Add New Property</Text>
           </TouchableOpacity>
         </View>
@@ -151,7 +156,7 @@ const OwnerHomePage = () => {
             <View key={property.id} style={styles.propertyItem}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("ProductDetails", {
+                  navigation.navigate("ProductsDetails", {
                     propertyid: property.id,
                     userid: userid,
                   })
@@ -181,8 +186,8 @@ const OwnerHomePage = () => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProductsDetails", {
-                    propertyId: property.id,
-                    userId: ownerId,
+                    propertyid: property.id,
+                    // userId: userId,
                   })
                 }
               >
@@ -199,15 +204,15 @@ const OwnerHomePage = () => {
               <View style={styles.actionButtons}>
                 <TouchableOpacity
                   style={styles.editButton}
-                  onPress={() => navigation.navigate("EditProperty")}
+                  onPress={() => navigation.navigate("EditProperty",{propertyId:property.id})}
                 >
-                  <Text style={styles.buttonText}>Edit</Text>
+                  <Text style={styles.buttonText}> <AntDesign name="edit" size={20} color="black" /></Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDeleteProperty(property.id)}
                 >
-                  <Text style={styles.buttonText}>Delete</Text>
+                  <Text style={styles.buttonTextt}><AntDesign name="delete" size={20} color="black" /></Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -366,6 +371,18 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
     alignItems: "center",
+  },
+  buttonText: {
+    position: 'absolute',
+    left: 145,
+    top: '15%',
+    marginBottom: 5,
+  },
+  buttonTextt: {
+    position: 'absolute',
+    left: 145,
+    bottom: '18%',
+    marginBottom: 5,
   },
 });
 
