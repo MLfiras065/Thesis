@@ -11,9 +11,10 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { Feather } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
+// import BottomNavigation from './Screens/BottomNavigation.jsx';
 
 function ProfileScreen() {
   const [refreshing, setRefreshing] = React.useState(false);
@@ -26,21 +27,17 @@ function ProfileScreen() {
   }, []);
   const navigation = useNavigation();
   const [item, setItem] = useState([]);
-  const [email,setEmail]=useState(SessionStorage.getItem("emailUser"))
+  const [email, setEmail] = useState(SessionStorage.getItem("emailUser"));
   const [token, setToken] = useState();
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
+
   const getEmail = async () => {
     try {
-      console.log("etest");
       const emailUser = SessionStorage.getItem("emailUser");
-      const emailOwner = SessionStorage.getItem("emailOwner");
-      console.log("email",emailUser);
-     if (emailUser) {
+      if (emailUser) {
         const res = await axios.get(`${APP_API_URL}/user/${emailUser}`);
-        SessionStorage.getItem('emailUser')
         setItem(res.data);
-        console.log('profuser',res.data);
       } else {
         console.log("no email provided");
       }
@@ -48,6 +45,7 @@ function ProfileScreen() {
       console.log(error);
     }
   };
+
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
   };
@@ -55,12 +53,14 @@ function ProfileScreen() {
   const toggleNotifications = () => {
     setIsNotificationsEnabled((previousState) => !previousState);
   };
-  const logout=()=>{
-    SessionStorage.clear('emailUser')
-    navigation.navigate("Role")
-  }
+
+  const logout = () => {
+    SessionStorage.clear('emailUser');
+    navigation.navigate("Role");
+  };
 
   const styles = createStyles(isDarkTheme);
+
   useEffect(() => {
     getEmail();
   }, [refreshing]);
@@ -68,52 +68,61 @@ function ProfileScreen() {
   return (
     <View style={styles.container}>
       <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-      <View style={styles.profileHeader}>
-      <Image  source={{ uri: item?item.image :"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" }} style={styles.avatar} />
-        <Text style={styles.name}>{item?item.FirstName :"first Name" } </Text>
-        <Text style={styles.lastname}>{item?item.LastName :"LastName" }</Text>
-        <Text style={styles.email}>{item?item.email:'email'}</Text>
-        
-      </View>
-      <TouchableOpacity
-        style={styles.option}
-        onPress={() => navigation.navigate("EditProfile", { item: item })}
-      >
-        <Text style={styles.optionText}>Edit profile information</Text>
-      </TouchableOpacity>
-      <View style={styles.option}>
-        <Text style={styles.optionText}>Notifications</Text>
-        <Switch
-          value={isNotificationsEnabled}
-          onValueChange={toggleNotifications}
-        />
-      </View>
-      <TouchableOpacity style={styles.option}>
-        <Text style={styles.optionText}>Security</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.option} onPress={toggleTheme}>
-        <Text style={styles.optionText}>Theme</Text>
-        <Text style={styles.optionText}>
-          {isDarkTheme ? "Dark mode" : "Light mode"}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.option}>
-        <Text style={styles.optionText}>Help & Support</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.option}>
-        <Text style={styles.optionText}>Contact us</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.option}>
-        <Text style={styles.optionText}>Privacy policy</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.option} onPress={logout}>
-      <Feather name="log-out" size={24} color="black" />
-      </TouchableOpacity>
+        <View style={styles.profileHeader}>
+          <Image source={{ uri: item ? item.image : "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" }} style={styles.avatar} />
+          <View style={styles.profileInfo}>
+            <Text style={styles.name}>{item ? item.FirstName : "First Name"}</Text>
+            <Text style={styles.lastname}>{item ? item.LastName : "Last Name"}</Text>
+            <Text style={styles.email}>{item ? item.email : 'email'}</Text>
+          </View>
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile", { item: item })} style={styles.editButton}>
+            <Feather name="edit" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("MyAccount")}>
+            <MaterialIcons name="account-circle" size={24} color={isDarkTheme ? "#fff" : "#000"} />
+            <Text style={styles.optionText}>My Account</Text>
+            <AntDesign name="right" size={24} color="gray" />
+          </TouchableOpacity>
+
+          <View style={styles.option}>
+            <Ionicons name="notifications-outline" size={24} color="black" />
+            <Text style={styles.optionText}>Notification</Text>
+            <Switch value={isNotificationsEnabled} onValueChange={toggleNotifications} />
+          </View>
+
+          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("TwoFactorAuthentication")}>
+            <Feather name="lock" size={24} color={isDarkTheme ? "#fff" : "#000"} />
+            <Text style={styles.optionText}>Two-Factor Authentication</Text>
+            <AntDesign name="right" size={24} color="gray" />
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("HelpSupport")}>
+            <Feather name="help-circle" size={24} color={isDarkTheme ? "#fff" : "#000"} />
+            <Text style={styles.optionText}>Help & Support</Text>
+            <AntDesign name="right" size={24} color="gray" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("AboutApp")}>
+            <Feather name="info" size={24} color={isDarkTheme ? "#fff" : "#000"} />
+            <Text style={styles.optionText}>About App</Text>
+            <AntDesign name="right" size={24} color="gray" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.option} onPress={logout}>
+            <Feather name="log-out" size={24} color="red" />
+            <Text style={styles.optionText}>Log out</Text>
+            <AntDesign name="right" size={24} color="gray" />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
+      {/* <BottomNavigation/> */}
     </View>
   );
 }
@@ -126,31 +135,47 @@ const createStyles = (isDarkTheme) =>
       backgroundColor: isDarkTheme ? "#333" : "#f5f5f5",
     },
     profileHeader: {
+      flexDirection: 'row',
       alignItems: "center",
       marginBottom: 20,
     },
     avatar: {
-      width: 100,
-      height: 100,
-      borderRadius: 50,
-      marginBottom: 10,
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      marginRight: 15,
+    },
+    profileInfo: {
+      flex: 1,
     },
     name: {
       fontSize: 20,
       fontWeight: "bold",
       color: isDarkTheme ? "#fff" : "#000",
     },
+    lastname: {
+      fontSize: 18,
+      color: isDarkTheme ? "#fff" : "#000",
+    },
     email: {
       fontSize: 16,
       color: isDarkTheme ? "lightgray" : "gray",
     },
-    phone: {
-      fontSize: 16,
-      color: isDarkTheme ? "lightgray" : "gray",
+    editButton: {
+      backgroundColor: '#4d8790',
+      padding: 10,
+      borderRadius: 25,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    section: {
+      marginTop: 20,
+      paddingTop: 10,
+      borderTopWidth: 1,
+      borderTopColor: isDarkTheme ? "#555" : "#ccc",
     },
     option: {
       flexDirection: "row",
-      justifyContent: "space-between",
       alignItems: "center",
       paddingVertical: 15,
       borderBottomWidth: 1,
@@ -159,6 +184,8 @@ const createStyles = (isDarkTheme) =>
     optionText: {
       fontSize: 18,
       color: isDarkTheme ? "#fff" : "#000",
+      flex: 1,
+      marginLeft: 15,
     },
   });
 

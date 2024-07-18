@@ -1,22 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { RefreshControl, View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Dimensions } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useRoute,useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
+import axios from "axios";
 
 const HomePage = () => {
+  
   const navigation = useNavigation();
+  const route = useRoute();
+  const propertyId = route.params?.propertyid;
+ 
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [userRole, setUserRole] = useState(null);
   const [rated, setRated] = useState([]);
   const [searchKey, setSearchKey] = useState('');
-  const [refreshing, setRefreshing] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  
+  const addWishList = async (userid, propertyId) => {
+    try {
+      const res = await axios.post(
+        `${APP_API_URL}/wishlist/add/${propertyId}/${userid}`,
+        {
+          UserId: userid,
+          PropertyId: propertyId,
+        }
+      );
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Wishlist added'
+      });
+      setLiked(true);
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to add wishlist'
+      });
+    }
+  };
+
+  const handelWishList = () => {
+    addWishList(userid, propertyId);
+  };
+
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -28,36 +65,33 @@ const HomePage = () => {
 
   const userid = SessionStorage.getItem("userid");
 
-  const fetchProperties = () => {
-    fetch(`${APP_API_URL}/property/getAll`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProperties(data);
-        setFilteredProperties(data); // Initialize filtered properties with all properties
-        console.log("data", data);
-        SessionStorage.setItem("ownerid", data[0].ownerid);
-        console.log('prop', data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching properties:", error);
-        setLoading(false);
-      });
-  };
+  const fetchProperties = async () => {
+    try {
+      const response = await fetch(`${APP_API_URL}/property/getAll`);
+      const data = await response.json();
+      setProperties(data);
+      setFilteredProperties(data);
+      console.log("data", data);
+      SessionStorage.setItem("ownerid", data[0]?.ownerid);
+      console.log('prop', data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+      setLoading(false);
+    }
+  }
 
   const getProperty = async () => {
-    fetch(`${APP_API_URL}/property/getAll`)
-      .then((response) => response.json())
-      .then((data) => {
-        const filteredData = data.filter((property) => property.rating > 3);
-        setRated(filteredData);
-      })
-      .catch((error) => {
-        console.error("Error fetching properties:", error);
-        setLoading(false);
-      });
+    try {
+      const response = await fetch(`${APP_API_URL}/property/getAll`);
+      const data = await response.json();
+      const filteredData = data.filter((property) => property.rating > 3);
+      setRated(filteredData);
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+      setLoading(false);
+    }
   };
-
   const search = () => {
     try {
       const filteredData = properties.filter((property) => 
@@ -72,7 +106,7 @@ const HomePage = () => {
   useEffect(() => {
     fetchProperties();
     getProperty();
-  }, []);
+  }, [refreshing]);
 
   const navigateToCategory = (category) => {
     navigation.navigate("FilteredProperties", { category });
@@ -149,7 +183,7 @@ const HomePage = () => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
+                    propertyId: property.id,
                     userid: userid,
                   })
                 }
@@ -165,7 +199,9 @@ const HomePage = () => {
                 </Text>
                 <Text style={styles.tripPrice}>
                   dt {property.Price} / Visit{" "}
+                  <TouchableOpacity style={styles.likeButton} onPress={handelWishList}  >
                   <Ionicons name="heart-outline" size={20} color="#000" style={styles.headerIcon} />
+                  </TouchableOpacity>
                 </Text>
               </TouchableOpacity>
             </View>
@@ -179,39 +215,77 @@ const HomePage = () => {
         </TouchableOpacity>
       </View>
       <View>
-        {filteredProperties.map((property) => (
-          <View key={property.id} style={styles.propertyItem}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("ProductDetails", {
-                  propertyid: property.id,
-                  userid: userid,
-                })
-              }
-            >
-              <Image
-                style={styles.propertyImage}
-                source={{ uri: property.image[0] }}
-              />
-              <View style={styles.propertyDetails}>
-                <Text style={styles.propertyTitle}>{property.Name}</Text>
-                <Text style={styles.propertyLocation}>
-                  <MaterialIcons name="location-pin" size={18} color="grey" />
-                  {property.location}
-                </Text>
-                <Text style={styles.propertyPrice}>
-                  dt {property.Price} / Visit{" "}
-                  <Ionicons
-                    name="heart-outline"
-                    size={20}
-                    color="#000"
-                    style={styles.headerIcon}
-                  />
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        ))}
+        {searchKey ? (
+          filteredProperties.map((property) => (
+            <View key={property.id} style={styles.propertyItem}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProductDetails", {
+                    propertyId: property.id,
+                    userid: userid,
+                  })
+                }
+              >
+                <Image
+                  style={styles.propertyImage}
+                  source={{ uri: property.image[0] }}
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyTitle}>{property.Name}</Text>
+                  <Text style={styles.propertyLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.propertyPrice}>
+                    dt {property.Price} / Visit{" "}
+                    <TouchableOpacity onPress={handelWishList}  >
+                    <Ionicons 
+                      name="heart-outline"
+                      size={22}
+                      color="#000"
+                      style={styles.headerIcon}
+                    />
+                    </TouchableOpacity>
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
+          properties.map((property) => (
+            <View key={property.id} style={styles.propertyItem}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProductDetails", {
+                    propertyId: property.id,
+                    userid: userid,
+                  })
+                }
+              >
+                <Image
+                  style={styles.propertyImage}
+                  source={{ uri: property.image[0] }}
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyTitle}>{property.Name}</Text>
+                  <Text style={styles.propertyLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.propertyPrice}>
+                    dt {property.Price} / Visit{" "}
+                      <Ionicons
+                      name="heart-outline"
+                      size={22}
+                      color="#000"
+                      style={styles.headerIcon}
+                    />
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))
+        )}
       </View>
     </ScrollView>
   );
@@ -236,6 +310,7 @@ const styles = StyleSheet.create({
   },
   headerIcon: {
     marginLeft: 10,
+    
   },
   searchContainer: {
     flexDirection: "row",
@@ -259,11 +334,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+    
   },
   categoryItem: {
-    backgroundColor: "#f0f0f0",
-    borderRadius: 10,
-    padding: 10,
+    backgroundColor: '#deeaed',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
     marginRight: 10,
   },
   categoryText: {
@@ -280,35 +357,33 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 16,
-    color: "#C0C0C0",
+    color: "#b3b3b3",
   },
   tripItem: {
-    marginRight: 10,
-    borderColor: "#ddd",
+    backgroundColor: '#fff',
     borderRadius: 10,
-    borderWidth: 1,
     padding: 10,
+    marginRight: 10,
+    width: 150,
+    
   },
   tripImage: {
-    width: width * 0.5,
-    height: 200,
+    width: 150,
+    height: 120,
     borderRadius: 10,
-    borderColor: "#ddd"
+    marginBottom: 10,
   },
   tripTitle: {
     fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 10,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   tripLocation: {
-    flexDirection: "row",
-    alignItems: "center",
-    color: "grey",
+    color: '#757575',
+    marginBottom: 5,
   },
   tripPrice: {
-    color:"#4d8790",
-    marginTop: 5,
-    fontSize: 14,
+    color: '#00796b',
   },
   propertyItem: {
     flexDirection: "row",
@@ -317,16 +392,20 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 10,
     padding: 10,
+    
   },
   propertyImage: {
     width: 140,
-    height: 140,
-    borderRadius: 10,
+    height: 100,
+    borderRadius: 20,
     marginRight: 10,
   },
   propertyDetails: {
     flex: 1,
-    justifyContent: "space-between",
+    
+    position:'absolute',
+    left:165,
+    top:'10%'
   },
   propertyTitle: {
     fontSize: 16,

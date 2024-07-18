@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, Button, TouchableOpacity, FlatList, Modal, ScrollView, StyleSheet } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { View, Text, Image, TouchableOpacity, FlatList, Modal, ScrollView, Button, RefreshControl } from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
-import { styles } from "./ProductDeatils.styles";
-import { AntDesign } from "@expo/vector-icons";
+import { styles } from "./ProductDeatils.styles";   
+
+
+
+import { AntDesign,MaterialIcons,FontAwesome5,FontAwesome6,MaterialCommunityIcons,FontAwesome  } from "@expo/vector-icons";
+
+
+
 import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
 import { APP_API_URL } from "../../env";
@@ -13,12 +19,14 @@ import { AirbnbRating } from "react-native-ratings";
 import AddComment from "../Comment/AddComment";
 import { io } from 'socket.io-client';
 import { Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
+
 
 const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const navigation = useNavigation();
-  const socket=io('http://192.168.11.174:3000')
+  const socket = io('http://192.168.103.3:3000');
   const route = useRoute();
-  const propertyId = route.params?.propertyid;
+  const propertyId = route.params?.propertyId;
   const userid = route.params?.userid;
   const [property, setProperty] = useState(null);
   const [mainImage, setMainImage] = useState("");
@@ -28,6 +36,15 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const [userRating, setUserRating] = useState(0);
   const [avgRating, setAvgRating] = useState(null);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const ownerid = SessionStorage.getItem('ownerid');
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
@@ -38,23 +55,32 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
     });
     return initResponse;
   };
-const handleCreateRoom=()=>{
-  socket.emit('createRoom','roomsList')
-}
+
+  const handleCreateRoom = () => {
+    socket.emit('createRoom', 'roomsList');
+    navigation.navigate("Chats", { ownerid });
+  };
+
   const openPaymentSheet = async () => {
     try {
       const { error } = await presentPaymentSheet();
       if (error) {
-        alert(`Error code: ${error.code}`, error.message);
+        Toast.show({
+          type: 'error',
+          text1: `Error code: ${error.code}`,
+          text2: error.message,
+          position: 'top',
+          topOffset: 0,
+        });
         console.error("Error presenting payment sheet:", error);
       } else {
         axios
           .get(`${APP_API_URL}/owner/booked/${userid}`)
           .then(() => {
-            alert(
-              "Payment Successful",
-              "Your payment has been processed successfully!"
-            );
+            Toast.show({
+              type: 'success',
+              text1: 'Your payment has been processed successfully!',
+            });
           })
           .catch((error) => {
             console.error("Error processing payment:", error);
@@ -64,6 +90,7 @@ const handleCreateRoom=()=>{
       console.error("Error presenting payment sheet:", error);
     }
   };
+
   const getPropertyRating = async (id) => {
     try {
       const res = await axios.get(`${APP_API_URL}/property/rate/${id}`);
@@ -72,15 +99,16 @@ const handleCreateRoom=()=>{
       console.log(err);
     }
   };
+
   useEffect(() => {
     const getProperty = (id) => {
       axios
         .get(`${APP_API_URL}/property/getone/${id}`)
         .then((res) => {
           setProperty(res.data);
-          SessionStorage.setItem("id",res.data.id);
-          setMainImage(res.data.image[0]);  
-          console.log('data',res.data);
+          SessionStorage.setItem("id", res.data.id);
+          setMainImage(res.data.image[0]);
+          console.log('data', res.data);
         })
         .catch((err) => console.log(err));
     };
@@ -109,17 +137,21 @@ const handleCreateRoom=()=>{
   const addWishList = async (userid, propertyId) => {
     try {
       const res = await axios.post(
-        `${APP_API_URL}/wishlist/add/${propertyId}/${userid}`,
+        ` ${APP_API_URL}/wishlist/add/${propertyId}/${userid}`,
         {
           UserId: userid,
           PropertyId: propertyId,
         }
       );
-      alert("Wishlist added");
+      Toast.show({
+        type: 'success',
+        text1: 'Wishlist added!',
+        position: 'bottom',
+        bottomOffset:800,
+      });
       setLiked(true);
     } catch (error) {
       console.log(error);
-      alert("Failed to add to wishlist");
     }
   };
 
@@ -133,41 +165,40 @@ const handleCreateRoom=()=>{
         rating,
       });
       setUserRating(response.data);
-      alert("Rating submitted successfully");
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Rating submitted successfully',
+        position: 'bottom',
+        bottomOffset:800,
+      });
     } catch (error) {
       console.error("Error submitting rating:", error);
-      alert("Failed to submit rating");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => {
-          handleCreateRoom();
-          navigation.navigate("Chats");
-        }}
-      >
-       <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
+    <View style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <TouchableOpacity onPress={handleCreateRoom}>
+        <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
       </TouchableOpacity>
       <ScrollView style={styles.container}>
         <View style={styles.card}>
           <Image source={{ uri: mainImage }} style={styles.image} />
 
-        <FlatList
-          data={property.image}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => setMainImage(item)}>
+          <FlatList
+            data={property.image}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => setMainImage(item)}>
+                <Image source={{ uri: item }} style={styles.smallImage} />
+              </TouchableOpacity>
+            )}
+          />
 
-              <Image source={{ uri: item }} style={styles.smallImage} />
-            </TouchableOpacity>
-          )}
-        />
-
-          <TouchableOpacity style={styles.likeButton} onPress={handelWishList}  >
+          <TouchableOpacity style={styles.likeButton} onPress={handelWishList}>
             <AntDesign name={liked ? "heart" : "hearto"} size={24} color={liked ? "red" : "black"} />
           </TouchableOpacity>
 
@@ -181,10 +212,46 @@ const handleCreateRoom=()=>{
               <EvilIcons name="location" size={26} color="black" /> {property.location}
             </Text>
           </View>
-        <Text style={styles.description}>{property.description}</Text>
+
+          <Text style={styles.description}>{property.description}</Text>
+          <View style={styles.commentsContainer}>
+          <Text style={styles.extraTitle}>House Plan Details</Text>
+          <View style={styles.propertyDetailsContainer}>
+            <View style={styles.propertyDetailItem}>
+            {/* <Text> */}
+              {property.Bedroom}  
+              <MaterialIcons name="bedroom-parent" size={24} color="black" />
+              {/* </Text>  */}
+            </View>
+            <View style={styles.propertyDetailItem}> 
+              {/* <Text>   */}
+              <FontAwesome name="bath" size={24} color="black" />
+              {property.Bathroom} 
+              {/* </Text> */}
+           </View>
+            <View style={styles.propertyDetailItem}>
+           {/* <Text> */}
+            {property.Ac}   
+            <MaterialCommunityIcons name="fan-minus" size={24} color="black" />
+           {/* </Text>  */}
+           </View>
+            <View style={styles.propertyDetailItem}>
+            {/* <Text> */}
+              {property.Pool} 
+              <FontAwesome5 name="swimming-pool" size={24} color="black" />  
+              {/* </Text>  */}
+               </View>
+            <View style={styles.propertyDetailItem}>
+             {/* <Text> */}
+              {property.Person} 
+              <FontAwesome6 name="person" size={24} color="black" />
+             {/* </Text>  */}
+             </View>
+             </View>
+          </View>
 
           <View style={styles.actionButtonsContainer}>
-            <TouchableOpacity style={styles.bookButton} onPress={()=>{navigation.navigate('Calender')}}>
+            <TouchableOpacity style={styles.bookButton} onPress={() => { navigation.navigate('Calender') }}>
               <Text style={styles.bookButtonText}>Book Now | ${property.Price}</Text>
             </TouchableOpacity>
           </View>
@@ -219,7 +286,7 @@ const handleCreateRoom=()=>{
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => <CommentCard comment={item} />}
             />
-          <Bottomsheet />
+            <Bottomsheet />
           </View>
 
         </View>

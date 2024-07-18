@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -6,15 +7,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert,
   Image,
-  Button,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
 import { APP_API_URL } from "../../env";
+import Toast from 'react-native-toast-message';
+import { Entypo } from '@expo/vector-icons';
+
 
 const EditProfile = () => {
   const route = useRoute();
@@ -43,7 +45,13 @@ const EditProfile = () => {
 
   const handleUpdate = async () => {
     if (!ownerid) {
-      alert("Error", "Owner ID is not available");
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Owner ID is not available',
+        position: 'bottom',
+        bottomOffset:800,
+      });
       return;
     }
 
@@ -63,14 +71,32 @@ const EditProfile = () => {
         setLastName(response.data.LastName);
         setImage(response.data.image);
         console.log("Updated", response.data);
-        alert("Success", "Profile updated successfully");
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Profile updated successfully',
+          position: 'bottom',
+          bottomOffset:800,
+        });
         navigation.goBack("Profilee", {});
       } else {
-        alert("Error", "Failed to update profile");
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Failed to update profile',
+          position: 'bottom',
+          bottomOffset:800,
+        });
       }
     } catch (error) {
       console.error(error);
-      alert("Error", "An error occurred while updating the profile");
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'An error occurred while updating the profile',
+        position: 'bottom',
+        bottomOffset:800,
+      });
     }
   };
 
@@ -114,11 +140,7 @@ const EditProfile = () => {
               }}
               style={styles.avatar}
             />
-            <Button
-              title="img"
-              style={{ backgroundColor: "#008080" }}
-              onPress={handleCameraLaunch}
-            />
+            <Entypo name="camera" size={24} color="black" onPress={handleCameraLaunch} style={styles.camera} />
           </TouchableOpacity>
         </View>
         <View style={styles.inputContainer}>
@@ -126,6 +148,7 @@ const EditProfile = () => {
           <TextInput
             style={styles.input}
             value={FirstName}
+            placeholder="your new First Name"
             onChangeText={setFirstName}
           />
         </View>
@@ -134,6 +157,7 @@ const EditProfile = () => {
           <TextInput
             style={styles.input}
             value={LastName}
+            placeholder="your new Last Name"
             onChangeText={setLastName}
           />
         </View>
@@ -142,6 +166,7 @@ const EditProfile = () => {
           <TextInput
             style={styles.input}
             value={email}
+            placeholder="your new Email"
             onChangeText={setEmail}
             keyboardType="email-address"
           />
@@ -159,6 +184,7 @@ const EditProfile = () => {
           <Text style={styles.updateButtonText}>Update</Text>
         </TouchableOpacity>
       </View>
+      <Toast />
     </ScrollView>
   );
 };
@@ -200,23 +226,29 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: "#b3b3b3",
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 12,
     paddingHorizontal: 10,
     backgroundColor: "#fff",
+    borderWidth: 1,
+    height: 50,
   },
   updateButton: {
     marginTop: 20,
-    backgroundColor: "#008080",
+    backgroundColor: "#4d8790",
     paddingVertical: 10,
     paddingHorizontal: 40,
-    borderRadius: 5,
+    borderRadius: 100,
   },
   updateButtonText: {
     color: "#fff",
     fontSize: 16,
   },
+  camera: {
+    alignItems: 'center',
+    paddingLeft: 37
+  }
 });
 
 export default EditProfile;

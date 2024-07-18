@@ -44,9 +44,9 @@ const Chats = ({}) => {
         getMessage();
     }, [userId, ownerId]);
     
-    // console.log("msg",messages);
+    console.log("msg",messages);
     useEffect(() => {
-        const socketConnection = io("http://192.168.103.5:3000");
+        const socketConnection = io("http://192.168.103.3:3000");
         setSocket(socketConnection);
 
         socketConnection.on("connect", () => {
@@ -60,10 +60,10 @@ const Chats = ({}) => {
         socketConnection.on("receive-message", message => {
             setMessages(previousMessages => GiftedChat.append(previousMessages, {
                 _id: message.id,
-                text: message[2].message,
+                text: message[1].message,
                 createdAt: new Date(messages.createdAt),
                 user: {
-                    id: message[2].FirstName,
+                    id: message[1].FirstName,
                     name:"firas",
                     avatar: 'https://placeimg.com/140/140/any'
                 }

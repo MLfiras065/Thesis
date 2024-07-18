@@ -1,10 +1,12 @@
+
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View ,Text} from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { APP_API_URL } from '../../env';
 import { useStripe } from "@stripe/stripe-react-native";
 import SessionStorage from 'react-native-session-storage';
+import Toast from 'react-native-toast-message';
 
 const Calender = () => {
   const [CheckIn, setCheckIn] = useState("");
@@ -110,6 +112,7 @@ const Calender = () => {
 
     return markedDates;
   };
+
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
     const { paymentIntent } = response.data;
@@ -119,23 +122,29 @@ const Calender = () => {
     });
     return initResponse;
   };
-const handleCreateRoom=()=>{
-  socket.emit('createRoom','roomsList')
-}
+
+  const handleCreateRoom = () => {
+    socket.emit('createRoom', 'roomsList');
+  };
+
   const openPaymentSheet = async () => {
     try {
       const { error } = await presentPaymentSheet();
       if (error) {
-        alert(`Error code: ${error.code}`, error.message);
+        Toast.show({
+          type: 'error',
+          text1: `Error code: ${error.code}`,
+          text2: error.message,
+        });
         console.error("Error presenting payment sheet:", error);
       } else {
         axios
           .get(`${APP_API_URL}/owner/booked/${Userid}`)
           .then(() => {
-            alert(
-              "Payment Successful",
-              "Your payment has been processed successfully!"
-            );
+            Toast.show({
+              type: 'success',
+              text1: 'Your payment has been processed successfully!',
+            });
           })
           .catch((error) => {
             console.error("Error processing payment:", error);
@@ -145,9 +154,10 @@ const handleCreateRoom=()=>{
       console.error("Error presenting payment sheet:", error);
     }
   };
+
   useEffect(() => {
     getBooking();
-    fetchPaymentSheetParams()
+    fetchPaymentSheetParams();
   }, []);
 
   return (
@@ -157,11 +167,8 @@ const handleCreateRoom=()=>{
         markingType='period'
         markedDates={getMarkedDates()}
       />
-      <TouchableOpacity onPress={openPaymentSheet} style={ {backgroundColor: '#4d8790',  paddingVertical: 15, paddingHorizontal: 60,  borderRadius: 100,   marginLeft:66,   marginTop: 20,
-  }}>
-    <Text>
-BookNow
-    </Text>
+      <TouchableOpacity onPress={openPaymentSheet} style={styles.button}>
+        <Text style={styles.buttonText}>Book Now</Text>
       </TouchableOpacity>
     </View>
   );
@@ -169,4 +176,18 @@ BookNow
 
 export default Calender;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#4d8790',
+    paddingVertical: 15,
+    paddingHorizontal: 60,
+    borderRadius: 100,
+    marginLeft: 66,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+});

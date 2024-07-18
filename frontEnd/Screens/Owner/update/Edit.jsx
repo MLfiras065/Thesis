@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { APP_API_URL } from '../../../env';
@@ -7,7 +7,7 @@ import { APP_API_URL } from '../../../env';
 const Edit = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  // const { propertyId } = route.params; 
+  const { propertyId } = route.params; 
   const [Name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
@@ -33,7 +33,7 @@ const Edit = () => {
 
   const updateProperty = async () => {
     try {
-      const res = await axios.put(`${APP_API_URL}/property/up/${5}`, {
+      const res = await axios.put(`${APP_API_URL}/property/up/${propertyId}`, {
         Name,
         Price: parseFloat(Price), 
         description,
@@ -41,7 +41,7 @@ const Edit = () => {
       });
       
       console.log('Property updated successfully:', res.data);
-      navigation.navigate('EditExtra');
+      navigation.navigate('EditExtra',{propertyId:propertyId});
     } catch (error) {
       console.error('Error updating property:', error);
       

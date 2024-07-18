@@ -1,13 +1,15 @@
-import React, { useState} from 'react';
-import { View, TextInput, Button, StyleSheet, Alert,Text } from 'react-native';
+
+import React, { useState } from 'react';
+import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
 import axios from 'axios';
 import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
+import Toast from 'react-native-toast-message';
 
 const AddComment = ({ propertyId }) => {
   const [content, setContent] = useState("");
-  const id =  SessionStorage.getItem('userid');
-  console.log(' user ID:', id);
+  const id = SessionStorage.getItem('userid');
+  console.log('User ID:', id);
   console.log("test");
 
   const handleAddComment = async () => {
@@ -17,18 +19,37 @@ const AddComment = ({ propertyId }) => {
 
     if (id && propertyId && content.trim()) {
       try {
-        const res = await axios.post(`${APP_API_URL}/comment/post/${id}/${propertyId}`, { content, userId:id, idProperty: propertyId });
+        const res = await axios.post(`${APP_API_URL}/comment/post/${id}/${propertyId}`, { content, userId: id, idProperty: propertyId });
         setContent('')
-        Alert.alert('Comment added successfully');
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Comment added successfully',
+          position: 'bottom',
+          bottomOffset:800,
+        });
         console.log(res.data, "comment");
       } catch (err) {
         console.error(err);
-        Alert.alert('Error adding comment');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Failed to add comment',
+          position: 'bottom',
+        bottomOffset:800,
+        });
       }
     } else {
-      Alert.alert('Please enter a comment');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter a comment',
+        position: 'bottom',
+        bottomOffset:800,
+      });
     }
   }
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -38,9 +59,11 @@ const AddComment = ({ propertyId }) => {
         onChangeText={setContent}
       />
       <Button title="Add Comment" onPress={handleAddComment} />
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     padding: 10,
@@ -72,4 +95,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+
 export default AddComment;

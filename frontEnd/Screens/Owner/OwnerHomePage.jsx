@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from "react";
+
+
+
+
+import React, { useEffect, useState, useCallback } from "react";
 import {
+  RefreshControl,
   View,
   Text,
   StyleSheet,
@@ -8,47 +13,32 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
-  RefreshControl,
-  Dimensions,
-  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
+import Toast from "react-native-toast-message";
 
 const OwnerHomePage = () => {
   const navigation = useNavigation();
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const ownerId = SessionStorage.getItem("ownerid");
-  const [refreshing, setRefreshing] = useState(false);
-  const [editingProperty, setEditingProperty] = useState(null);
-  const [deletingProperty, setDeletingProperty] = useState(null);
-  const [searchKey, setSearchKey] = useState('');
+  const [searchKey, setSearchKey] = useState("");
+  const ownerid = SessionStorage.getItem("ownerid");
   const [showFilteredProperties, setShowFilteredProperties] = useState(false);
-  const onRefresh = React.useCallback(() => {
+  const [refreshing, setRefreshing] = useState(false);
+  
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, []);
-  const search = () => {
-    try {
-      const filteredData = properties.filter((property) => 
-        property.location.toLowerCase().includes(searchKey.toLowerCase())||property.Name.toLowerCase().includes(searchKey.toLowerCase())
-      
-      );
-      setFilteredProperties(filteredData);
-      setShowFilteredProperties(!showFilteredProperties)
-    } catch (error) {
-      console.error('Error while searching:', error);
-    }
-  };
 
   const fetchOwnerProperties = () => {
-    fetch(`${APP_API_URL}/property/getAll/${1}`)
+    fetch(`${APP_API_URL}/property/getAll/${ownerid}`)
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
@@ -57,7 +47,33 @@ const OwnerHomePage = () => {
       .catch((error) => {
         console.error("Error fetching properties:", error);
         setLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Error fetching properties',
+          position: 'bottom',
+        bottomOffset:800,
+        });
       });
+  };
+
+  const search = () => {
+    try {
+      const filteredData = properties.filter((property) =>
+        property.Name.toLowerCase().includes(searchKey.toLowerCase())
+      );
+      setFilteredProperties(filteredData);
+      setShowFilteredProperties(true);
+    } catch (error) {
+      console.error('Error while searching:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Error while searching',
+        position: 'bottom',
+        bottomOffset:800,
+      });
+    }
   };
 
   useEffect(() => {
@@ -76,67 +92,92 @@ const OwnerHomePage = () => {
       .then((response) => response.json())
       .then(() => {
         setLoading(false);
-        setEditingProperty(null);
         fetchOwnerProperties();
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Property updated successfully',
+          position: 'bottom',
+          bottomOffset:800,
+        });
       })
       .catch((error) => {
         console.error("Error updating property:", error);
         setLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Error updating property',
+          position: 'bottom',
+          bottomOffset:800,
+        });
       });
   };
 
   const handleDeleteProperty = (propertyId) => {
-    Alert.alert(
-      "Confirm Delete",
-      "Are you sure you want to delete this property?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: () => {
-            setLoading(true);
-            fetch(`${APP_API_URL}/property/delet/${6}`, {
-              method: "DELETE",
-            })
-              .then(() => {
-                setLoading(false);
-                fetchOwnerProperties();
-              })
-              .catch((error) => {
-                console.error("Error deleting property:", error);
-                setLoading(false);
-              });
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    Toast.show({
+      type: 'info',
+      text1: 'Deleting Property',
+      text2: 'Are you sure you want to delete this property?',
+      position: 'bottom',
+      autoHide: false,
+      onPress: () => {
+        setLoading(true);
+        fetch(`${APP_API_URL}/property/delet/${propertyId}`, {
+          method: "DELETE",
+        })
+          .then(() => {
+            setLoading(false);
+            fetchOwnerProperties();
+            Toast.hide();
+            Toast.show({
+              type: 'success',
+              text1: 'Success',
+              text2: 'Property deleted successfully',
+              position: 'bottom',
+              bottomOffset:800,
+            });
+          })
+          .catch((error) => {
+            console.error("Error deleting property:", error);
+            setLoading(false);
+            Toast.hide();
+            Toast.show({
+              type: 'error',
+              text1: 'Error',
+              text2: 'Error deleting property',
+              position: 'bottom',
+              bottomOffset:800,
+            });
+          });
+      },
+      onHide: () => {
+        Toast.hide();
+      },
+    });
   };
-
-  if (loading) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
 
   return (
     <ScrollView
       style={styles.container}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <View style={styles.header}>
         <Ionicons name="location-outline" size={20} color="#000" />
         <Text style={styles.locationText}>Tunisie</Text>
         <Ionicons name="chevron-down-outline" size={20} color="#000" />
-        <Ionicons name="notifications-outline" size={20} color="#000" style={styles.headerIcon} />
+
+        <Ionicons
+          name="notifications-outline"
+          size={20}
+          color="#000"
+          style={styles.headerIcon}
+        />
       </View>
       <View style={styles.searchContainer}>
-      <TextInput
+        <TextInput
           style={styles.searchInput}
           placeholder="Search"
           value={searchKey}
@@ -148,100 +189,91 @@ const OwnerHomePage = () => {
       </View>
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
-          <Text style={styles.sectionTitle}>Your Properties</Text>
+          <Text style={styles.sectionTitle}>Your Offers</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Subscribe")}>
             <Text style={styles.seeAllText}>Add New Property</Text>
           </TouchableOpacity>
         </View>
         <ScrollView>
           <View>
-          {showFilteredProperties ? (
-          filteredProperties.map((property) => (
-            <View key={property.id} style={styles.propertyItem}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("ProductDetails", {
-                    propertyid: property.id,
-                    userid: userid,
-                  })
-                }
-              >
-                <Image
-                  style={styles.propertyImage}
-                  source={{ uri: property.image[0] }}
-                />
-                <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyTitle}>{property.Name}</Text>
-                  <Text style={styles.propertyLocation}>
-                    <MaterialIcons name="location-pin" size={18} color="grey" />
-                    {property.location}
-                  </Text>
-                  <Text style={styles.propertyPrice}>
-                    dt {property.Price} / Visit{" "}
-                    <Ionicons
-                      name="heart-outline"
-                      size={20}
-                      color="#000"
-                      style={styles.headerIcon}
+            {showFilteredProperties ? (
+              filteredProperties.map((property) => (
+                <View key={property.id} style={styles.propertyItem}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("ProductsDetails", {
+                        propertyid: property.id,
+                        userid: userid,
+                      })
+                    }
+                  >
+                    <Image
+                      style={styles.propertyImage}
+                      source={{ uri: property.image[0] }}
                     />
-                  </Text>
+                    <View style={styles.propertyDetails}>
+                      <Text style={styles.propertyTitle}>{property.Name}</Text>
+                      <Text style={styles.propertyLocation}>
+                        <MaterialIcons name="location-pin" size={18} color="grey" />
+                        {property.location}
+                      </Text>
+                      <Text style={styles.propertyPrice}>
+                        dt {property.Price} / Visit
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            </View>
-          ))
-        ) : (
-          properties.map((property) => (
-            <View key={property.id} style={styles.propertyItem}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("ProductsDetails", {
-                    propertyId: property.id,
-                    userId: ownerId,
-                  })
-                }
-              >
-                <Image style={styles.propertyImage} source={{ uri: property.image[0] }} />
-                <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyTitle}>{property.Name}</Text>
-                  <Text style={styles.propertyLocation}>
-                    <MaterialIcons name="location-pin" size={18} color="grey" />
-                    {property.location}
-                  </Text>
-                  <Text style={styles.propertyPrice}>dt {property.Price} / Visit</Text>
+              ))
+            ) : (
+              properties.map((property) => (
+                <View key={property.id} style={styles.propertyItem}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("ProductsDetails", {
+                        propertyid: property.id,
+                        // userId: userId,
+                      })
+                    }
+                  >
+                    <Image style={styles.propertyImage} source={{ uri: property.image[0] }} />
+                    <View style={styles.propertyDetails}>
+                      <Text style={styles.propertyTitle}>{property.Name}</Text>
+                      <Text style={styles.propertyLocation}>
+                        <MaterialIcons name="location-pin" size={18} color="grey" />
+                        {property.location}
+                      </Text>
+                      <Text style={styles.propertyPrice}>dt {property.Price} / Visit</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.actionButtons}>
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() => navigation.navigate("EditProperty",{propertyId:property.id})}
+                    >
+                      <Text style={styles.buttonText}> <AntDesign name="edit" size={20} color="black" /></Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.deleteButton}
+                      onPress={() => handleDeleteProperty(property.id)}
+                    >
+                      <Text style={styles.buttonTextt}><AntDesign name="delete" size={20} color="black" /></Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </TouchableOpacity>
-              <View style={styles.actionButtons}>
-                <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={() => navigation.navigate("EditProperty")}
-                >
-                  <Text style={styles.buttonText}>Edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => handleDeleteProperty(property.id)}
-                >
-                  <Text style={styles.buttonText}>Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))
-        )}
+              ))
+            )}
+          </View>
+        </ScrollView>
       </View>
-    </ScrollView>
-   
-      </View>
-   
     </ScrollView>
   );
 };
 
-const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
+    padding: 16,
+    backgroundColor: "#f9f9f9",
   },
   header: {
     flexDirection: "row",
@@ -271,6 +303,11 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
   tripsSection: {
     marginBottom: 20,
   },
@@ -290,26 +327,34 @@ const styles = StyleSheet.create({
     color: "#C0C0C0",
   },
   propertyItem: {
-    flexDirection: "row",
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 1,
   },
   propertyImage: {
-    width: 140,
-    height: 140,
-    borderRadius: 10,
+    width: 150,
+    height: 100,
+    borderRadius: 20,
     marginRight: 10,
   },
   propertyDetails: {
     flex: 1,
-    justifyContent: "space-between",
+    position: 'absolute',
+    left: 165,
+    top: '10%'
   },
   propertyTitle: {
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 5,
   },
   propertyLocation: {
     flexDirection: "row",
@@ -318,29 +363,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   propertyPrice: {
-    fontSize: 16,
-    color: "green",
-    fontWeight: "bold",
-  },
-  actionButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
-  editButton: {
-    backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 5,
-  },
-  deleteButton: {
-    backgroundColor: "#ff0000",
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: "#00796b",
+    marginTop: 5,
+    fontSize: 14,
   },
   loader: {
     flex: 1,
@@ -387,6 +412,18 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
     alignItems: "center",
+  },
+  buttonText: {
+    position: 'absolute',
+    left: 145,
+    top: '15%',
+    marginBottom: 5,
+  },
+  buttonTextt: {
+    position: 'absolute',
+    left: 145,
+    bottom: '18%',
+    marginBottom: 5,
   },
 });
 
