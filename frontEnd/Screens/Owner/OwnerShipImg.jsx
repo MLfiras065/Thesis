@@ -120,6 +120,7 @@ const handelAdd=()=>{
 
 export default Img;
 
+
 const styles = StyleSheet.create({
   addButton: {
     alignSelf: 'center',

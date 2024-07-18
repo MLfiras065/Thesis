@@ -33,6 +33,7 @@ useEffect(()=>{
   }
   fetchOwnerProperties()
 },[])
+
   return (
     <View style={styles.searchForm}>
          <View style={styles.searchContainer}>
@@ -98,5 +99,7 @@ const styles=StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
+  
 })
+
 export default Search;

@@ -52,6 +52,7 @@ useEffect(()=>getUser(),[])
           <Text style={styles.ctime}>{idOwner?.time ? idOwner.time : "now"}</Text>
         </View>
       </View>
+      <buttonNavigation/>
     </Pressable>
   );
 };

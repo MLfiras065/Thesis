@@ -23,6 +23,8 @@ const HomePage = () => {
   const [searchKey, setSearchKey] = useState('');
   const [liked, setLiked] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+
+  
   const addWishList = async (userid, propertyId) => {
     try {
       const res = await axios.post(
@@ -32,11 +34,19 @@ const HomePage = () => {
           PropertyId: propertyId,
         }
       );
-      alert("Wishlist added");
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Wishlist added'
+      });
       setLiked(true);
     } catch (error) {
       console.log(error);
-      alert("Failed to add to wishlist");
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to add wishlist'
+      });
     }
   };
 
