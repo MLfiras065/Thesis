@@ -14,6 +14,7 @@ import axios from "axios";
 import { Feather, Ionicons, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
+// import BottomNavigation from './Screens/BottomNavigation.jsx';
 
 function ProfileScreen() {
   const [refreshing, setRefreshing] = React.useState(false);
@@ -121,6 +122,7 @@ function ProfileScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      {/* <BottomNavigation/> */}
     </View>
   );
 }

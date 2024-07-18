@@ -40,15 +40,15 @@ const Property = sequelize.define("Property", {
     defaultValue:""
   },
 Bathroom:{
-  type:DataTypes.INTEGER,
+  type:DataTypes.STRING,
   allowNull:true
 },
 Bedroom:{
-  type:DataTypes.INTEGER,
+  type:DataTypes.STRING,
   allowNull:true
 },
 person:{
-  type:DataTypes.INTEGER,
+  type:DataTypes.STRING,
   allowNull:true
 },
 Ac:{

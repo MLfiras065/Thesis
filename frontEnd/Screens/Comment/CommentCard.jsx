@@ -40,6 +40,7 @@ const CommentCard = () => {
     refreshControl={
       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
     }
+    
     >
       <FlatList
         style={styles.root}
@@ -60,7 +61,7 @@ const CommentCard = () => {
             </ScrollView>
           </View>
         )}
-      />    
+      />   
     </ScrollView>
   );
 };
