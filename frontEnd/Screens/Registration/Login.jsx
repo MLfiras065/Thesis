@@ -48,7 +48,7 @@ const Login = () => {
       <Text style={styles.title}>Welcome Back!</Text>
       
       <Image
-        source={{ uri: "https://cdn.discordapp.com/attachments/1235498402746335293/1260214654999728158/TuniGo_1.png?ex=66966adb&is=6695195b&hm=312a9d83bf7fb6c2688749fd346153229ebbb04e995bb1d460e4c5666dbc8104&" }}
+        source={{ uri: "https://cdn.discordapp.com/attachments/1235498402746335293/1260214654999728158/TuniGo_1.png?ex=6697bc5b&is=66966adb&hm=77c94ba0c4e56bf2546428a066eab5eaa1bec8550facb30c30cf449d0d6389fc&" }}
         style={styles.image}
       />
       

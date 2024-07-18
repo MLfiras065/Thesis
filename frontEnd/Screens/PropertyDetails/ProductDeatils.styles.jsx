@@ -69,9 +69,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 60,
     borderRadius: 100,
 
-    marginLeft:66,
-
-    marginTop: 20,
+   margin:"auto"
   },
 
   bookButtonText: {
@@ -117,7 +115,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8',
   },
   commentsTitle: {
-    fontSize: 20,
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 10,
   },
