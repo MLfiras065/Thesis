@@ -3,34 +3,38 @@ import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./OwnerChatStyle";
 import { useNavigation } from "@react-navigation/native";
-import SessionStorage from "react-native-session-storage";
 import axios from "axios";
-
+import { APP_API_URL } from "../../env";
 
 const OwnerAllChats = ({ data }) => {
   const navigation = useNavigation();
-  const [user,setUser]=useState([])
-  console.log("iduser====",data);
-  // const ownerId=SessionStorage.getItem('ownerid')
-  console.log("testitem", data);
-  console.log("user",user);
-  const getUser=async()=>{
-    const res= await axios.get(`${APP_API_URL}/user/user/${1}`)
+  const [user, setUser] = useState(null);
+  const getUser = async () => {
     try {
-      console.log('userchat',res.data);
-      setUser(res.data)
-
-      
+     
+      const userRequest = axios.get(`${APP_API_URL}/user/user/${data}`); 
+      const [userResponse] = await Promise.all([userRequest]);
+  
+     
+      console.log('userchat', userResponse.data);
+      setUser(userResponse.data);
+  
     } catch (error) {
-        console.log("error",error);
+      console.log("error", error);
     }
-}
-useEffect(()=>{getUser()},[user])
+  }
+  
+  useEffect(() => {
+    getUser();
+  }, [data]);
+  
+
   const handleNavigation = () => {
     navigation.navigate("ownerchats", {
       userid: data,
     });
   };
+
   return (
     <Pressable
       style={styles.cchat}
@@ -47,17 +51,21 @@ useEffect(()=>{getUser()},[user])
 
       <View style={styles.crightContainer}>
         <View>
-          <Text style={styles.cusername}>test{data.FirstName}</Text>
-
+          <Text style={styles.cusername}>
+            {userResponse ? userResponse.FirstName : "Loading..."}
+          </Text>
           <Text style={styles.cmessage}>
-            {data?.message ? data.message : "Tap to start chatting"}
+            { "Tap to start chatting"}
           </Text>
         </View>
         <View>
-          <Text style={styles.ctime}>{data?.time ? data.time : "now"}</Text>
+          <Text style={styles.ctime}>
+            { "now"}
+          </Text>
         </View>
       </View>
     </Pressable>
   );
 };
+
 export default OwnerAllChats;

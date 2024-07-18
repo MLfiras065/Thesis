@@ -135,6 +135,7 @@ cusername: {
     fontSize: 18,
     marginBottom: 5,
     fontWeight: "bold",
+    color:"black"
 },
 cmessage: {
     fontSize: 14,

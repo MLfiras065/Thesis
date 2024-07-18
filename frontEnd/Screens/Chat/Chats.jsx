@@ -20,7 +20,7 @@ const Chats = ({}) => {
     const getMessage = async () => {
         try {
             console.log("uesrid ownerid ",userId,idOwner);
-            const res = await axios.get(`${APP_API_URL}/chat/getmsg/${userId}/${idOwner}`);
+            const res = await axios.get(`${APP_API_URL}/chat/getmsg/${idOwner}/${userId}`);
             console.log("getmsg",res.data);
             const formattedMessages = res.data.map(msg => ({
                 _id:msg.id,
@@ -85,7 +85,7 @@ const Chats = ({}) => {
         try {
             await axios.post(`${APP_API_URL}/chat/addmsg/${userId}/${idOwner}`, {
                 message: newMessage[0].text,
-                sender:newMessage[0].userId
+                sender:userId
             });
 
             if (socket) {

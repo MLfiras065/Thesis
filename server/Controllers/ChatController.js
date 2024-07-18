@@ -32,6 +32,17 @@ const addMessage=async(req,res)=>{
         res.status(500).json({ error: error.message });
     }
 }
+const addMessageOwner=async(req,res)=>{
+    try {
+        const { userId, ownerId } = req.params;
+        const { message,sender } = req.body;
+
+        const newChat = await Chat.create({ message, userId, ownerId,sender });
+        res.status(201).json(newChat);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
 const getRooms=async(req,res)=>{
 try {
     let room=[]
@@ -60,4 +71,4 @@ res.json(result)
 }
 }
   
-module.exports={getMessages,addMessage,getRooms}
+module.exports={getMessages,addMessage,getRooms,addMessageOwner}
