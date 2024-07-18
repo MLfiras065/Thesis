@@ -30,6 +30,7 @@ const OwnerChats = () => {
             try {
                 const res = await axios.get(`${APP_API_URL}/chat/getmsg/${userid}/${ownerId}`);
                 const formattedMessages = res.data.map(msg => ({
+                   
                     _id: msg.id,
                     text: msg.message,
                     createdAt: new Date(msg.createdAt),
@@ -40,6 +41,7 @@ const OwnerChats = () => {
                     }
                 }));
                 setMessages(formattedMessages);
+              console.log("msg",formattedMessages);
             } catch (err) {
                 console.log(err);
             }
@@ -47,7 +49,7 @@ const OwnerChats = () => {
 
         getMessage();
     }, [userid, ownerId]);
-
+// console.log(msg.Owner.FirstName);
     useEffect(() => {
         const socketConnection = io();
         setSocket(socketConnection);
@@ -68,7 +70,7 @@ const OwnerChats = () => {
                 user: {
                     _id: message.senderId,
                     name: message.FirstName,
-                    avatar: 'https://placeimg.com/140/140/any'
+                    // avatar: 'https://placeimg.com/140/140/any'
                 }
             }));
         });
@@ -103,19 +105,19 @@ const OwnerChats = () => {
             <Bubble
                 {...props}
                 wrapperStyle={{
-                    left: {
-                        backgroundColor: props.currentMessage.user._id !== ownerId ? '#0078fe' : '#f0f0f0',
-                        alignSelf: 'flex-start',
-                    },
+                    // left: {
+                    //     backgroundColor: props.currentMessage.user._id !== ownerId ? '#0078fe' : '#f0f0f0',
+                    //     alignSelf: 'flex-start',
+                    // },
                     right: {
                         backgroundColor: props.currentMessage.user._id === ownerId ? '#0078fe' : '#f0f0f0',
                         alignSelf: 'flex-end',
                     }
                 }}
                 textStyle={{
-                    left: {
-                        color: props.currentMessage.user._id !== ownerId ? '#fff' : '#000',
-                    },
+                    // left: {
+                    //     color: props.currentMessage.user._id !== userid ? '#fff' : '#000',
+                    // },
                     right: {
                         color: props.currentMessage.user._id === ownerId ? '#fff' : '#000',
                     }
@@ -132,7 +134,7 @@ const OwnerChats = () => {
                 user={{
                     _id: ownerId,
                     name: "firas",
-                    avatar: 'https://placeimg.com/140/140/any'
+                    // avatar: 'https://placeimg.com/140/140/any'
                 }}
                 renderBubble={renderBubble}
                 inverted={false}

@@ -27,7 +27,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const [liked, setLiked] = useState(false);
   const [userRating, setUserRating] = useState(0);
   const [avgRating, setAvgRating] = useState(null);
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  // const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const ownerid=SessionStorage.getItem('ownerid')
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(() => {
@@ -37,42 +37,42 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
     }, 2000);
   }, []);
 
-  const fetchPaymentSheetParams = async () => {
-    const response = await axios.post(`${APP_API_URL}/payment/${222}`);
-    const { paymentIntent } = response.data;
-    const initResponse = initPaymentSheet({
-      merchantDisplayName: "finalproj",
-      paymentIntentClientSecret: paymentIntent,
-    });
-    return initResponse;
-  };
+//   const fetchPaymentSheetParams = async () => {
+//     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
+//     const { paymentIntent } = response.data;
+//     const initResponse = initPaymentSheet({
+//       merchantDisplayName: "finalproj",
+//       paymentIntentClientSecret: paymentIntent,
+//     });
+//     return initResponse;
+//   };
 
-const handleCreateRoom=()=>{
-  socket.emit('createRoom','roomsList')
-}
-  const openPaymentSheet = async () => {
-    try {
-      const { error } = await presentPaymentSheet();
-      if (error) {
-        alert(`Error code: ${error.code}`, error.message);
-        console.error("Error presenting payment sheet:", error);
-      } else {
-        axios
-          .get(`${APP_API_URL}/owner/booked/${userid}`)
-          .then(() => {
-            alert(
-              "Payment Successful",
-              "Your payment has been processed successfully!"
-            );
-          })
-          .catch((error) => {
-            console.error("Error processing payment:", error);
-          });
-      }
-    } catch (error) {
-      console.error("Error presenting payment sheet:", error);
-    }
-  };
+// const handleCreateRoom=()=>{
+//   socket.emit('createRoom','roomsList')
+// }
+//   const openPaymentSheet = async () => {
+//     try {
+//       const { error } = await presentPaymentSheet();
+//       if (error) {
+//         alert(`Error code: ${error.code}`, error.message);
+//         console.error("Error presenting payment sheet:", error);
+//       } else {
+//         axios
+//           .get(`${APP_API_URL}/owner/booked/${userid}`)
+//           .then(() => {
+//             alert(
+//               "Payment Successful",
+//               "Your payment has been processed successfully!"
+//             );
+//           })
+//           .catch((error) => {
+//             console.error("Error processing payment:", error);
+//           });
+//       }
+//     } catch (error) {
+//       console.error("Error presenting payment sheet:", error);
+//     }
+//   };
   const getPropertyRating = async (id) => {
     try {
       const res = await axios.get(`${APP_API_URL}/property/rate/${id}`);
@@ -98,7 +98,7 @@ const handleCreateRoom=()=>{
       getProperty(propertyId);
       getPropertyRating(propertyId);
     }
-    fetchPaymentSheetParams();
+    // fetchPaymentSheetParams();
   }, [propertyId]);
 
   const openImageModal = (img) => {
@@ -199,8 +199,8 @@ const handleCreateRoom=()=>{
         <Text style={styles.description}>{property.description}</Text>
 
           <View style={styles.actionButtonsContainer}>
-            <TouchableOpacity style={styles.bookButton} onPress={()=>{navigation.navigate('Calender')}}>
-              <Text style={styles.bookButtonText}>Book Now | ${property.Price}</Text>
+            <TouchableOpacity style={styles.bookButton} onPress={()=>{navigation.navigate('Calender',{property:property})}}>
+              <Text style={styles.bookButtonText}>Book Now | {property.Price} Dt</Text>
             </TouchableOpacity>
           </View>
 
@@ -227,7 +227,7 @@ const handleCreateRoom=()=>{
           </Modal>
 
           <View style={styles.commentsContainer}>
-            <Text style={styles.commentsTitle}>Comments:</Text>
+            <Text style={styles.commentsTitle}>COMMENTS:</Text>
             <AddComment propertyId={propertyId} />
             <FlatList
               data={property.comments}

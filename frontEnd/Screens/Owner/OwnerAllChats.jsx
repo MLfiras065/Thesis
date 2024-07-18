@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable ,Image} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./OwnerChatStyle";
 import { useNavigation } from "@react-navigation/native";
@@ -9,25 +9,19 @@ import { APP_API_URL } from "../../env";
 const OwnerAllChats = ({ data }) => {
   const navigation = useNavigation();
   const [user, setUser] = useState(null);
-  const getUser = async () => {
+
+  const getUser=async()=>{
+    const res= await axios.get(`${APP_API_URL}/user/user/${data}`)
     try {
-     
-      const userRequest = axios.get(`${APP_API_URL}/user/user/${data}`); 
-      const [userResponse] = await Promise.all([userRequest]);
-  
-     
-      console.log('userchat', userResponse.data);
-      setUser(userResponse.data);
-  
+      console.log('userchat',res.data[0].FirstName);
+      setUser(res.data)
+
+      
     } catch (error) {
-      console.log("error", error);
+        console.log("error",error);
     }
-  }
-  
-  useEffect(() => {
-    getUser();
-  }, [data]);
-  
+}
+  useEffect(()=>{getUser()},[data])
 
   const handleNavigation = () => {
     navigation.navigate("ownerchats", {
@@ -42,17 +36,12 @@ const OwnerAllChats = ({ data }) => {
         handleNavigation();
       }}
     >
-      <Ionicons
-        name="person-circle-outline"
-        size={45}
-        color="black"
-        style={styles.cavatar}
-      />
+      <Image source={{uri: user ? user[0].image : "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1"}} styles={styles.cavatar}/>
 
       <View style={styles.crightContainer}>
         <View>
           <Text style={styles.cusername}>
-            {userResponse ? userResponse.FirstName : "Loading..."}
+            {user ? user[0].FirstName : "Loading..."}
           </Text>
           <Text style={styles.cmessage}>
             { "Tap to start chatting"}

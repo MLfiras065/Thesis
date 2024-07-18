@@ -31,7 +31,6 @@ import Profilee from './Screens/Owner/Profilee';
 import ProductsDetails from './Screens/Owner/ProductsDetails.jsx'; 
 import ExtraFeatures from './Screens/Owner/ExtraFeatures.jsx';
 import OwnerBottomNavigation from './Screens/Owner/OwnerBottomNavigation.jsx';
-
 import OwnerHomePage from './Screens/Owner/OwnerHomePage.jsx';
 import OwnerAllChats from './Screens/Owner/OwnerAllChats.jsx';
 import OwnerChats from './Screens/Owner/OwnerChats.jsx';
@@ -43,7 +42,7 @@ import Search from './Screens/Search/Search.jsx';
 const Stack = createStackNavigator();
 export default function App() {
   return (
-    <StripeProvider publishableKey="pk_test_51O7xr1FBTzNlZioJG5eArUt9FVglGo9PSPmDI5EU7STowGqZPxZbI8FOkfGhlqX6CGiYILjvtYntdB0CtMiD7k4g00pipm25C1">
+    <StripeProvider publishableKey="pk_test_51PXUqxJX5WGHFkJ357yF3r3zYUZa5DG1brYSqTPvuq68dWTkyK6hKKGXwghw2ggTBbZIy6LvNwhlPA1nNlxbskhE00iE9RwmHl">
     <Provider>
       <NavigationContainer>
         <Stack.Navigator >
