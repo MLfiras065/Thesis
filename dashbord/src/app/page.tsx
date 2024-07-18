@@ -6,7 +6,7 @@ const SidBar = () => {
 
   const logOut=()=>{
     localStorage.clear()
-    window.location.href='http://localhost:3000/Signin/Login'
+    window.location.href='http://localhost:3000/Signin'
   }
   return (
 
