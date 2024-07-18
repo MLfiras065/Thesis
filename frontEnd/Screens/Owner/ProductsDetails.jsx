@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { styles } from "./ProductsDetails.styles";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign,MaterialIcons,FontAwesome5,FontAwesome6,MaterialCommunityIcons,FontAwesome  } from "@expo/vector-icons";
 import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
 import { APP_API_URL } from "../../env";
@@ -162,6 +162,42 @@ const ProductsDetails = ({ deleteProduct, switchView, isOwner }) => {
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
             <Text style={styles.title}>{property.Name}</Text>
             <Text style={styles.ratingText}>⭐ {avgRating ? avgRating.toFixed(2) : "No ratings yet"}</Text>
+          </View>
+          <Text style={styles.description}>{property.description}</Text>
+          <View style={styles.commentsContainer}>
+          <Text style={styles.extraTitle}>House Plan Details</Text>
+          <View style={styles.propertyDetailsContainer}>
+            <View style={styles.propertyDetailItem}>
+            <Text>
+              {property.Bedroom}  
+              <MaterialIcons name="bedroom-parent" size={24} color="black" />
+              </Text> 
+            </View>
+            <View style={styles.propertyDetailItem}> 
+              <Text>  
+              <FontAwesome name="bath" size={24} color="black" />
+              {property.Bathroom} 
+              </Text>
+           </View>
+            <View style={styles.propertyDetailItem}>
+           <Text>
+            {property.Ac}   
+            <MaterialCommunityIcons name="fan-minus" size={24} color="black" />
+           </Text> 
+           </View>
+            <View style={styles.propertyDetailItem}>
+            <Text>
+              {property.Pool} 
+              <FontAwesome5 name="swimming-pool" size={24} color="black" />  
+              </Text> 
+               </View>
+            <View style={styles.propertyDetailItem}>
+             <Text>
+              {property.Person} 
+              <FontAwesome6 name="person" size={24} color="black" />
+             </Text> 
+             </View>
+             </View>
           </View>
 
           <View style={styles.locationContainer}>
