@@ -1,20 +1,24 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View ,Text} from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { APP_API_URL } from '../../env';
 import { useStripe } from "@stripe/stripe-react-native";
 import SessionStorage from 'react-native-session-storage';
+import { useRoute, useNavigation } from "@react-navigation/native";
 
 const Calender = () => {
-  const [CheckIn, setCheckIn] = useState("");
-  const [CheckOut, setCheckOut] = useState("");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
   const [selectedDate, setSelectedDate] = useState(false);
   const [date, setDate] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const Userid = SessionStorage.getItem("userId");
+  const userId = SessionStorage.getItem("userId");
   const propertyId = SessionStorage.getItem("propertyId");
-
+  const route = useRoute()
+  const {property}=route.params
+  console.log("price",property);
   const getBooking = async () => {
     try {
       const res = await axios.get(`${APP_API_URL}/Booking/get`);
@@ -25,25 +29,33 @@ const Calender = () => {
     }
   };
 
-  const addBooking = async ({ checkIn, checkOut, UserId, PropertyId }) => {
+  const addBooking = async ({ checkIn, checkOut, userId, propertyId }) => {
     try {
-      const res = await axios.post(`${APP_API_URL}/Booking/add/${2}/${2}`, {
-        checkIn: checkIn,
-        checkOut: checkOut,
-        UserId: 2,
-        PropertyId: 2
+      const res = await axios.post(`${APP_API_URL}/Booking/add/${userId}/${propertyId}`, {
+        checkIn,
+        checkOut,
+        userId,
+        propertyId
       });
       setSelectedDate(true);
       setCheckIn(res.data.checkIn);
       setCheckOut(res.data.checkOut);
       console.log('booked', res.data);
     } catch (error) {
-      console.error("your error is", error);
+      console.error("Error adding booking:", error);
     }
   };
 
+  const calculatePrice = (checkIn, checkOut) => {
+    const startDate = new Date(checkIn);
+    const endDate = new Date(checkOut);
+    const days = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1; 
+    const pricePerDay = property.Price; 
+    return days * pricePerDay;
+  };
+
   const onDayPress = (day) => {
-    if (!CheckIn || (CheckIn && CheckOut)) {
+    if (!checkIn || (checkIn && checkOut)) {
       setCheckIn(day.dateString);
       setCheckOut("");
       setSelectedDate(false);
@@ -51,7 +63,9 @@ const Calender = () => {
     } else {
       setCheckOut(day.dateString);
       console.log("day", day);
-      addBooking({ checkIn: CheckIn, checkOut: day.dateString, UserId: Userid, PropertyId: propertyId });
+      const totalPrice = calculatePrice(checkIn, day.dateString);
+      setTotalPrice(totalPrice);
+      addBooking({ checkIn, checkOut: day.dateString, userId, propertyId });
     }
   };
 
@@ -74,29 +88,29 @@ const Calender = () => {
       }
     });
 
-    if (CheckIn) {
-      markedDates[CheckIn] = {
+    if (checkIn) {
+      markedDates[checkIn] = {
         startingDay: true,
         color: 'lightblue',
         textColor: 'gray',
       };
     }
 
-    if (CheckOut) {
-      markedDates[CheckOut] = {
+    if (checkOut) {
+      markedDates[checkOut] = {
         endingDay: true,
         color: 'lightblue',
         textColor: 'gray',
       };
     }
 
-    if (CheckIn && CheckOut) {
-      let currentDate = new Date(CheckIn);
-      const endDate = new Date(CheckOut);
+    if (checkIn && checkOut) {
+      let currentDate = new Date(checkIn);
+      const endDate = new Date(checkOut);
 
       while (currentDate <= endDate) {
         const dateString = currentDate.toISOString().split('T')[0];
-        if (dateString !== CheckIn && dateString !== CheckOut) {
+        if (dateString !== checkIn && dateString !== checkOut) {
           markedDates[dateString] = {
             color: 'lightblue',
             textColor: 'gray',
@@ -110,18 +124,24 @@ const Calender = () => {
 
     return markedDates;
   };
+
   const fetchPaymentSheetParams = async () => {
-    const response = await axios.post(`${APP_API_URL}/payment/${222}`);
-    const { paymentIntent } = response.data;
-    const initResponse = initPaymentSheet({
-      merchantDisplayName: "finalproj",
-      paymentIntentClientSecret: paymentIntent,
-    });
-    return initResponse;
+    try {
+      const response = await axios.post(`${APP_API_URL}/payment/${totalPrice}`);
+      const { paymentIntent } = response.data;
+      const initResponse = await initPaymentSheet({
+        merchantDisplayName: 'finalproj',
+        paymentIntentClientSecret: paymentIntent,
+      });
+      if (initResponse.error) {
+        console.error('Error initializing payment sheet:', initResponse.error);
+        alert(`Error code: ${initResponse.error.code}`, initResponse.error.message);
+      }
+    } catch (error) {
+      console.error('Error fetching payment sheet params:', error);
+    }
   };
-const handleCreateRoom=()=>{
-  socket.emit('createRoom','roomsList')
-}
+
   const openPaymentSheet = async () => {
     try {
       const { error } = await presentPaymentSheet();
@@ -130,12 +150,11 @@ const handleCreateRoom=()=>{
         console.error("Error presenting payment sheet:", error);
       } else {
         axios
-          .get(`${APP_API_URL}/owner/booked/${Userid}`)
+          .get(`${APP_API_URL}/owner/booked/${userId}`)
           .then(() => {
-            alert(
-              "Payment Successful",
-              "Your payment has been processed successfully!"
-            );
+            alert("Payment Successful", "Your payment has been processed successfully!");
+           
+            axios.get(`${APP_API_URL}/owner/acceptBooking/${userId}`);
           })
           .catch((error) => {
             console.error("Error processing payment:", error);
@@ -145,10 +164,13 @@ const handleCreateRoom=()=>{
       console.error("Error presenting payment sheet:", error);
     }
   };
+
   useEffect(() => {
     getBooking();
-    fetchPaymentSheetParams()
-  }, []);
+    if (checkIn && checkOut) {
+      fetchPaymentSheetParams();
+    }
+  }, [checkIn, checkOut]);
 
   return (
     <View>
@@ -157,16 +179,35 @@ const handleCreateRoom=()=>{
         markingType='period'
         markedDates={getMarkedDates()}
       />
-      <TouchableOpacity onPress={openPaymentSheet} style={ {backgroundColor: '#4d8790',  paddingVertical: 15, paddingHorizontal: 60,  borderRadius: 100,   marginLeft:66,   marginTop: 20,
-  }}>
-    <Text>
-BookNow
-    </Text>
+      <TouchableOpacity 
+        onPress={() => {
+          if (totalPrice > 0) {
+            openPaymentSheet();
+          } else {
+            alert('Please select check-in and check-out dates.');
+          }
+        }} 
+        style={{  backgroundColor: '#4d8790',
+          paddingVertical: 15,
+          paddingHorizontal: 60,
+          borderRadius: 100,
+          marginTop:70,
+          margin:"auto" }}
+      >
+        <Text style={styles.booktext} >Book Now {totalPrice} Dt</Text>
       </TouchableOpacity>
+      <Text></Text>
     </View>
   );
 };
 
 export default Calender;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+
+  booktext:{
+    fontSize:15,
+    color: '#fff',
+    fontWeight: 'bold',
+  }
+});

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, Button ,ScrollView} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity ,ScrollView} from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -29,11 +29,9 @@ const Bottomsheet= () => {
   return (
     <BottomSheetModalProvider>
       <View style={styles.container}>
-        <Button
-          onPress={handlePresentModalPress}
-          title="Comments"
-          color="#008080"
-        />
+        <TouchableOpacity onPress={handlePresentModalPress}>
+        <Text style={styles.see}>See All </Text>
+          </TouchableOpacity>
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={1}
@@ -76,9 +74,18 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   container: {
-    padding: 20,
-    flexDirection: 'row',
-    // alignItems: 'flex-start',
+    backgroundColor: '#b3b3b3',
+    padding: 2,
+    borderRadius: 10,
+    width:60,
+    height:30,
+    left:27
+  },
+  see:{
+   color:"#333333",
+   margin:"auto",
+   top:3,
+   left:2
   },
   content: {
     marginLeft: 16,

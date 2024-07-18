@@ -36,7 +36,7 @@ const ownerid=SessionStorage.getItem("ownerid")
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.formContainer}>
         <View style={styles.form}>
-          <Text style={styles.label}>name</Text>
+          <Text style={styles.label}>Name</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter product name"
@@ -55,7 +55,7 @@ const ownerid=SessionStorage.getItem("ownerid")
 
           <Text style={styles.label}>Location</Text>
           <TextInput
-            style={[styles.input, styles.descriptionInput]}
+            style={[styles.input, styles.input]}
             placeholder="Enter the location"
             multiline
             value={location}
@@ -120,7 +120,17 @@ const styles = StyleSheet.create({
   },
   descriptionInput: {
     height: 100,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
     marginBottom: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
   },
   priceContainer: {
     flexDirection: 'row',
@@ -128,8 +138,9 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 10,
     paddingHorizontal: 4,
-    paddingVertical: 8,
-    backgroundColor: '#f9f9f9',
+    paddingVertical: 5,
+    backgroundColor: '#fff',
+    width:150
   },
   dollarSign: {
     fontSize: 18,
@@ -137,16 +148,17 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   priceInput: {
-    flex: 1,
     fontSize: 18,
     color: '#333',
+    width: 150
   },
+  
   button: {
     alignSelf: 'flex-end',
-    backgroundColor: '#007BFF',
+    backgroundColor: '#4d8790',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 10,
+    borderRadius: 50,
     marginTop: 20,
     shadowOpacity: 0.2,
     shadowRadius: 5,
