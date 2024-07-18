@@ -1,3 +1,4 @@
+"use client"
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -5,13 +6,13 @@ import React from 'react';
 const AllOwner = ({ data }) => {
   const router = useRouter();
 
-  const deleteOwner = () => {
+  const deleteOwner = (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this owner?");
     if (confirmDelete) {
       axios
-        .delete(`http://localhost:4000/api/owner/del/${data.id}`)
+        .delete(`http://localhost:4000/api/owner/del/${id}`)
         .then(() => {
-          router.push("/Owner");
+          window.location.reload(); 
         })
         .catch((err) => {
           console.log(err);
@@ -40,10 +41,11 @@ const AllOwner = ({ data }) => {
               <span style={styles.status}>Active</span>
             </td>
             <td style={styles.td}>
-              <button style={{ ...styles.button, ...styles.editButton }} onClick={() => router.push('./Edit')}>
-                Edit
-              </button>
-              <button style={{ ...styles.button, ...styles.deleteButton }} onClick={deleteOwner}>
+             
+              <button
+                style={{ ...styles.button, ...styles.deleteButton }}
+                onClick={() => deleteOwner(data.id)}
+              >
                 Delete
               </button>
             </td>
@@ -78,16 +80,10 @@ const styles = {
     color: '#4b5563',
     borderBottom: '2px solid #e5e7eb',
   },
-  td: {
-    padding: '1rem',
-    textAlign: 'left',
-    borderBottom: '1px solid #e5e7eb',
-  },
+
+  
   tr: {
     transition: 'background-color 0.2s',
-  },
-  trHover: {
-    backgroundColor: '#f1f5f9',
   },
   status: {
     display: 'inline-block',

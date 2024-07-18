@@ -35,7 +35,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const [liked, setLiked] = useState(false);
   const [userRating, setUserRating] = useState(0);
   const [avgRating, setAvgRating] = useState(null);
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  // const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const ownerid = SessionStorage.getItem('ownerid');
   const [refreshing, setRefreshing] = useState(false);
 
@@ -46,15 +46,15 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
     }, 2000);
   }, []);
 
-  const fetchPaymentSheetParams = async () => {
-    const response = await axios.post(`${APP_API_URL}/payment/${222}`);
-    const { paymentIntent } = response.data;
-    const initResponse = initPaymentSheet({
-      merchantDisplayName: "finalproj",
-      paymentIntentClientSecret: paymentIntent,
-    });
-    return initResponse;
-  };
+//   const fetchPaymentSheetParams = async () => {
+//     const response = await axios.post(`${APP_API_URL}/payment/${222}`);
+//     const { paymentIntent } = response.data;
+//     const initResponse = initPaymentSheet({
+//       merchantDisplayName: "finalproj",
+//       paymentIntentClientSecret: paymentIntent,
+//     });
+//     return initResponse;
+//   };
 
   const handleCreateRoom = () => {
     socket.emit('createRoom', 'roomsList');
@@ -117,7 +117,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
       getProperty(propertyId);
       getPropertyRating(propertyId);
     }
-    fetchPaymentSheetParams();
+    // fetchPaymentSheetParams();
   }, [propertyId]);
 
   const openImageModal = (img) => {
@@ -218,41 +218,41 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
           <Text style={styles.extraTitle}>House Plan Details</Text>
           <View style={styles.propertyDetailsContainer}>
             <View style={styles.propertyDetailItem}>
-            {/* <Text> */}
+            <Text>
               {property.Bedroom}  
               <MaterialIcons name="bedroom-parent" size={24} color="black" />
-              {/* </Text>  */}
+              </Text> 
             </View>
             <View style={styles.propertyDetailItem}> 
-              {/* <Text>   */}
+              <Text>  
               <FontAwesome name="bath" size={24} color="black" />
               {property.Bathroom} 
-              {/* </Text> */}
+              </Text>
            </View>
             <View style={styles.propertyDetailItem}>
-           {/* <Text> */}
+           <Text>
             {property.Ac}   
             <MaterialCommunityIcons name="fan-minus" size={24} color="black" />
-           {/* </Text>  */}
+           </Text> 
            </View>
             <View style={styles.propertyDetailItem}>
-            {/* <Text> */}
+            <Text>
               {property.Pool} 
               <FontAwesome5 name="swimming-pool" size={24} color="black" />  
-              {/* </Text>  */}
+              </Text> 
                </View>
             <View style={styles.propertyDetailItem}>
-             {/* <Text> */}
+             <Text>
               {property.Person} 
               <FontAwesome6 name="person" size={24} color="black" />
-             {/* </Text>  */}
+             </Text> 
              </View>
              </View>
           </View>
 
           <View style={styles.actionButtonsContainer}>
-            <TouchableOpacity style={styles.bookButton} onPress={() => { navigation.navigate('Calender') }}>
-              <Text style={styles.bookButtonText}>Book Now | ${property.Price}</Text>
+            <TouchableOpacity style={styles.bookButton} onPress={()=>{navigation.navigate('Calender',{property:property})}}>
+              <Text style={styles.bookButtonText}>Book Now | {property.Price} Dt</Text>
             </TouchableOpacity>
           </View>
 
@@ -279,7 +279,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
           </Modal>
 
           <View style={styles.commentsContainer}>
-            <Text style={styles.commentsTitle}>Comments:</Text>
+            <Text style={styles.commentsTitle}>COMMENTS:</Text>
             <AddComment propertyId={propertyId} />
             <FlatList
               data={property.comments}

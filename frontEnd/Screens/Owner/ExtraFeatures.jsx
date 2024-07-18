@@ -10,15 +10,15 @@ const ExtraFeatures = () => {
     const navigation = useNavigation();
     const [Bedroom, setBedroom] = useState(0);
     const [Bathroom, setBathroom] = useState(0);
-    const [Person, setPerson] = useState(0);
+    const [person, setPerson] = useState(0);
     const [Ac, setAc] = useState('');
     const [Pool, setPool] = useState('');
-    const [features, setFeatures] = useState({ bedroom: Bedroom, bathroom: Bathroom, person: Person, ac: Ac, pool: Pool });
+    const [features, setFeatures] = useState({ bedroom: Bedroom, bathroom: Bathroom, person: person, ac: Ac, pool: Pool });
     const [extra, setExtra] = useState([]);
 
     const addExtra = async () => {
         try {
-            const res = await axios.put(`${APP_API_URL}/property/extra/${propertyid}`, { Bedroom, Bathroom, Person, Ac, Pool });
+            const res = await axios.put(`${APP_API_URL}/property/extra/${propertyid}`, { Bedroom, Bathroom, person, Ac, Pool });
             setExtra(res.data);
             console.log("data", res.data);
         } catch (error) {
@@ -58,8 +58,8 @@ const ExtraFeatures = () => {
                             style={styles.input}
                             placeholder="Bedroom"
                             keyboardType="numeric"
-                            value={features.bedroom.toString()}
-                            onChangeText={(text) => setBedroom(Number(text))}
+                            value={Bedroom}
+                            onChangeText={(text) => setBedroom(text)}
                         />
                         <TouchableOpacity onPress={() => incrementFeature('bedroom')} style={styles.incrementButton}>
                             <Text style={styles.incrementButtonText}>+</Text>
@@ -75,8 +75,8 @@ const ExtraFeatures = () => {
                             style={styles.input}
                             placeholder="Bathroom"
                             keyboardType="numeric"
-                            value={features.bathroom.toString()}
-                            onChangeText={(text) => setBathroom(Number(text))}
+                            value={Bathroom}
+                            onChangeText={(text) => setBathroom(text)}
                         />
                         <TouchableOpacity onPress={() => incrementFeature('bathroom')} style={styles.incrementButton}>
                             <Text style={styles.incrementButtonText}>+</Text>
@@ -92,8 +92,8 @@ const ExtraFeatures = () => {
                             style={styles.input}
                             placeholder="Person"
                             keyboardType="numeric"
-                            value={features.person.toString()}
-                            onChangeText={(text) => setPerson(Number(text))}
+                            value={person}
+                            onChangeText={(text) => setPerson(text)}
                         />
                         <TouchableOpacity onPress={() => incrementFeature('person')} style={styles.incrementButton}>
                             <Text style={styles.incrementButtonText}>+</Text>

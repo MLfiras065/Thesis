@@ -72,7 +72,8 @@ export const styles = StyleSheet.create({
 
     marginTop: 2,
     margin:'auto',
-    right:15
+    right:15,
+   margin:"auto"
   },
 
   bookButtonText: {
@@ -119,7 +120,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8',
   },
   commentsTitle: {
-    fontSize: 20,
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 10,
   },

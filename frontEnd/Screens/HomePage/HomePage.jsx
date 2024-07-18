@@ -129,7 +129,7 @@ const HomePage = () => {
         <Ionicons name="location-outline" size={20} color="#000" />
         <Text style={styles.locationText}>Tunisie</Text>
         <Ionicons name="chevron-down-outline" size={20} color="#000" />
-        <Ionicons name="heart-outline" size={20} color="#000" style={styles.headerIcon} />
+
         <Ionicons name="notifications-outline" size={20} color="#000" style={styles.headerIcon} />
       </View>
       <View style={styles.searchContainer}>
@@ -200,7 +200,7 @@ const HomePage = () => {
                 <Text style={styles.tripPrice}>
                   dt {property.Price} / Visit{" "}
                   <TouchableOpacity style={styles.likeButton} onPress={handelWishList}  >
-                  <Ionicons name="heart-outline" size={20} color="#000" style={styles.headerIcon} />
+                  <Ionicons name="heart-outline" size={20} color="#000" style={styles.heart} />
                   </TouchableOpacity>
                 </Text>
               </TouchableOpacity>
@@ -241,9 +241,9 @@ const HomePage = () => {
                     <TouchableOpacity onPress={handelWishList}  >
                     <Ionicons 
                       name="heart-outline"
-                      size={22}
+                      size={20}
                       color="#000"
-                      style={styles.headerIcon}
+                      style={styles.heart}
                     />
                     </TouchableOpacity>
                   </Text>
@@ -276,9 +276,9 @@ const HomePage = () => {
                     dt {property.Price} / Visit{" "}
                       <Ionicons
                       name="heart-outline"
-                      size={22}
+                      size={20}
                       color="#000"
-                      style={styles.headerIcon}
+                      style={styles.heart}
                     />
                   </Text>
                 </View>
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   },
   headerIcon: {
     marginLeft: 10,
-    
+
   },
   searchContainer: {
     flexDirection: "row",
@@ -425,6 +425,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  heart:{
+    flex: 1,
+    
+    position:'absolute',
+    left:40,
+    bottom:'10%'
+  }
 });
 
 export default HomePage;
