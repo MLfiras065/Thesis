@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
-import { APP_API_URL } from '../../env';
+import { APP_API_URL } from '../../../env';
 
 const ExtraFeatures = () => {
   const route = useRoute();
@@ -25,7 +25,7 @@ const ExtraFeatures = () => {
       });
     
       console.log('Extra features updated successfully:', res.data);
-      navigation.navigate('Photo', { propertyId });
+      navigation.navigate('EditImage',{propertyId});
     } catch (error) {
       console.error('Error updating extra features:', error);
     

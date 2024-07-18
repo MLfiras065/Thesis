@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import {
+  RefreshControl,
   View,
+  Alert,
   Text,
   StyleSheet,
   ScrollView,
@@ -8,33 +10,30 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
-  RefreshControl,
-  Dimensions,
-  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons,AntDesign } from "@expo/vector-icons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
 const OwnerHomePage = () => {
   const navigation = useNavigation();
+  const [filteredProperties, setFilteredProperties] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const ownerId = SessionStorage.getItem("ownerid");
-  const [refreshing, setRefreshing] = useState(false);
-  const [editingProperty, setEditingProperty] = useState(null);
-  const [deletingProperty, setDeletingProperty] = useState(null);
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
+  const [searchKey,setSearchKey]=useState("")
+  const ownerid = SessionStorage.getItem("ownerid");
+  const [showFilteredProperties,setShowFilteredProperties]=useState(false)
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = useCallback(() => {
+      setRefreshing(true);
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+    }, []);
 
   const fetchOwnerProperties = () => {
-    fetch(`${APP_API_URL}/property/getAll/${1}`)
+    fetch(`${APP_API_URL}/property/getAll/${ownerid}`)
       .then((response) => response.json())
       .then((data) => {
         setProperties(data);
@@ -45,10 +44,21 @@ const OwnerHomePage = () => {
         setLoading(false);
       });
   };
+  const search = () => {
+    try {
+      const filteredData = properties.filter((property) => 
+        property.Name.toLowerCase().includes(searchKey.toLowerCase())
+      );
+      setFilteredProperties(filteredData);
+    } catch (error) {
+      console.error('Error while searching:', error);
+    }
+  };
 
   useEffect(() => {
     fetchOwnerProperties();
   }, [refreshing]);
+
 
   const handleUpdateProperty = (property) => {
     setLoading(true);
@@ -63,7 +73,6 @@ const OwnerHomePage = () => {
       .then(() => {
         setLoading(false);
         setEditingProperty(null);
-        alert("Property updated successfully!");
         fetchOwnerProperties();
       })
       .catch((error) => {
@@ -71,7 +80,6 @@ const OwnerHomePage = () => {
         setLoading(false);
       });
   };
-
   const handleDeleteProperty = (propertyId) => {
     Alert.alert(
       "Confirm Delete",
@@ -85,12 +93,11 @@ const OwnerHomePage = () => {
           text: "Delete",
           onPress: () => {
             setLoading(true);
-            fetch(`${APP_API_URL}/property/delet/${6}`, {
+            fetch(`${APP_API_URL}/property/delet/${propertyId}`, {
               method: "DELETE",
             })
               .then(() => {
                 setLoading(false);
-                alert("Property deleted successfully!");
                 fetchOwnerProperties();
               })
               .catch((error) => {
@@ -103,45 +110,84 @@ const OwnerHomePage = () => {
       { cancelable: false }
     );
   };
-
-  if (loading) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
+ 
 
   return (
     <ScrollView
       style={styles.container}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <View style={styles.header}>
         <Ionicons name="location-outline" size={20} color="#000" />
         <Text style={styles.locationText}>Tunisie</Text>
         <Ionicons name="chevron-down-outline" size={20} color="#000" />
-        <Ionicons name="notifications-outline" size={20} color="#000" style={styles.headerIcon} />
+
+        <Ionicons
+          name="notifications-outline"
+          size={20}
+          color="#000"
+          style={styles.headerIcon}
+        />
       </View>
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search" />
-        <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
+      <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          value={searchKey}
+          onChangeText={setSearchKey}
+        />
+        <TouchableOpacity onPress={search}>
+          <Ionicons name="search-outline" size={20} color="#000" style={styles.searchIcon} />
+        </TouchableOpacity>
       </View>
       <View style={styles.tripsSection}>
         <View style={styles.tripsHeader}>
-          <Text style={styles.sectionTitle}>Your Properties</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("add")}>
+          <Text style={styles.sectionTitle}>Your Offers</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Subscribe")}>
             <Text style={styles.seeAllText}>Add New Property</Text>
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {properties.map((property) => (
+          <View>
+          {showFilteredProperties ? (
+          filteredProperties.map((property) => (
             <View key={property.id} style={styles.propertyItem}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProductsDetails", {
-                    propertyId: property.id,
-                    userId: ownerId,
+                    propertyid: property.id,
+                    userid: userid,
+                  })
+                }
+              >
+                <Image
+                  style={styles.propertyImage}
+                  source={{ uri: property.image[0] }}
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyTitle}>{property.Name}</Text>
+                  <Text style={styles.propertyLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.propertyPrice}>
+                    dt {property.Price} / Visit
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
+          properties.map((property) => (
+            <View key={property.id} style={styles.propertyItem}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProductsDetails", {
+                    propertyid: property.id,
+                    // userId: userId,
                   })
                 }
               >
@@ -158,73 +204,34 @@ const OwnerHomePage = () => {
               <View style={styles.actionButtons}>
                 <TouchableOpacity
                   style={styles.editButton}
-                  onPress={() => setEditingProperty(property)}
+                  onPress={() => navigation.navigate("EditProperty",{propertyId:property.id})}
                 >
-                  <Text style={styles.buttonText}>Edit</Text>
+                  <Text style={styles.buttonText}> <AntDesign name="edit" size={20} color="black" /></Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDeleteProperty(property.id)}
                 >
-                  <Text style={styles.buttonText}>Delete</Text>
+                  <Text style={styles.buttonTextt}><AntDesign name="delete" size={20} color="black" /></Text>
                 </TouchableOpacity>
               </View>
             </View>
-          ))}
-        </ScrollView>
+          ))
+        )}
       </View>
-      {editingProperty && (
-        <EditProperty
-          property={editingProperty}
-          onUpdate={handleUpdateProperty}
-          onCancel={() => setEditingProperty(null)}
-        />
-      )}
+    </ScrollView>
+   
+      </View>
+   
     </ScrollView>
   );
 };
 
-const EditProperty = ({ property, onUpdate, onCancel }) => {
-  const [name, setName] = useState(property.Name);
-  const [location, setLocation] = useState(property.location);
-  const [price, setPrice] = useState(property.Price.toString());
-
-  return (
-    <View style={styles.editContainer}>
-      <Text style={styles.title}>Edit Property</Text>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput style={styles.input} value={name} onChangeText={setName} />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Location</Text>
-        <TextInput style={styles.input} value={location} onChangeText={setLocation} />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Price</Text>
-        <TextInput style={styles.input} value={price} onChangeText={setPrice} keyboardType="numeric" />
-      </View>
-      <View style={styles.actionButtons}>
-        <TouchableOpacity
-          style={styles.updateButton}
-          onPress={() => onUpdate({ ...property, Name: name, location, Price: parseFloat(price) })}
-        >
-          <Text style={styles.buttonText}>Update</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-          <Text style={styles.buttonText}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
-
-const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
+    padding: 16,
+    backgroundColor: "#f9f9f9",
   },
   header: {
     flexDirection: "row",
@@ -254,6 +261,11 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
   tripsSection: {
     marginBottom: 20,
   },
@@ -273,26 +285,35 @@ const styles = StyleSheet.create({
     color: "#C0C0C0",
   },
   propertyItem: {
-    flexDirection: "row",
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 1,
   },
   propertyImage: {
-    width: 140,
-    height: 140,
-    borderRadius: 10,
+    width: 150,
+    height: 100,
+    borderRadius: 20,
     marginRight: 10,
   },
   propertyDetails: {
     flex: 1,
-    justifyContent: "space-between",
+    
+    position:'absolute',
+    left:165,
+    top:'10%'
   },
   propertyTitle: {
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 5,
   },
   propertyLocation: {
     flexDirection: "row",
@@ -301,29 +322,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   propertyPrice: {
-    fontSize: 16,
-    color: "green",
-    fontWeight: "bold",
-  },
-  actionButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
-  editButton: {
-    backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 5,
-  },
-  deleteButton: {
-    backgroundColor: "#ff0000",
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: "#00796b",
+    marginTop: 5,
+    fontSize: 14,
   },
   loader: {
     flex: 1,
@@ -370,6 +371,18 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
     alignItems: "center",
+  },
+  buttonText: {
+    position: 'absolute',
+    left: 145,
+    top: '15%',
+    marginBottom: 5,
+  },
+  buttonTextt: {
+    position: 'absolute',
+    left: 145,
+    bottom: '18%',
+    marginBottom: 5,
   },
 });
 

@@ -23,9 +23,9 @@ const getMessages=async(req,res) =>{
 const addMessage=async(req,res)=>{
     try {
         const { userId, ownerId } = req.params;
-        const { message } = req.body;
+        const { message ,sender} = req.body;
 
-        const newChat = await Chat.create({ message, userId, ownerId });
+        const newChat = await Chat.create({ message, userId, ownerId,sender });
         res.status(201).json(newChat);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -33,12 +33,30 @@ const addMessage=async(req,res)=>{
 }
 const getRooms=async(req,res)=>{
 try {
-    const {userId,ownerId,message}=req.params
-let room=[]
+    let room=[]
+    const {userId,ownerId}=req.body
+    let result=null
+    if(userId){
 
-
+        const chats=await Chat.findAll({where:{userId:userId}})
+        room.push(chats[0].ownerId)
+    for(let i=1;i<chats.length;i++){
+        room.push(chats[i].ownerId)
+    }
+     result=Array.from(new Set(room))
+     console.log(result);
+    }else{
+        const chats=await Chat.findAll({where:{ownerId:ownerId}})
+        room.push(chats[0])
+    for(let i=1;i<chats.length;i++){
+        room.push(chats[i])
+    }
+    result=Array.from(new Set(room))
+    }
+res.json(result)
 } catch (error) {
     console.log(error);
 }
 }
-module.exports={getMessages,addMessage}
+  
+module.exports={getMessages,addMessage,getRooms}

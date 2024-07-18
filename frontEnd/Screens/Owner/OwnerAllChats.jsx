@@ -1,30 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import styles from "./ChatStyles";
+import styles from "./OwnerChatStyle";
 import { useNavigation } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
 
 
-const AllChats = ({ idOwner }) => {
+const OwnerAllChats = ({ iduser }) => {
   const navigation = useNavigation();
   const [owner,setOwner]=useState([])
-  console.log("testitem", idOwner);
-  const userId=SessionStorage.getItem('userid')
-  const getUser=async()=>{
+  const ownerId=SessionStorage.getItem('ownerid')
+  console.log("testitem", iduser);
+  const getOwner=async()=>{
+    const res= await axios.get(`${APP_API_URL}/user/user/${ownerId}`)
     try {
-      const res= await axios.get(`${APP_API_URL}/owner/One/${idOwner}`)
 setOwner(res.data)
 console.log('owner',res.data);
+
       
     } catch (error) {
         console.log("error",error);
     }
 }
-useEffect(()=>getUser(),[])
+useEffect(()=>getOwner(),[])
   const handleNavigation = () => {
-    navigation.navigate("Chats", {
-      idOwner: idOwner,
+    navigation.navigate("ownerchats", {
+      userid: iduser,
     });
   };
   return (
@@ -43,16 +44,17 @@ useEffect(()=>getUser(),[])
 
       <View style={styles.crightContainer}>
         <View>
-          <Text style={styles.cusername}>{idOwner}</Text>
-<Text style={styles.cmessage}>
-            {idOwner?.messages ? idOwner.message : "Tap to start chatting"}
+          <Text style={styles.cusername}>{iduser}</Text>
+
+          <Text style={styles.cmessage}>
+            {iduser?.message ? iduser.message : "Tap to start chatting"}
           </Text>
         </View>
         <View>
-          <Text style={styles.ctime}>{idOwner?.time ? idOwner.time : "now"}</Text>
+          <Text style={styles.ctime}>{iduser?.time ? iduser.time : "now"}</Text>
         </View>
       </View>
     </Pressable>
   );
 };
-export default AllChats;
+export default OwnerAllChats;

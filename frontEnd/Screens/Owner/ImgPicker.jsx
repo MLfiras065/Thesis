@@ -52,7 +52,7 @@ console.log("added");
   };
 const handelAdd=()=>{
   updateProperty()
-  navigation.navigate ('HomePage',{propertyid})
+  navigation.navigate ('HomePage')
 }
   return (
     <SafeAreaView>

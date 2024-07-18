@@ -15,6 +15,7 @@ import axios from "axios";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SessionStorage from "react-native-session-storage";
 import { APP_API_URL } from "../../env";
+import { Entypo } from '@expo/vector-icons';
 
 const EditProfile = () => {
   const route = useRoute();
@@ -114,11 +115,8 @@ const EditProfile = () => {
               }}
               style={styles.avatar}
             />
-            <Button
-              title="img"
-              style={{ backgroundColor: "#008080" }}
-              onPress={handleCameraLaunch}
-            />
+            
+            <Entypo name="camera" size={24} color="black" onPress={handleCameraLaunch} style={styles.camera}/>
           </TouchableOpacity>
         </View>
         <View style={styles.inputContainer}>
@@ -126,6 +124,7 @@ const EditProfile = () => {
           <TextInput
             style={styles.input}
             value={FirstName}
+            placeholder="your new First Name"
             onChangeText={setFirstName}
           />
         </View>
@@ -134,6 +133,7 @@ const EditProfile = () => {
           <TextInput
             style={styles.input}
             value={LastName}
+            placeholder="your new Last Name"
             onChangeText={setLastName}
           />
         </View>
@@ -142,6 +142,7 @@ const EditProfile = () => {
           <TextInput
             style={styles.input}
             value={email}
+            placeholder="your new Email"
             onChangeText={setEmail}
             keyboardType="email-address"
           />
@@ -200,23 +201,31 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: "#b3b3b3",
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 12,
     paddingHorizontal: 10,
     backgroundColor: "#fff",
+    borderWidth: 1,
+    height: 50,
+    
   },
   updateButton: {
     marginTop: 20,
-    backgroundColor: "#008080",
+    backgroundColor: "#4d8790",
     paddingVertical: 10,
     paddingHorizontal: 40,
-    borderRadius: 5,
+    borderRadius: 100,
   },
   updateButtonText: {
     color: "#fff",
     fontSize: 16,
+    
   },
+  camera:{
+    alignItems: 'center',
+    paddingLeft: 37
+  }
 });
 
 export default EditProfile;

@@ -54,6 +54,18 @@ const getOwnerEmail = async (req, res) => {
     console.log(err);
   }
 };
+const getOwnerId = async (req, res) => {
+  const {id}=req.params
+  try {
+    const ownerid = await Owner.findOne({
+      where: { id: id },
+    });
+    console.log("ownerid",req.params.id);
+    res.json(ownerid);
+  } catch (err) {
+    console.log(err);
+  }
+};
 const login = (req, res) => {
   console.log(req.body, "req.body");
   Owner.findOne({ where: { email: req.params.email } }).then((owner) => {
@@ -91,13 +103,13 @@ const login = (req, res) => {
 const acceptBooking = async (req, res) => {
   console.log("test");
   const { id } = req.params;
+try{
   Owner.findByPk(id).then((owner) => {
-    console.log(owner.id);
     const mailOptions = {
       from: "zbouzid75@gmail.com",
       to: "mlayehf@gmail.com",
       subject: "Welcome to your place ",
-      text: `Dear ${Owner.username},
+      text: `Dear ${"hii"},
       
 Your booking is confirmed  
 
@@ -115,7 +127,13 @@ Best regards,
         console.log("Email sent: " + info.response);
       }
     });
+
   });
+res.send(mailOptions)
+}  
+catch (error){
+  res.send(error)
+}
 }
 const updateOwner = async (req, res) => {
   const updeted = await Owner.update(
@@ -170,4 +188,4 @@ const markeAsPayed= async (req, res) => {
       res.json(err);
     });
 }
-module.exports = { getOwner, register, login, updateOwner, getOwnerEmail,acceptBooking,markeAsPayed,deleteOwner};
+module.exports = { getOwner, register, login, updateOwner, getOwnerEmail,acceptBooking,markeAsPayed,deleteOwner,getOwnerId};

@@ -1,30 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View, Text, Alert } from "react-native";
 import { PricingCard, lightColors } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 import { APP_API_URL } from "../../env";
+import { useStripe } from "@stripe/stripe-react-native";
 
 const Subscribe = () => {
-
   const navigation = useNavigation();
   const [postCount, setPostCount] = useState(0);
   const ownerid = SessionStorage.getItem("ownerid");
-
-  useEffect(() => {
-    const fetchPostCount = async () => {
-      try {
-        const res = await axios.get(`${APP_API_URL}/property/count/${ownerid}`);
-        setPostCount(res.data.count);
-      } catch (error) {
-        console.error("Failed to fetch post count", error);
-      }
-    };
-
-    fetchPostCount();
-  }, []);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
   const handleSubscription = async (plan) => {
     try {
@@ -34,7 +22,6 @@ const Subscribe = () => {
           text1: 'Success',
           text2: 'You can post for free!'
         });
-       
         navigation.navigate("AddProperty");
       } else {
         if (plan === "Free trial") {
@@ -46,7 +33,6 @@ const Subscribe = () => {
           return;
         }
 
-       
         const res = await axios.post(`${APP_API_URL}/subscribe`, {
           ownerid,
           plan,
@@ -58,8 +44,9 @@ const Subscribe = () => {
             text1: 'Success',
             text2: 'Subscription successful!'
           });
-          
-          navigation.navigate("Add");
+
+          await fetchPaymentSheetParams(plan);
+          await openPaymentSheet();
         } else {
           Toast.show({
             type: 'error',
@@ -78,13 +65,52 @@ const Subscribe = () => {
     }
   };
 
+  const fetchPaymentSheetParams = async (plan) => {
+    try {
+      const response = await axios.post(`${APP_API_URL}/payment/${plan}`);
+      const { paymentIntent } = response.data;
+      const initResponse = await initPaymentSheet({
+        merchantDisplayName: 'finalproj',
+        paymentIntentClientSecret: paymentIntent,
+      });
+      if (initResponse.error) {
+        console.error('Error initializing payment sheet:', initResponse.error);
+        Alert.alert(`Error code: ${initResponse.error.code}`, initResponse.error.message);
+      }
+    } catch (error) {
+      console.error('Error fetching payment sheet params:', error);
+    }
+  };
+
+  const openPaymentSheet = async () => {
+    try {
+      const { error } = await presentPaymentSheet();
+      if (error) {
+        Alert.alert(`Error code: ${error.code}`, error.message);
+        console.error("Error presenting payment sheet:", error);
+      } else {
+        axios
+          .get(`${APP_API_URL}/owner/booked/${ownerid}`)
+          .then(() => {
+            Alert.alert("Payment Successful", "Your payment has been processed successfully!");
+            axios.get(`${APP_API_URL}/owner/acceptBooking/${ownerid}`);
+          })
+          .catch((error) => {
+            console.error("Error processing payment:", error);
+          });
+      }
+    } catch (error) {
+      console.error("Error presenting payment sheet:", error);
+    }
+  };
+
   return (
     <>
-      <ScrollView>
+      <ScrollView >
         <PricingCard
           color={lightColors.primary}
           title="Free trial"
-          price="For one month"
+          price="For Three Posts"
           info={["1 User", "add multiple homes"]}
           button={{
             title: "GET STARTED",
@@ -118,3 +144,5 @@ const Subscribe = () => {
 };
 
 export default Subscribe;
+
+
