@@ -2,44 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import AllOwner from './Owner';
 import './styles.css';
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 90,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    // valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-];
 
 const Owner = () => {
+  const router = useRouter();
   const [owner, setOwner] = useState([]);
  
   const getOwner = () => {
     axios
       .get('http://localhost:4000/api/owner/getOwner')
       .then((response) => {
-        const ownerData = response.data.map((owner, index) => ({
-          id: index + 1,
-          firstName: owner.firstName,
-          lastName: owner.lastName,
-          age: owner.age,
-        }));
-        setOwner(ownerData);
-        console.log('data', ownerData);
+        setOwner(response.data);
+        console.log('data', response.data);
       })
       .catch((err) => {
         console.log(err);
@@ -51,11 +29,13 @@ const Owner = () => {
   }, []);
 
   return (
+
+    
     <div className="ownerContainer">
-      <div className="dataGrid">
+      <div style={{ height: 400, width: '100%' }}>
         <DataGrid
           rows={owner}
-          columns={columns}
+          columns={owner}
           initialState={{
             pagination: {
               paginationModel: { page: 0, pageSize: 5 },
@@ -64,6 +44,14 @@ const Owner = () => {
           pageSizeOptions={[5, 10]}
           checkboxSelection
         />
+      </div>
+      
+      <div>
+        {owner.map((el, index) => (
+          <div className="ownerItem" key={index}>
+            <AllOwner data={el} />
+          </div>
+        ))}
       </div>
     </div>
   );
