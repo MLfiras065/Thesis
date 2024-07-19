@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { DataGrid } from '@mui/x-data-grid'; 
+import { TiDeleteOutline } from "react-icons/ti";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './styles.css';
 
 const Owner = () => {
@@ -33,9 +36,11 @@ const Owner = () => {
         .delete(`http://localhost:4000/api/owner/del/${id}`)
         .then(() => {
           setOwners((prevOwners) => prevOwners.filter(owner => owner.id !== id));
+          toast.success('Owner deleted successfully!');
         })
         .catch((err) => {
           console.log(err);
+          toast.error('Failed to delete owner.');
         });
     }
   };
@@ -47,11 +52,14 @@ const Owner = () => {
     { field: 'role', headerName: 'Role', width: 150 },
     {
       field: 'status',
-      headerName: 'Status',
+      headerName: 'Action',
       width: 120,
       renderCell: (params) => (
-        <button onClick={() => deleteOwner(params.row.id)} className="deleteButton">
-          Delete
+        <button
+          onClick={() => deleteOwner(params.row.id)}
+          className="deleteButton"
+        >
+          <TiDeleteOutline />
         </button>
       ),
     },
@@ -59,6 +67,7 @@ const Owner = () => {
 
   return (
     <div className="ownerContainer">
+      <ToastContainer />
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
           rows={owners}
