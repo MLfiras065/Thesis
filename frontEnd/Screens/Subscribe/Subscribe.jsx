@@ -16,13 +16,13 @@ const Subscribe = () => {
 
   const handleSubscription = async (plan) => {
     try {
-      if (postCount === 0) {
+      if (postCount === 3) {
         Toast.show({
           type: 'success',
           text1: 'Success',
-          text2: 'You can post for free!'
+          text2: 'You can post  !'
         });
-        navigation.navigate("AddProperty");
+        fetchPaymentSheetParams()
       } else {
         if (plan === "Free trial") {
           Toast.show({
@@ -103,6 +103,7 @@ const Subscribe = () => {
       console.error("Error presenting payment sheet:", error);
     }
   };
+  useEffect(()=>{fetchPaymentSheetParams()},[])
 
   return (
     <>

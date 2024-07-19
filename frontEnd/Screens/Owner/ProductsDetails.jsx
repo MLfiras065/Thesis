@@ -175,8 +175,9 @@ const ProductsDetails = ({ deleteProduct, switchView, isOwner }) => {
             </View>
             <View style={styles.propertyDetailItem}> 
               <Text>  
+              {property.Bathroom}
               <FontAwesome name="bath" size={24} color="black" />
-              {property.Bathroom} 
+               
               </Text>
            </View>
             <View style={styles.propertyDetailItem}>
@@ -193,7 +194,7 @@ const ProductsDetails = ({ deleteProduct, switchView, isOwner }) => {
                </View>
             <View style={styles.propertyDetailItem}>
              <Text>
-              {property.Person} 
+              {property.person} 
               <FontAwesome6 name="person" size={24} color="black" />
              </Text> 
              </View>

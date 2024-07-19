@@ -40,13 +40,14 @@ import Edit from './Screens/Owner/update/Edit.jsx';
 import Extra from "./Screens/Owner/update/Extraupdate.jsx"
 import EditPhoto from './Screens/Owner/update/Photo.jsx';
 import Search from './Screens/Search/Search.jsx';
-
+import { ToastProvider } from 'react-native-fast-toast'
 
 
 
 const Stack = createStackNavigator();
 export default function App() {
   return (
+    <ToastProvider>
     <StripeProvider publishableKey="pk_test_51PXUqxJX5WGHFkJ357yF3r3zYUZa5DG1brYSqTPvuq68dWTkyK6hKKGXwghw2ggTBbZIy6LvNwhlPA1nNlxbskhE00iE9RwmHl">
     <Provider>
       <NavigationContainer>
@@ -90,6 +91,7 @@ export default function App() {
       </NavigationContainer>
     </Provider>
     </StripeProvider>
+    </ToastProvider>
   );
 }
 

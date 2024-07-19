@@ -3,7 +3,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { RefreshControl, View, Text, FlatList, TouchableOpacity, Image, ScrollView } from "react-native";
 import axios from "axios";
-import { AntDesign } from '@expo/vector-icons';
+
+import { MaterialIcons ,AntDesign } from "@expo/vector-icons";
 import styles from "./styles.jsx";
 import { APP_API_URL } from "../../env.js";
 import SessionStorage from "react-native-session-storage";
@@ -80,42 +81,48 @@ const Wishlist = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-        <View>
-          <TouchableOpacity onPress={() =>
-            navigation.navigate("ProductDetails", {
-              propertyid: propertyId,
-              userid: userId,
-            })
-          }>
-            <FlatList
-              data={wishlist}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <View key={item.id} style={styles.propertyItem}>
-                  <Image style={styles.propertyImage} source={{ uri: item.image[0] }} />
-                  <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyTitle}>{item.Name}</Text>
-                    <Text style={styles.propertyPrice}>
-                      dt {item.Price} / Visit
-                    </Text>
-                  </View>
-                  <TouchableOpacity onPress={() => confirmRemove(item.id)}>
-                    <AntDesign name="delete" size={20} color="black" />
-                  </TouchableOpacity>
-                </View>
-              )}
+    <ScrollView
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+    >
+
+    <View>
+      <TouchableOpacity onPress={() =>
+          navigation.navigate("ProductDetails", {
+            propertyid: propertyId,
+            userid: userId,
+          })}>
+
+      <FlatList
+        data={wishlist}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View key={item.id} style={styles.propertyItem}>
+          <Image
+            style={styles.propertyImage}
+            source={{ uri: item.image[0] }}
             />
-          </TouchableOpacity>
+          <View style={styles.propertyDetails}>
+          
+            <Text style={styles.propertyTitle}>{item.Name}</Text>
+            <Text style={styles.propertyDetails}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {item.location}
+                  </Text>
+            <Text style={styles.propertyPrice}>
+              dt {item.Price} / Visit
+            </Text>
+          </View>
+        <TouchableOpacity onPress={() => confirmRemove(item.id)}>
+        <AntDesign name="delete" size={20} color="black" />
+            </TouchableOpacity>
         </View>
-      </ScrollView>
-      <Toast style={{ zIndex: 9999, top: 0 }} ref={(ref) => Toast.setRef(ref)} />
-
-
-
-
+        )}
+        />
+        </TouchableOpacity>
     </View>
+        </ScrollView>
   );
 };
 
