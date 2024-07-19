@@ -1,8 +1,11 @@
-import React, { useEffect, useState,useCallback } from "react";
+
+
+
+
+import React, { useEffect, useState, useCallback } from "react";
 import {
   RefreshControl,
   View,
-  Alert,
   Text,
   StyleSheet,
   ScrollView,
@@ -10,27 +13,32 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons, MaterialIcons,MaterialCommunityIcons,FontAwesome5} from "@expo/vector-icons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
+import Toast from "react-native-toast-message";
+
 
 const OwnerHomePage = () => {
+  
   const navigation = useNavigation();
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchKey,setSearchKey]=useState("")
+  const [searchKey, setSearchKey] = useState("");
   const ownerid = SessionStorage.getItem("ownerid");
-  const [showFilteredProperties,setShowFilteredProperties]=useState(false)
-    const [refreshing, setRefreshing] = useState(false);
-    const onRefresh = useCallback(() => {
-      setRefreshing(true);
-      setTimeout(() => {
-        setRefreshing(false);
-      }, 2000);
-    }, []);
+  const [showFilteredProperties, setShowFilteredProperties] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const fetchOwnerProperties = () => {
     fetch(`${APP_API_URL}/property/getAll/${ownerid}`)
@@ -42,23 +50,38 @@ const OwnerHomePage = () => {
       .catch((error) => {
         console.error("Error fetching properties:", error);
         setLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Error fetching properties',
+          position: 'bottom',
+        bottomOffset:800,
+        });
       });
   };
+
   const search = () => {
     try {
-      const filteredData = properties.filter((property) => 
+      const filteredData = properties.filter((property) =>
         property.Name.toLowerCase().includes(searchKey.toLowerCase())
       );
       setFilteredProperties(filteredData);
+      setShowFilteredProperties(true);
     } catch (error) {
       console.error('Error while searching:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Error while searching',
+        position: 'bottom',
+        bottomOffset:800,
+      });
     }
   };
 
   useEffect(() => {
     fetchOwnerProperties();
   }, [refreshing]);
-
 
   const handleUpdateProperty = (property) => {
     setLoading(true);
@@ -72,14 +95,28 @@ const OwnerHomePage = () => {
       .then((response) => response.json())
       .then(() => {
         setLoading(false);
-        setEditingProperty(null);
         fetchOwnerProperties();
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Property updated successfully',
+          position: 'bottom',
+          bottomOffset:800,
+        });
       })
       .catch((error) => {
         console.error("Error updating property:", error);
         setLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Error updating property',
+          position: 'bottom',
+          bottomOffset:800,
+        });
       });
   };
+
   const handleDeleteProperty = (propertyId) => {
     Alert.alert(
       "Confirm Delete",
@@ -98,6 +135,7 @@ const OwnerHomePage = () => {
             })
               .then(() => {
                 setLoading(false);
+                alert("Property deleted successfully!");
                 fetchOwnerProperties();
               })
               .catch((error) => {
@@ -110,7 +148,6 @@ const OwnerHomePage = () => {
       { cancelable: false }
     );
   };
- 
 
   return (
     <ScrollView
@@ -132,7 +169,7 @@ const OwnerHomePage = () => {
         />
       </View>
       <View style={styles.searchContainer}>
-      <TextInput
+        <TextInput
           style={styles.searchInput}
           placeholder="Search"
           value={searchKey}
@@ -222,7 +259,6 @@ const OwnerHomePage = () => {
     </ScrollView>
    
       </View>
-   
     </ScrollView>
   );
 };
@@ -305,10 +341,9 @@ const styles = StyleSheet.create({
   },
   propertyDetails: {
     flex: 1,
-    
-    position:'absolute',
-    left:165,
-    top:'10%'
+    position: 'absolute',
+    left: 165,
+    top: '10%'
   },
   propertyTitle: {
     fontSize: 16,

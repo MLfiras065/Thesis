@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -16,7 +17,7 @@ import { APP_API_URL } from "../../env";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-
+import Toast from 'react-native-toast-message';
 
 const SignUp = () => {
   const route = useRoute();
@@ -49,8 +50,14 @@ const SignUp = () => {
       !gender ||
       !CINImage
     ) {
-      console.log("res",FirstName,LastName,email,Password,DateOfBirth,gender,CINImage);
-      alert("Please enter your data");
+      console.log("res", FirstName, LastName, email, Password, DateOfBirth, gender, CINImage);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter your data',
+        position: 'top',
+        topOffset: 0,
+      });
       return;
     }
 
@@ -66,16 +73,20 @@ const SignUp = () => {
 
     try {
       const res = await axios.post(`${APP_API_URL}/owner/reg`, data);
-      alert("Signup successful");
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Signup successful',
+        position: 'top',
+        topOffset: 0,
+      });
       navigation.goBack("TopTabNav");
-      
     } catch (error) {
       console.error(error);
     }
   };
 
   const SignUpUser = async (
-   
     FirstName,
     LastName,
     email,
@@ -84,7 +95,6 @@ const SignUp = () => {
     gender
   ) => {
     if (
-   
       !FirstName ||
       !LastName ||
       !email ||
@@ -92,13 +102,18 @@ const SignUp = () => {
       !DateOfBirth ||
       !gender
     ) {
-      console.log("resUser",FirstName,LastName,email,Password,DateOfBirth,gender);
-      alert("Please enter your data");
+      console.log("resUser", FirstName, LastName, email, Password, DateOfBirth, gender);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter your data',
+        position: 'top',
+        topOffset: 0,
+      });
       return;
     }
 
     const data = {
-  
       FirstName,
       LastName,
       email,
@@ -110,9 +125,14 @@ const SignUp = () => {
 
     try {
       const res = await axios.post(`${APP_API_URL}/user/reg`, data);
-      alert("Signup successful");
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Signup successful',
+        position: 'bottom',
+        bottomOffset:800,
+      });
       navigation.goBack("TopNav");
-      
     } catch (error) {
       console.error(error);
     }
@@ -146,7 +166,6 @@ const SignUp = () => {
 
   const handleSignup = () => {
     SignUp(
-      
       FirstName,
       LastName,
       email,
@@ -159,7 +178,6 @@ const SignUp = () => {
 
   const handleSignupUser = () => {
     SignUpUser(
-      
       FirstName,
       LastName,
       email,
@@ -181,21 +199,17 @@ const SignUp = () => {
     <KeyboardAvoidingView
       behavior="padding"
       style={styles.container}
-      
       keyboardVerticalOffset={100}
     >
       <Text style={styles.title}>Create An Account</Text>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        
         <ScrollView
           contentContainerStyle={styles.scrollViewContent}
           showsVerticalScrollIndicator={false}
         >
           <Formik onSubmit={handleSignup}>
             {({ touched }) => (
-              
               <View style={styles.wrapper}>
-                
                 {/* <View style={styles.imageContainer}>
                   <TouchableOpacity onPress={pickImage}>
                     <Image
@@ -205,7 +219,6 @@ const SignUp = () => {
                       style={styles.profimges}
                     />
                   </TouchableOpacity>
-                 
                 </View> */}
 
                 <View style={styles.inputWrapper}>
@@ -321,7 +334,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 80, 
+    marginBottom: 80,
   },
   inputWrapper: {
     flexDirection: "row",

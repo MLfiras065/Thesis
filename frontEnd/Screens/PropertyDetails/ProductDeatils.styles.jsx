@@ -1,5 +1,4 @@
 import { StyleSheet, Dimensions } from 'react-native';
-
 const { width, height } = Dimensions.get('window');
 export const styles = StyleSheet.create({
   container: {
@@ -69,6 +68,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 60,
     borderRadius: 100,
 
+    marginLeft:66,
+
+    marginTop: 2,
+    margin:'auto',
+    right:15,
    margin:"auto"
   },
 
@@ -108,6 +112,7 @@ export const styles = StyleSheet.create({
     height: 300,
     borderRadius: 10,
   },
+
   commentsContainer: {
     marginTop: 20,
     padding: 10,
@@ -119,4 +124,17 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  propertyDetailsContainer:{
+    display: "flex",
+    gap:25,
+    flexDirection: "row",
+    margin:"auto",
+    padding:40,
+    left:-10
+  },
+  extraTitle:{
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  }
 });

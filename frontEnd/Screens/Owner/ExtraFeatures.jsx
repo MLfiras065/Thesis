@@ -19,7 +19,7 @@ const ExtraFeatures = () => {
 
     const addExtra = async () => {
         try {
-            const res = await axios.put(`${APP_API_URL}/property/extra/${propertyid}`, { Bedroom, Bathroom, Person, Ac, Pool });
+            const res = await axios.put(`${APP_API_URL}/property/extra/${propertyid}`, { Bedroom, Bathroom, person, Ac, Pool });
             setExtra(res.data);
             console.log("data", res.data);
         } catch (error) {
@@ -172,10 +172,11 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 10,
-        marginTop: 80,
+        marginTop: 100,
         shadowOpacity: 0.2,
         shadowRadius: 5,
-        margin:'auto'
+        margin:'auto',
+        right:-120
     },
     buttonText: {
         color: '#fff',

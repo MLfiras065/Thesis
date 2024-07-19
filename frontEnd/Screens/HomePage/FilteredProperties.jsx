@@ -76,6 +76,7 @@ const FilteredProperties = () => {
             </TouchableOpacity>
       ))}
     </ScrollView>
+    
   );
 };
 

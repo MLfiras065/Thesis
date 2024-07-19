@@ -1,37 +1,57 @@
+
 import { useNavigation } from '@react-navigation/native';
-import React, { useState,useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import SessionStorage from 'react-native-session-storage';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 import { APP_API_URL } from '../../env';
 
 const Add = () => {
-    const navigation=useNavigation()
+  const navigation = useNavigation();
   const [Name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
   const [Price, setPrice] = useState('');
-const [property,setProperty]=useState([])
-const ownerid=SessionStorage.getItem("ownerid")
-    
-    const addProperty =async()=>{
-        if (!Name || !description || !location || !Price) {
-            Alert.alert('Error', 'Please fill all the fields');
-            return
-          }
-        const  res =await axios.post(`${APP_API_URL}/property/post/${ownerid}`,
-            {Name:Name,Price:Price,description:description,location:location})
-        try {
-         console.log(" post prop",res);
-      
-         setProperty(res.data) 
-         console.log("data",res.data);
-         console.log('id',res.data.id);
-         navigation.navigate('Extra',{propertyid:res.data.id});
-                } catch (error) {
-          console.error(error)
-        }}
-   
+  const [property, setProperty] = useState([]);
+  const ownerid = SessionStorage.getItem("ownerid");
+
+  const addProperty = async () => {
+    if (!Name || !description || !location || !Price) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please fill all the fields',
+        position: 'bottom',
+        bottomOffset:800,
+      });
+      return;
+    }
+
+    try {
+      const res = await axios.post(`${APP_API_URL}/property/post/${ownerid}`, {
+        Name: Name,
+        Price: Price,
+        description: description,
+        location: location
+      });
+      console.log("post prop", res);
+      setProperty(res.data);
+      console.log("data", res.data);
+      console.log('id', res.data.id);
+      navigation.navigate('Extra', { propertyid: res.data.id });
+    } catch (error) {
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'An error occurred while adding the property',
+        position: 'bottom',
+        bottomOffset:800,
+      });
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.formContainer}>
@@ -75,10 +95,11 @@ const ownerid=SessionStorage.getItem("ownerid")
           </View>
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={()=>{addProperty()}}>
-                <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={addProperty}>
+          <Text style={styles.buttonText}>Next</Text>
+        </TouchableOpacity>
       </View>
+      <Toast />
     </ScrollView>
   );
 };
@@ -170,3 +191,4 @@ const styles = StyleSheet.create({
 });
 
 export default Add;
+

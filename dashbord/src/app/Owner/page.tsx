@@ -2,44 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useRouter } from 'next/navigation';
+import { DataGrid } from '@mui/x-data-grid'; 
 import './styles.css';
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 90,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    // valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-];
-
 const Owner = () => {
-  const [owner, setOwner] = useState([]);
- 
-  const getOwner = () => {
+  const router = useRouter();
+  const [owners, setOwners] = useState([]);
+
+  const getOwners = () => {
     axios
       .get('http://localhost:4000/api/owner/getOwner')
       .then((response) => {
-        const ownerData = response.data.map((owner, index) => ({
-          id: index + 1,
-          firstName: owner.firstName,
-          lastName: owner.lastName,
-          age: owner.age,
-        }));
-        setOwner(ownerData);
-        console.log('data', ownerData);
+        setOwners(response.data);
+        console.log('data', response.data);
       })
       .catch((err) => {
         console.log(err);
@@ -47,21 +23,48 @@ const Owner = () => {
   };
 
   useEffect(() => {
-    getOwner();
+    getOwners();
   }, []);
+
+  const deleteOwner = (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this owner?");
+    if (confirmDelete) {
+      axios
+        .delete(`http://localhost:4000/api/owner/del/${id}`)
+        .then(() => {
+          setOwners((prevOwners) => prevOwners.filter(owner => owner.id !== id));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 100 },
+    { field: 'username', headerName: 'Name', width: 150 },
+    { field: 'email', headerName: 'Email', width: 250 },
+    { field: 'role', headerName: 'Role', width: 150 },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 120,
+      renderCell: (params) => (
+        <button onClick={() => deleteOwner(params.row.id)} className="deleteButton">
+          Delete
+        </button>
+      ),
+    },
+  ];
 
   return (
     <div className="ownerContainer">
-      <div className="dataGrid">
+      <div style={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={owner}
+          rows={owners}
           columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10]}
           checkboxSelection
         />
       </div>

@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+
+import React, { useState  } from 'react';
+import { View, TextInput, StyleSheet,  TouchableOpacity,Button } from 'react-native';
 import axios from 'axios';
 import { APP_API_URL } from '../../env';
 import SessionStorage from 'react-native-session-storage';
+import Toast from 'react-native-toast-message';
 import { FontAwesome } from '@expo/vector-icons';
+import { useToast } from 'react-native-fast-toast'
 
 const AddComment = ({ propertyId }) => {
+  const toast = useToast()
   const [content, setContent] = useState("");
   const id = SessionStorage.getItem('userid');
   console.log('user ID:', id);
@@ -19,18 +23,33 @@ const AddComment = ({ propertyId }) => {
     if (id && propertyId && content.trim()) {
       try {
         const res = await axios.post(`${APP_API_URL}/comment/post/${id}/${propertyId}`, { content, userId: id, idProperty: propertyId });
-        setContent('');
-        Alert.alert('Comment added successfully');
+        setContent('')
+        toast.show("Comment Added Successfully !",{
+          type: 'success',
+      animationType:"slide-in",
+          position: 'top',
+        });
         console.log(res.data, "comment");
       } catch (err) {
         console.error(err);
-        Alert.alert('Error adding comment');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Failed to add comment',
+          position: 'bottom',
+        bottomOffset:800,
+        });
       }
     } else {
-      Alert.alert('Please enter a comment');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter a comment',
+        position: 'bottom',
+        bottomOffset:800,
+      });
     }
-  };
-
+  }
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>

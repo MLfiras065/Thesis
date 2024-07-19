@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
@@ -5,9 +6,12 @@ import { Calendar } from 'react-native-calendars';
 import { APP_API_URL } from '../../env';
 import { useStripe } from "@stripe/stripe-react-native";
 import SessionStorage from 'react-native-session-storage';
+import Toast from 'react-native-toast-message';
 import { useRoute, useNavigation } from "@react-navigation/native";
+import { useToast } from 'react-native-fast-toast'
 
 const Calender = () => {
+  const toast = useToast()
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [selectedDate, setSelectedDate] = useState(false);
@@ -146,15 +150,21 @@ const Calender = () => {
     try {
       const { error } = await presentPaymentSheet();
       if (error) {
-        alert(`Error code: ${error.code}`, error.message);
+        Toast.show({
+          type: 'error',
+          text1: `Error code: ${error.code}`,
+          text2: error.message,
+        });
         console.error("Error presenting payment sheet:", error);
       } else {
         axios
           .get(`${APP_API_URL}/owner/booked/${userId}`)
           .then(() => {
-            alert("Payment Successful", "Your payment has been processed successfully!");
-           
-            axios.get(`${APP_API_URL}/owner/acceptBooking/${userId}`);
+            toast.show("payment successfully !",{
+              type: 'success',
+          animationType:"slide-in",
+              position: 'top',
+            });
           })
           .catch((error) => {
             console.error("Error processing payment:", error);
@@ -204,10 +214,17 @@ const Calender = () => {
 export default Calender;
 
 const styles = StyleSheet.create({
-
-  booktext:{
-    fontSize:15,
+  button: {
+    backgroundColor: '#4d8790',
+    paddingVertical: 15,
+    paddingHorizontal: 60,
+    borderRadius: 100,
+    marginLeft: 66,
+    marginTop: 20,
+  },
+  buttonText: {
     color: '#fff',
+    textAlign: 'center',
     fontWeight: 'bold',
-  }
+  },
 });

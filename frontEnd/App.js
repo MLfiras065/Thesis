@@ -40,9 +40,14 @@ import Edit from './Screens/Owner/update/Edit.jsx';
 import Extra from "./Screens/Owner/update/Extraupdate.jsx"
 import EditPhoto from './Screens/Owner/update/Photo.jsx';
 import Search from './Screens/Search/Search.jsx';
+import { ToastProvider } from 'react-native-fast-toast'
+
+
+
 const Stack = createStackNavigator();
 export default function App() {
   return (
+    <ToastProvider>
     <StripeProvider publishableKey="pk_test_51PXUqxJX5WGHFkJ357yF3r3zYUZa5DG1brYSqTPvuq68dWTkyK6hKKGXwghw2ggTBbZIy6LvNwhlPA1nNlxbskhE00iE9RwmHl">
     <Provider>
       <NavigationContainer>
@@ -52,40 +57,41 @@ export default function App() {
           <Stack.Screen name="Role" component={Role} options={{ headerShown: false }} />
           <Stack.Screen name="TopTabNav" component={TopTabNav} options={{ headerShown: false }}/>
           <Stack.Screen name="TopNav" component={TopNav} options={{ headerShown: false }}/>
-          <Stack.Screen name="Login" component={Login} />  
-          <Stack.Screen name="SignUp" component={SignUp} />  
-           <Stack.Screen name="LogIn" component={LogInUser} />   
-           <Stack.Screen name="ProductDetails" component={ProductDetails}  />
-           <Stack.Screen name="EditProperty" component={Edit}  />
+          <Stack.Screen name="Login" component={Login}  options={{ headerShown: false }} />  
+          <Stack.Screen name="SignUp" component={SignUp}  options={{ headerShown: false }}/>  
+           <Stack.Screen name="LogIn" component={LogInUser} options={{ headerShown: false }} />   
+           <Stack.Screen name="ProductDetails" component={ProductDetails}   options={{ headerShown: false }}/>
+           <Stack.Screen name="EditProperty" component={Edit}   options={{ headerShown: false }}/>
           <Stack.Screen name="Navigation" component={BottomNavigation} options={{ headerShown: false }}/>
           <Stack.Screen name="OwnerNav" component={OwnerBottomNavigation} options={{ headerShown: false }}/>
-          <Stack.Screen name="Subscribe" component={Subscribe} />    
-          <Stack.Screen name="Home" component={HomePage} />
+          <Stack.Screen name="Subscribe" component={Subscribe}  options={{ headerShown: false }}/>    
+          <Stack.Screen name="Home" component={HomePage}  />
            <Stack.Screen name="FilteredProperties" component={FilteredProperties} />
           <Stack.Screen name="Calender" component={Calender} />
-          <Stack.Screen name="AllProperties" component={AllPropertiesPage} options={{ title: 'All Properties' }} />
-          <Stack.Screen name="Search" component={Search} />  
-          <Stack.Screen name="FiltredProperties" component={FilteredProperties} />  
-          <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen name="EditProfile" component={EditProfile} /> 
-          <Stack.Screen name="Chat" component={Chat} /> 
-          <Stack.Screen name="AllChat" component={AllChats} />  
-           <Stack.Screen name="Chats" component={Chats} /> 
-           <Stack.Screen name="bottom" component={Bottomsheet} />  
-           <Stack.Screen name="Profilee" component={Profilee} />    
-           <Stack.Screen name="HomePage" component={OwnerHomePage} />   
-            <Stack.Screen name="EditProfilee" component={EditProfilee}  /> 
+          <Stack.Screen name="AllProperties" component={AllPropertiesPage} options={{ title: 'All Properties', headerShown: false  }} />
+          <Stack.Screen name="Search" component={Search}  options={{ headerShown: false }}/>  
+          <Stack.Screen name="FiltredProperties" component={FilteredProperties}  options={{ headerShown: false }}/>  
+          <Stack.Screen name="Profile" component={Profile}  options={{ headerShown: false }}/>
+          <Stack.Screen name="EditProfile" component={EditProfile}  options={{ headerShown: false }}/> 
+          <Stack.Screen name="Chat" component={Chat}  options={{ headerShown: false }}/> 
+          <Stack.Screen name="AllChat" component={AllChats}  options={{ headerShown: false }}/>  
+           <Stack.Screen name="Chats" component={Chats}  options={{ headerShown: false }}/> 
+           <Stack.Screen name="bottom" component={Bottomsheet}  options={{ headerShown: false }}/>  
+           <Stack.Screen name="Profilee" component={Profilee}  options={{ headerShown: false }}/>    
+           <Stack.Screen name="HomePage" component={OwnerHomePage}  />   
+            <Stack.Screen name="EditProfilee" component={EditProfilee}   options={{ headerShown: false }}/> 
           <Stack.Screen name="add" component={add} options={{ headerShown: false }}/>
-          <Stack.Screen name="Extra" component={ExtraFeatures} />
+          <Stack.Screen name="Extra" component={ExtraFeatures}  options={{ headerShown: false }}/>
           <Stack.Screen name="img" component={Photo} options={{ headerShown: false }}  />  
-           <Stack.Screen name="ProductsDetails" component={ProductsDetails}   />    
-           <Stack.Screen name="EditExtra" component={Extra}   />    
-           <Stack.Screen name="EditImage" component={EditPhoto}   />    
+           <Stack.Screen name="ProductsDetails" component={ProductsDetails}  options={{ headerShown: false }}  />    
+           <Stack.Screen name="EditExtra" component={Extra}  options={{ headerShown: false }}  />    
+           <Stack.Screen name="EditImage" component={EditPhoto}  options={{ headerShown: false }}  />    
            
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
     </StripeProvider>
+    </ToastProvider>
   );
 }
 

@@ -1,3 +1,4 @@
+
 import { StyleSheet, View, Text, TextInput, Button, Image, TouchableOpacity } from "react-native";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -5,8 +6,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
+import Toast from 'react-native-toast-message';
+import { useToast } from 'react-native-fast-toast'
 
-const LogInUser = () => {
+const ClientLogin = () => {
+  const toast = useToast()
   const navigation = useNavigation();
 
   const [emailUser, setEmailUser] = useState("");
@@ -14,7 +18,13 @@ const LogInUser = () => {
   const [token, setToken] = useState("");
   const logIn = async (navigation) => {
     if (!emailUser || !Password) {
-      alert("Please enter both email and password");
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter both email and password',
+        position: 'top',
+        topOffset: 0,
+      });
       return;
     }
 
@@ -29,12 +39,20 @@ const LogInUser = () => {
       SessionStorage.setItem("userToken", res.data.token);
       console.log("userid", res.data.id);
       console.log("usertoken", res.data.token);
-      alert("Login successful");
-      navigation.navigate("Navigation", { screen: "Navigation" })
+      toast.show("Login Successfully !",{
+        type: 'success',
+    animationType:"slide-in",
+        position: 'top',
+      });
+      navigation.navigate("Navigation", { screen: "Navigation" });
 
     } catch (err) {
       console.error(err);
-      alert("Login failed. Please check your credentials and try again.");
+      toast.show("Login failed !",{
+        type: 'danger',
+    animationType:"slide-in",
+        position: 'top',
+      });
     }
   };
   const handleLogIn = () => {
@@ -88,7 +106,7 @@ const LogInUser = () => {
   );
 };
 
-export default LogInUser;
+export default ClientLogin;
 
 const styles = StyleSheet.create({
   container: {
