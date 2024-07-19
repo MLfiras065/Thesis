@@ -1,32 +1,46 @@
-"use client"
+"use client";
+
 import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import axios from "axios";
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { DataGrid } from '@mui/x-data-grid'; 
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Page = () => {
-  const [users, setUsers] = useState([]);
 
-  const getUsers = () => {
+const Owner = () => {
+  const router = useRouter();
+  const [owners, setOwners] = useState([]);
+
+  const getOwners = () => {
     axios
-      .get("http://localhost:4000/api/user/get")
+      .get('http://localhost:4000/api/owner/getOwner')
       .then((response) => {
-        setUsers(response.data);
+        setOwners(response.data);
+        console.log('data', response.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
-  const deleteUser = (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+  useEffect(() => {
+    getOwners();
+  }, []);
+
+  const deleteOwner = (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this owner?");
     if (confirmDelete) {
-      axios.delete(`http://localhost:4000/api/user/del/${id}`)
+      axios
+        .delete(`http://localhost:4000/api/owner/del/${id}`)
         .then(() => {
-          // Filter out the deleted user from the state
-          setUsers((prevUsers) => prevUsers.filter(user => user.id !== id));
+          setOwners((prevOwners) => prevOwners.filter(owner => owner.id !== id));
+          toast.success('Owner deleted successfully!');
         })
         .catch((err) => {
           console.log(err);
+          toast.error('Failed to delete owner.');
         });
     }
   };
@@ -42,23 +56,21 @@ const Page = () => {
       width: 120,
       renderCell: (params) => (
         <button
-          onClick={() => deleteUser(params.row.id)}
+          onClick={() => deleteOwner(params.row.id)}
           className="deleteButton"
-          style={{ backgroundColor: 'red', color: 'white', border: 'none', borderRadius: '4px', padding: '5px 10px' }}
         >
-          Delete
+          <RiDeleteBin5Line />
         </button>
       ),
     },
   ];
 
-  useEffect(() => { getUsers() }, []);
-
   return (
-    <div className="ownerContainer" style={{ padding: '20px' }}>
+    <div className="ownerContainer">
+      <ToastContainer />
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={users}
+          rows={owners}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5, 10]}
@@ -66,7 +78,7 @@ const Page = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Page;
+export default Owner;

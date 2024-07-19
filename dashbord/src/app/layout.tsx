@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Home from "./page";
+import SignIn from "./SignIn/page";
 
 
 
@@ -20,10 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex ">
-     <Home/>
+        <Home/> 
       <>
         {children}
       </>
+     {/* <SignIn/> */}
         </body>
         
     </html>

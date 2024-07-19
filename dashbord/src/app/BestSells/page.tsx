@@ -1,4 +1,3 @@
-// components/Charts.js
 "use client";
 import dynamic from 'next/dynamic';
 import 'chart.js/auto';
@@ -98,7 +97,6 @@ const BestSellingCharts = () => {
   return (
     <div className="flex justify-center items-center h-full">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 p-4">
-        {/* Doughnut Chart */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="p-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-center font-bold text-lg">
             Most Popular Accommodation Types
@@ -118,7 +116,7 @@ const BestSellingCharts = () => {
           </div>
         </div>
 
-        {/* Line Chart */}
+       
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="p-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-center font-bold text-lg">
             Booking Trends
