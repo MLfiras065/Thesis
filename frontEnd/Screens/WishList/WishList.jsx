@@ -9,8 +9,8 @@ import {RefreshControl,
   ScrollView,
 } from "react-native";
 import axios from "axios";
-import { AntDesign } from '@expo/vector-icons';
 
+import { MaterialIcons ,AntDesign } from "@expo/vector-icons";
 import styles from "./styles.jsx";
 import { APP_API_URL } from "../../env.js";
 import SessionStorage from "react-native-session-storage";
@@ -95,7 +95,12 @@ const Wishlist = () => {
             source={{ uri: item.image[0] }}
             />
           <View style={styles.propertyDetails}>
+          
             <Text style={styles.propertyTitle}>{item.Name}</Text>
+            <Text style={styles.propertyDetails}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {item.location}
+                  </Text>
             <Text style={styles.propertyPrice}>
               dt {item.Price} / Visit
             </Text>

@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, MaterialIcons,AntDesign } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons,MaterialCommunityIcons,FontAwesome5} from "@expo/vector-icons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 
@@ -198,21 +198,21 @@ const OwnerHomePage = () => {
                     <MaterialIcons name="location-pin" size={18} color="grey" />
                     {property.location}
                   </Text>
-                  <Text style={styles.propertyPrice}>dt {property.Price} / Visit</Text>
+                  <Text style={styles.propertyPrice}> {property.Price} dt / Visit</Text>
                 </View>
               </TouchableOpacity>
               <View style={styles.actionButtons}>
                 <TouchableOpacity
-                  style={styles.editButton}
+                  style={styles.updateprop}
                   onPress={() => navigation.navigate("EditProperty",{propertyId:property.id})}
                 >
-                  <Text style={styles.buttonText}> <AntDesign name="edit" size={20} color="black" /></Text>
+                  <Text style={styles.buttonText}><MaterialCommunityIcons name="home-edit-outline" size={24} color="#999999" /></Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.deleteButton}
+                  style={styles.updateprop}
                   onPress={() => handleDeleteProperty(property.id)}
                 >
-                  <Text style={styles.buttonTextt}><AntDesign name="delete" size={20} color="black" /></Text>
+                  <Text style={styles.buttonTextt}><FontAwesome5 name="trash-alt" size={19} color="#999999" /></Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -383,7 +383,13 @@ const styles = StyleSheet.create({
     left: 145,
     bottom: '18%',
     marginBottom: 5,
+    
   },
+  updateprop: {
+    marginLeft: 8,
+    
+  },
+ 
 });
 
 export default OwnerHomePage;

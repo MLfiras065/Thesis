@@ -74,15 +74,17 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   container: {
-    backgroundColor: '#b3b3b3',
+    backgroundColor: '#cedfe4',
     padding: 2,
     borderRadius: 10,
     width:60,
     height:30,
-    left:27
+    
+    margin:'auto'
+    
   },
   see:{
-   color:"#333333",
+   color:"#000000",
    margin:"auto",
    top:3,
    left:2
