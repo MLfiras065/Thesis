@@ -39,14 +39,15 @@ import Edit from './Screens/Owner/update/Edit.jsx';
 import Extra from "./Screens/Owner/update/Extraupdate.jsx"
 import EditPhoto from './Screens/Owner/update/Photo.jsx';
 import Search from './Screens/Search/Search.jsx';
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-const Tab = createBottomTabNavigator();
+import { ToastProvider } from 'react-native-fast-toast'
+
 
 
 const Stack = createStackNavigator();
 export default function App() {
   return (
-    <StripeProvider publishableKey="pk_test_51O7xr1FBTzNlZioJG5eArUt9FVglGo9PSPmDI5EU7STowGqZPxZbI8FOkfGhlqX6CGiYILjvtYntdB0CtMiD7k4g00pipm25C1">
+    <ToastProvider>
+    <StripeProvider publishableKey="pk_test_51PXUqxJX5WGHFkJ357yF3r3zYUZa5DG1brYSqTPvuq68dWTkyK6hKKGXwghw2ggTBbZIy6LvNwhlPA1nNlxbskhE00iE9RwmHl">
     <Provider>
       <NavigationContainer>
         
@@ -92,6 +93,7 @@ export default function App() {
       </NavigationContainer>
     </Provider>
     </StripeProvider>
+    </ToastProvider>
   );
 }
 

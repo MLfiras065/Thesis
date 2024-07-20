@@ -102,7 +102,8 @@ const Subscribe = () => {
     } catch (error) {
       console.error("Error presenting payment sheet:", error);
     }
-  };  useEffect(()=>{fetchPaymentSheetParams()},[])
+  };  u
+  seEffect(()=>{fetchPaymentSheetParams()},[])
 
   return (
     <>

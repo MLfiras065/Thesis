@@ -10,9 +10,9 @@ const TopTabNav = ({ route }) => {
   return (
     <View>
       <ScrollView>
-        <View>
-        
-          <Tab.Navigator style={{ height: 850 }}>
+        <View style={{ marginTop: 30 }}>
+       
+          <Tab.Navigator style={{ height: 805 }}>
             <Tab.Screen name="Login" component={Login} />
             <Tab.Screen
               name="SignUp"

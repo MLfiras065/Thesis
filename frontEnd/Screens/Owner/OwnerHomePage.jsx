@@ -16,12 +16,14 @@ import {
   Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons,MaterialCommunityIcons,FontAwesome5} from "@expo/vector-icons";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 import Toast from "react-native-toast-message";
 
+
 const OwnerHomePage = () => {
+  
   const navigation = useNavigation();
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [properties, setProperties] = useState([]);
@@ -115,7 +117,7 @@ const OwnerHomePage = () => {
       });
   };
 
-  const handleDeleteProperty = (propertyId) => { 
+  const handleDeleteProperty = (propertyId) => {
     Alert.alert(
       "Confirm Delete",
       "Are you sure you want to delete this property?",
@@ -134,7 +136,7 @@ const OwnerHomePage = () => {
               .then(() => {
                 setLoading(false);
                 alert("Property deleted successfully!");
-                fetchOwnerProperties()
+                fetchOwnerProperties();
               })
               .catch((error) => {
                 console.error("Error deleting property:", error);
@@ -186,74 +188,76 @@ const OwnerHomePage = () => {
         </View>
         <ScrollView>
           <View>
-            {showFilteredProperties ? (
-              filteredProperties.map((property) => (
-                <View key={property.id} style={styles.propertyItem}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("ProductsDetails", {
-                        propertyid: property.id,
-                        userid: userid,
-                      })
-                    }
-                  >
-                    <Image
-                      style={styles.propertyImage}
-                      source={{ uri: property.image[0] }}
-                    />
-                    <View style={styles.propertyDetails}>
-                      <Text style={styles.propertyTitle}>{property.Name}</Text>
-                      <Text style={styles.propertyLocation}>
-                        <MaterialIcons name="location-pin" size={18} color="grey" />
-                        {property.location}
-                      </Text>
-                      <Text style={styles.propertyPrice}>
-                        dt {property.Price} / Visit
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
+          {showFilteredProperties ? (
+          filteredProperties.map((property) => (
+            <View key={property.id} style={styles.propertyItem}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProductsDetails", {
+                    propertyid: property.id,
+                    userid: userid,
+                  })
+                }
+              >
+                <Image
+                  style={styles.propertyImage}
+                  source={{ uri: property.image[0] }}
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyTitle}>{property.Name}</Text>
+                  <Text style={styles.propertyLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.propertyPrice}>
+                    dt {property.Price} / Visit
+                  </Text>
                 </View>
-              ))
-            ) : (
-              properties.map((property) => (
-                <View key={property.id} style={styles.propertyItem}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("ProductsDetails", {
-                        propertyid: property.id,
-                        // userId: userId,
-                      })
-                    }
-                  >
-                    <Image style={styles.propertyImage} source={{ uri: property.image[0] }} />
-                    <View style={styles.propertyDetails}>
-                      <Text style={styles.propertyTitle}>{property.Name}</Text>
-                      <Text style={styles.propertyLocation}>
-                        <MaterialIcons name="location-pin" size={18} color="grey" />
-                        {property.location}
-                      </Text>
-                      <Text style={styles.propertyPrice}>dt {property.Price} / Visit</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <View style={styles.actionButtons}>
-                    <TouchableOpacity
-                      style={styles.editButton}
-                      onPress={() => navigation.navigate("EditProperty",{propertyId:property.id})}
-                    >
-                      <Text style={styles.buttonText}> <AntDesign name="edit" size={20} color="black" /></Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.deleteButton}
-                      onPress={() => handleDeleteProperty(property.id)}
-                    >
-                      <Text style={styles.buttonTextt}><AntDesign name="delete" size={20} color="black" /></Text>
-                    </TouchableOpacity>
-                  </View>
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
+          properties.map((property) => (
+            <View key={property.id} style={styles.propertyItem}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProductsDetails", {
+                    propertyid: property.id,
+                    // userId: userId,
+                  })
+                }
+              >
+                <Image style={styles.propertyImage} source={{ uri: property.image[0] }} />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyTitle}>{property.Name}</Text>
+                  <Text style={styles.propertyLocation}>
+                    <MaterialIcons name="location-pin" size={18} color="grey" />
+                    {property.location}
+                  </Text>
+                  <Text style={styles.propertyPrice}> {property.Price} dt / Visit</Text>
                 </View>
-              ))
-            )}
-          </View>
-        </ScrollView>
+              </TouchableOpacity>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={styles.updateprop}
+                  onPress={() => navigation.navigate("EditProperty",{propertyId:property.id})}
+                >
+                  <Text style={styles.buttonText}><MaterialCommunityIcons name="home-edit-outline" size={24} color="#999999" /></Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.updateprop}
+                  onPress={() => handleDeleteProperty(property.id)}
+                >
+                  <Text style={styles.buttonTextt}><FontAwesome5 name="trash-alt" size={19} color="#999999" /></Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
+        )}
+      </View>
+    </ScrollView>
+   
       </View>
     </ScrollView>
   );
@@ -414,7 +418,13 @@ const styles = StyleSheet.create({
     left: 145,
     bottom: '18%',
     marginBottom: 5,
+    
   },
+  updateprop: {
+    marginLeft: 8,
+    
+  },
+ 
 });
 
 export default OwnerHomePage;

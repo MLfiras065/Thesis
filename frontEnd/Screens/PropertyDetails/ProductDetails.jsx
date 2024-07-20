@@ -20,9 +20,12 @@ import AddComment from "../Comment/AddComment";
 import { io } from 'socket.io-client';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
+import { useToast } from 'react-native-fast-toast'
 
 
 const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
+  const toast = useToast()
+
   const navigation = useNavigation();
   const socket=io('http://192.168.139.186:3000')
   const route = useRoute();
@@ -35,7 +38,6 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
   const [liked, setLiked] = useState(false);
   const [userRating, setUserRating] = useState(0);
   const [avgRating, setAvgRating] = useState(null);
-  // const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const ownerid = SessionStorage.getItem('ownerid');
   const [refreshing, setRefreshing] = useState(false);
 
@@ -58,7 +60,19 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
       console.log(err);
     }
   };
-
+  const showtoast = () => {
+ 
+    toast.show({
+ 
+      type: 'success',
+ 
+      text1: 'Hello',
+ 
+      text2: 'This is a toast notification!',
+ 
+    });
+ 
+  };
   useEffect(() => {
     const getProperty = (id) => {
       axios
@@ -76,7 +90,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
       getProperty(propertyId);
       getPropertyRating(propertyId);
     }
-    // fetchPaymentSheetParams();
+   
   }, [propertyId]);
 
   const openImageModal = (img) => {
@@ -102,7 +116,12 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
           PropertyId: propertyId,
         }
       );
-    
+      toast.show({
+        type: 'success',
+        text1: 'Wishlist added!',
+        position: 'bottom',
+        bottomOffset:800,
+      });
       setLiked(true);
     } catch (error) {
       console.log(error);
@@ -120,12 +139,10 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
         rating,
       });
       setUserRating(response.data);
-      Toast.show({
+      toast.show("Rating Submitted !",{
         type: 'success',
-        text1: 'Success',
-        text2: 'Rating submitted successfully',
-        position: 'bottom',
-        bottomOffset:800,
+    animationType:"slide-in",
+        position: 'top',
       });
     } catch (error) {
       console.error("Error submitting rating:", error);
@@ -179,9 +196,9 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
               </Text> 
             </View>
             <View style={styles.propertyDetailItem}> 
-              <Text>  
-              <FontAwesome name="bath" size={24} color="black" />
+              <Text> 
               {property.Bathroom} 
+              <FontAwesome name="bath" size={24} color="black" />
               </Text>
            </View>
             <View style={styles.propertyDetailItem}>
@@ -198,7 +215,7 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
                </View>
             <View style={styles.propertyDetailItem}>
              <Text>
-              {property.Person} 
+              {property.person} 
               <FontAwesome6 name="person" size={24} color="black" />
              </Text> 
              </View>
@@ -214,12 +231,12 @@ const ProductDetails = ({ addToCart, deleteProduct, switchView, isOwner }) => {
           <View style={styles.ratingContainer}>
             <Text style={styles.ratingText}>Rate this product:</Text>
             <AirbnbRating
-              count={5}
-              defaultRating={userRating}
-              size={20}
-              showRating={false}
-              onFinishRating={handleRatingCompleted}
-            />
+      count={5}
+      defaultRating={userRating}
+      size={20}
+      showRating={false}
+      onFinishRating={handleRatingCompleted}
+    />
           </View>
 
           <Modal visible={modalVisible} transparent={true} animationType="slide" onRequestClose={closeImageModal}>
