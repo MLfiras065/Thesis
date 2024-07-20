@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-// import Bottomsheet from "../Component/Bottomsheet";
 
 const Role = () => {
   const navigation = useNavigation();

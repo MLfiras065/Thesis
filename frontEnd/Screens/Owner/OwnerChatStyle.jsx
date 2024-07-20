@@ -116,7 +116,13 @@ mmessage: {
     marginBottom: 2,
 },
 mvatar: {
-    marginRight: 5,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10, 
+    marginTop: 2,
+    borderWidth: 2, 
+    borderColor: '#ddd', 
 },
 cchat: {
     width: "100%",

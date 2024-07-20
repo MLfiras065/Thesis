@@ -1,10 +1,12 @@
+
 import { StyleSheet, View, Text, TextInput, Button, Image, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { APP_API_URL } from "../../env";
 import SessionStorage from "react-native-session-storage";
 import axios from "axios";
+import Toast from 'react-native-toast-message';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -14,7 +16,13 @@ const Login = () => {
 
   const logIn = async (navigation) => {
     if (!email || !password) {
-      alert("Please enter both email and password");
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter both email and password',
+        position: 'top',
+        topOffset: 0,
+      });
       return;
     }
 
@@ -30,12 +38,24 @@ const Login = () => {
       
       console.log("ownerid", res.data.id);
       console.log("ownertoken", res.data.token);
-      alert("Login successful");
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Login successful',
+        position: 'bottom',
+        bottomOffset:800,
+      });
 
       navigation.navigate("OwnerNav", { screen: "BottomNavigation" });
     } catch (err) {
       console.error(err);
-      alert("Login failed. Please check your credentials and try again.");
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Login failed. Please check your credentials and try again.',
+        position: 'bottom',
+        bottomOffset:800,
+      });
     }
   };
 
@@ -168,7 +188,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  image:{width: 320,
+  image: {
+    width: 320,
     height: 200,
-    marginBottom: 20,}
+    marginBottom: 20,
+  }
 });

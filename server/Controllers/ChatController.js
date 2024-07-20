@@ -4,7 +4,7 @@ const User = require('../database/models/User');
 const getMessages=async(req,res) =>{
     try {
         const { userId, ownerId } = req.params;
-
+console.log(userId,ownerId);
         const chats = await Chat.findAll({
             where: {
                 userId,
@@ -16,20 +16,25 @@ const getMessages=async(req,res) =>{
                 { model: User, as: 'User' }
             ]
         });
+        
         res.status(200).json(chats);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 }
 const addMessage=async(req,res)=>{
     try {
+        
         const { userId, ownerId } = req.params;
         const { message,sender } = req.body;
 
         const newChat = await Chat.create({ message, userId, ownerId,sender });
         res.status(201).json(newChat);
     } catch (error) {
+    console.log("err",error);
         res.status(500).json({ error: error.message });
+    
     }
 }
 const addMessageOwner=async(req,res)=>{
@@ -40,6 +45,7 @@ const addMessageOwner=async(req,res)=>{
         const newChat = await Chat.create({ message, userId, ownerId,sender });
         res.status(201).json(newChat);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 }

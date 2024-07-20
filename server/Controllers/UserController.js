@@ -150,4 +150,17 @@ const loginAdmin=(req,res)=>{
           });
       }});
 }
-module.exports={getUser,register,login,updateUser,getUserEmail,markAsPayed,loginAdmin,getUserId}
+const deleteUser= (req, res) => {
+  User.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((data) => {
+ res.json(data);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+}
+module.exports={getUser,register,login,updateUser,getUserEmail,markAsPayed,loginAdmin,deleteUser,getUserId}

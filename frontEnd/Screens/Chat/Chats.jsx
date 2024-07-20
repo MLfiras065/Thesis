@@ -14,22 +14,24 @@ const Chats = ({}) => {
  console.log("route",route.params);
     const userId = SessionStorage.getItem("userid");
     console.log("userid",userId);
+    const [user, setUser] = useState({});
+    const [owner, setOwner] = useState(null);
     const ownerId = SessionStorage.getItem("ownerid");
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
     const getMessage = async () => {
         try {
             console.log("uesrid ownerid ",userId,idOwner);
-            const res = await axios.get(`${APP_API_URL}/chat/getmsg/${idOwner}/${userId}`);
+            const res = await axios.get(`${APP_API_URL}/chat/getmsg/${userId}/${idOwner}`);
             console.log("getmsg",res.data);
+            
             const formattedMessages = res.data.map(msg => ({
                 _id:msg.id,
                 text:msg.message,
-
                 user: {
-                    id: userId,
-                    name:"firas",
-                    avatar: 'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg'
+                    id: msg.id,
+                    name:msg.sender===msg.User.id ? msg.User?.FirstName : msg.Owner?.FirstName,
+                    avatar:  msg.sender===msg.User.id ? msg.User?.image : msg.Owner?.image,
                 },
                 createdAt: new Date(msg.createdAt)
             }));
@@ -38,13 +40,24 @@ const Chats = ({}) => {
             console.log(err);
         }
     };
-    
+    const fetchOwnerData = async () => {
+        try {
+            const id = await SessionStorage.getItem('userid');
+            if (id) {
+                const res = await axios.get(`${APP_API_URL}/user/user/${id}`);
+                setUser(res.data[0]);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
         
+        fetchOwnerData();
         getMessage();
     }, [userId, ownerId]);
     
-    console.log("msg",messages);
     useEffect(() => {
         const socketConnection = io("http://192.168.139.186:3000");
         setSocket(socketConnection);
@@ -58,14 +71,15 @@ const Chats = ({}) => {
         });
 
         socketConnection.on("receive-message", message => {
+            console.log("messga==>",message);
             setMessages(previousMessages => GiftedChat.append(previousMessages, {
                 _id: message.id,
-                text: message[1].message,
+                text: message.message,
                 createdAt: new Date(messages.createdAt),
                 user: {
-                    id: message[1].FirstName,
-                    name:"firas",
-                    avatar: 'https://placeimg.com/140/140/any'
+                    id: message.sender,
+                   
+                    avatar:message.sender=== msg.Owner.id? msg.Owner?.image : msg.User?.image,
                 }
             }));
         });
@@ -83,7 +97,7 @@ const Chats = ({}) => {
         setMessages(previousMessages => GiftedChat.append(previousMessages, newMessage));
 
         try {
-            await axios.post(`${APP_API_URL}/chat/addmsg/${userId}/${idOwner}`, {
+            await axios.post(`${APP_API_URL}/chat/addmsgO/${ownerId}/${userId}`, {
                 message: newMessage[0].text,
                 sender:userId
             });
@@ -96,39 +110,42 @@ const Chats = ({}) => {
         }
     }, [userId, idOwner, socket]);
     const renderBubble = (props) => {
+        const isUser = props.currentMessage.user._id === userId;
         return (
             <Bubble
                 {...props}
                 wrapperStyle={{
                     left: {
-                        backgroundColor: '#f0f0f0',
-                        alignSelf: 'flex-start',
+                        backgroundColor: isUser ? '#f0f0f0' : '#0078fe',
                     },
                     right: {
-                        backgroundColor: '#0078fe',
-                        alignSelf: 'flex-end',
+                        backgroundColor: isUser ? '#0078fe' : '#f0f0f0',
                     }
                 }}
                 textStyle={{
                     left: {
-                        color: '#000',
+                        color: isUser ? '#000' : '#fff',
                     },
                     right: {
-                        color: '#fff',
+                        color:owner ? '#fff' : '#000',
                     }
                 }}
+                usernameStyle={{ color: '#aaa', fontSize: 12, marginBottom: 4 }}
+                renderUsernameOnMessage={true}
             />
         );
     };
+
     return (
         <View style={styles.messagingscreen}>
             <GiftedChat
                 messages={messages}
                 onSend={handleSend}
                 user={{
-                    _id: 10,
-                    name: "user.FirstName",
-                    // avatar: 'https://placeimg.com/140/140/any'
+                    _user:{
+                        name: user.FirstName,
+                        avatar:  user.image,
+                    }
                 }}
                 inverted={false}
                 renderBubble={renderBubble}

@@ -13,7 +13,7 @@ const OwnerAllChats = ({ data }) => {
   const getUser=async()=>{
     const res= await axios.get(`${APP_API_URL}/user/user/${data}`)
     try {
-      console.log('userchat',res.data[0].FirstName);
+      console.log('userchat',res.data[0].image);
       setUser(res.data)
 
       
@@ -36,8 +36,10 @@ const OwnerAllChats = ({ data }) => {
         handleNavigation();
       }}
     >
-      <Image source={{uri: user ? user[0].image : "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1"}} styles={styles.cavatar}/>
-
+         <Image 
+        source={{ uri: user ? user[0].image : "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/ba/29/5c/img-worlds-of-adventure.jpg?w=1200&h=1200&s=1" }} 
+        style={styles.cavatar} 
+      />
       <View style={styles.crightContainer}>
         <View>
           <Text style={styles.cusername}>
